@@ -134,5 +134,16 @@ pnpm run preview
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
+## to investigate and fix
+
+I want to go full tw. But below the vanilla way and the tw way are not
+equivalent as they should be. Probably some css rule take precedence of the
+tw one.
+
+```svelte
+    {#snippet a()}
+      <!-- <div class="h-full p-4 overflow-y-auto"> -->
+      <div style="height: 100%; overflow-y: auto;" 
+```
