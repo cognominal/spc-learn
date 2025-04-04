@@ -1,0 +1,32 @@
+# app
+words.db
+words.db-wal
+words.db-shm
+
+# building
+/node_modules
+/coverage
+/.next/
+/build
+
+# Output
+.output
+.vercel
+.netlify
+.wrangler
+/.svelte-kit
+/build
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
