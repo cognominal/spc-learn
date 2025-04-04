@@ -25,7 +25,9 @@
 		"svelte-check": "^4.0.0",
 		"tailwindcss": "^4.0.0",
 		"typescript": "^5.0.0",
-		"vite": "^6.2.5"
+		"vite": "^6.2.5",
+		"@types/jsdom": "^21.1.7",
+		"@types/node": "^22.13.17"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
@@ -33,6 +35,8 @@
 		]
 	},
 	"dependencies": {
-		"@rich_harris/svelte-split-pane": "^2.0.0"
+		"@rich_harris/svelte-split-pane": "^2.0.0",
+		"better-sqlite3": "^11.9.1",
+		"jsdom": "^26.0.0"
 	}
 }
