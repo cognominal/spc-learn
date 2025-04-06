@@ -36,16 +36,7 @@ export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageSt
     return true;
 }
 
-function hideEnglish() {
-    document.querySelectorAll('li.break-words strong').forEach(li => {
-        
-        (li as HTMLElement).style.color = '#9ca3af'; // grey color
-        const english = li.querySelector('strong:contains("English:")');
-        if (english?.parentElement) {
-            english.parentElement.style.display = 'none';
-        }
-    });
-}
+// Function removed as it was unused
 
 export function handleClick(event: MouseEvent | KeyboardEvent, pageState: PageState) {
     if (handleClickRussianWord(event, pageState)) return;
@@ -53,12 +44,17 @@ export function handleClick(event: MouseEvent | KeyboardEvent, pageState: PageSt
     // Reset all li elements to default state
     document.querySelectorAll('li.break-words').forEach(li => {
         (li as HTMLElement).style.color = '#9ca3af'; // grey color
-        const english = li.querySelector('strong:contains("English:")');
-        if (english?.parentElement) {
-            english.parentElement.style.display = 'none';
-        }
-    });
 
+        // Find all strong elements within this li
+        li.querySelectorAll('strong').forEach(strong => {
+            // Check if the strong element contains the text "English:"
+            if (strong.textContent && strong.textContent.trim() === 'English:') {
+                if (strong.parentElement) {
+                    strong.parentElement.style.display = 'none';
+                }
+            }
+        });
+    });
 }
 
 async function showDefinition(word: string, pageState: PageState) {

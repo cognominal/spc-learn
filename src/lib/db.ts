@@ -1,5 +1,33 @@
+/**
+ * Database Module for Word Storage and Retrieval
+ * =============================================
+ *
+ * This module provides a SQLite database interface for storing and retrieving
+ * Russian words, their occurrences (indices), and their Wiktionary definitions.
+ *
+ * Key Features:
+ * - Automatic database initialization and table creation
+ * - Automatic restoration from YAML dump if database is empty
+ * - Asynchronous API for database operations
+ * - Word normalization (lowercase, trimmed)
+ *
+ * Database Schema:
+ * - words table:
+ *   - word: TEXT PRIMARY KEY - The Russian word (normalized)
+ *   - indices: TEXT - JSON string of indices where the word appears in the text
+ *   - wiktionary: TEXT - HTML content from Wiktionary for the word
+ *
+ * Persistence Strategy:
+ * - The database file (words.db) is excluded from git
+ * - A YAML dump (words-dump.yaml) is included in git
+ * - On startup, if the database is empty, it's automatically restored from the YAML dump
+ * - The db:dump script can be used to update the YAML dump when needed
+ */
+
 import sqlite3 from 'sqlite3';
-import { promisify } from 'util';
+import fs from 'fs/promises';
+import { existsSync } from 'fs';
+import { parse } from 'yaml';
 
 interface WordData {
     word: string;
@@ -11,14 +39,12 @@ import path from 'path';
 
 // Open database with sqlite3 using an absolute path
 const dbPath = path.resolve(process.cwd(), 'words.db');
+const yamlDumpPath = path.resolve(process.cwd(), 'words-dump.yaml');
 console.log(`Using database at: ${dbPath}`);
 const db = new sqlite3.Database(dbPath);
 
-// Helper function to run SQL as a promise
-const runAsync = promisify(db.run.bind(db));
-const getAsync = promisify(db.get.bind(db));
-const allAsync = promisify(db.all.bind(db));
-const execAsync = promisify(db.exec.bind(db));
+// Note: We're using callbacks directly instead of promisified versions
+// because we need to handle type casting properly
 
 // Enable foreign keys
 db.run('PRAGMA foreign_keys = ON');
@@ -31,11 +57,57 @@ db.exec(`
         indices TEXT,
         wiktionary TEXT
     )
-`, (err) => {
+`, async (err) => {
     if (err) {
         console.error('Error creating table:', err);
     } else {
         console.log('Table created or already exists');
+
+        // Check if the database is empty
+        db.get('SELECT COUNT(*) as count FROM words', async (err, row: { count: number }) => {
+            if (err) {
+                console.error('Error checking if database is empty:', err);
+                return;
+            }
+
+            const count = row.count;
+            console.log(`Database contains ${count} words`);
+
+            // If the database is empty and the YAML dump exists, restore from it
+            if (count === 0 && existsSync(yamlDumpPath)) {
+                console.log(`Database is empty. Restoring from ${yamlDumpPath}...`);
+                try {
+                    // Read the YAML file
+                    const yamlData = await fs.readFile(yamlDumpPath, 'utf-8');
+                    const words: WordData[] = parse(yamlData) as WordData[];
+
+                    console.log(`Found ${words.length} words in the YAML dump`);
+
+                    // Insert all words
+                    const insertPromises = words.map(word => {
+                        return new Promise<void>((resolve, reject) => {
+                            db.run(
+                                'INSERT INTO words (word, indices, wiktionary) VALUES (?, ?, ?)',
+                                [word.word, JSON.stringify(word.indices), word.wiktionary],
+                                (err) => {
+                                    if (err) {
+                                        console.error(`Error inserting word '${word.word}':`, err);
+                                        reject(err);
+                                    } else {
+                                        resolve();
+                                    }
+                                }
+                            );
+                        });
+                    });
+
+                    await Promise.all(insertPromises);
+                    console.log(`Successfully restored ${words.length} words to the database`);
+                } catch (error) {
+                    console.error('Error restoring database from JSON dump:', error);
+                }
+            }
+        });
     }
 });
 
@@ -71,7 +143,7 @@ export async function getWordData(word: string): Promise<WordData | undefined> {
         db.get(
             'SELECT word, indices, wiktionary FROM words WHERE word = ?',
             [normalizedWord],
-            (err, row) => {
+            (err, row: { word: string, indices: string, wiktionary: string | null } | undefined) => {
                 if (err) {
                     console.error('Error getting word:', err);
                     reject(err);
@@ -97,7 +169,7 @@ export async function getWordData(word: string): Promise<WordData | undefined> {
 
 export async function getAllWords(): Promise<WordData[]> {
     return new Promise((resolve, reject) => {
-        db.all('SELECT word, indices, wiktionary FROM words', (err, rows) => {
+        db.all('SELECT word, indices, wiktionary FROM words', (err, rows: Array<{ word: string, indices: string, wiktionary: string | null }>) => {
             if (err) {
                 console.error('Error getting all words:', err);
                 reject(err);

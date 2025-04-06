@@ -1,11 +1,13 @@
 # app
 words.db
-words.db-wal
+words.db-wal # keep them if we switch back to better-sqlite3
 words.db-shm
+words-dump.json
 
 # personal saved files
 
 **/*.sv.*
+**/*.bak
 
 # building
 /node_modules
