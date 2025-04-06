@@ -4,39 +4,39 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
+		"postinstall": "node scripts/postinstall.js",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"process-content": "tsx scripts/processContent.ts",
+		"analyze-words": "tsx scripts/analyzeWords.ts"
 	},
 	"devDependencies": {
 		"@skeletonlabs/skeleton": "^3.1.2",
 		"@skeletonlabs/skeleton-svelte": "^1.1.0",
 		"@sveltejs/adapter-auto": "^4.0.0",
-		"@sveltejs/kit": "^2.16.0",
-		"@sveltejs/vite-plugin-svelte": "^5.0.0",
-		"@tailwindcss/forms": "^0.5.9",
-		"@tailwindcss/typography": "^0.5.15",
-		"@tailwindcss/vite": "^4.0.0",
-		"lucide-svelte": "^0.487.0",
-		"svelte": "^5.0.0",
-		"svelte-check": "^4.0.0",
-		"tailwindcss": "^4.0.0",
-		"typescript": "^5.0.0",
-		"vite": "^6.2.5",
+		"@sveltejs/kit": "^2.20.3",
+		"@sveltejs/vite-plugin-svelte": "^5.0.3",
+		"@tailwindcss/forms": "^0.5.10",
+		"@tailwindcss/typography": "^0.5.16",
+		"@tailwindcss/vite": "^4.1.2",
 		"@types/jsdom": "^21.1.7",
-		"@types/node": "^22.13.17"
-	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"esbuild"
-		]
+		"@types/node": "^22.14.0",
+		"lucide-svelte": "^0.487.0",
+		"svelte": "^5.25.6",
+		"svelte-check": "^4.1.5",
+		"tailwindcss": "^4.1.2",
+		"tsx": "^4.19.3",
+		"typescript": "^5.8.2",
+		"vite": "^6.2.5"
 	},
 	"dependencies": {
 		"@rich_harris/svelte-split-pane": "^2.0.0",
 		"better-sqlite3": "^11.9.1",
-		"jsdom": "^26.0.0"
+		"jsdom": "^26.0.0",
+		"sqlite3": "^5.1.7"
 	}
 }

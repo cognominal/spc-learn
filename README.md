@@ -103,7 +103,15 @@ pnpm run process-content
 pnpm run dev
 ```
 
-4. Open your browser to `http://localhost:5173`
+4. Open your browser to `http://localhost:5173` (5173 or the chosen port)
+
+    Shortcuts
+     press r + enter to restart the server
+     press u + enter to show server url
+     press o + enter to open in browser
+     press c + enter to clear console
+     press q + enter to quit
+
 
 ## Building
 
@@ -147,3 +155,21 @@ tw one.
       <!-- <div class="h-full p-4 overflow-y-auto"> -->
       <div style="height: 100%; overflow-y: auto;" 
 ```
+
+## File processing
+
+We started from a session in grok about Soljenitzine's address.
+We need to use the format for further document.
+The current downside is that the layout in paragraphs is lost
+
+We got a file from grok in `/static/raw-file-from-grok.html`.
+We process it to suit our purpose. Most notably we create a
+span for each russian word
+
+```html
+<span class="russian-word" data-word="Я">Я</span> 
+```
+
+When loading the page or when the page is loaded it.
+We may chose to hide section (for example to keep only russian )
+[See](#later)

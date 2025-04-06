@@ -3,6 +3,10 @@ words.db
 words.db-wal
 words.db-shm
 
+# personal saved files
+
+**/*.sv.*
+
 # building
 /node_modules
 /coverage

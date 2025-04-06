@@ -1,4 +1,5 @@
-import Database from 'better-sqlite3';
+import sqlite3 from 'sqlite3';
+import { promisify } from 'util';
 
 interface WordData {
     word: string;
@@ -8,14 +9,20 @@ interface WordData {
 
 import path from 'path';
 
-// Open database with better-sqlite3 using an absolute path
+// Open database with sqlite3 using an absolute path
 const dbPath = path.resolve(process.cwd(), 'words.db');
 console.log(`Using database at: ${dbPath}`);
-const db = new Database(dbPath);
+const db = new sqlite3.Database(dbPath);
 
-// Enable foreign keys and WAL mode for better performance
-db.pragma('foreign_keys = ON');
-db.pragma('journal_mode = WAL');
+// Helper function to run SQL as a promise
+const runAsync = promisify(db.run.bind(db));
+const getAsync = promisify(db.get.bind(db));
+const allAsync = promisify(db.all.bind(db));
+const execAsync = promisify(db.exec.bind(db));
+
+// Enable foreign keys
+db.run('PRAGMA foreign_keys = ON');
+db.run('PRAGMA journal_mode = WAL');
 
 // Create table if it doesn't exist
 db.exec(`
@@ -24,75 +31,106 @@ db.exec(`
         indices TEXT,
         wiktionary TEXT
     )
-`);
+`, (err) => {
+    if (err) {
+        console.error('Error creating table:', err);
+    } else {
+        console.log('Table created or already exists');
+    }
+});
 
-// Prepare statements for better performance
-const insertStmt = db.prepare(`
-    INSERT OR REPLACE INTO words (word, indices, wiktionary)
-    VALUES (?, ?, ?)
-`);
-
-const getWordStmt = db.prepare(`
-    SELECT word, indices, wiktionary
-    FROM words
-    WHERE word = ?
-`);
-
-const getAllWordsStmt = db.prepare(`
-    SELECT word, indices, wiktionary
-    FROM words
-`);
-
-export function storeWordData(word: string, indices: number[], wiktionary: string | null): void {
+export async function storeWordData(word: string, indices: number[], wiktionary: string | null): Promise<void> {
     // Normalize the word to ensure consistent storage
     const normalizedWord = word.toLowerCase().trim();
 
     console.log(`Storing word in database: '${normalizedWord}'`);
-    insertStmt.run(normalizedWord, JSON.stringify(indices), wiktionary);
+    return new Promise((resolve, reject) => {
+        db.run(
+            'INSERT OR REPLACE INTO words (word, indices, wiktionary) VALUES (?, ?, ?)',
+            [normalizedWord, JSON.stringify(indices), wiktionary],
+            (err) => {
+                if (err) {
+                    console.error('Error storing word:', err);
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            }
+        );
+    });
 }
 
-export function getWordData(word: string): WordData | undefined {
+export async function getWordData(word: string): Promise<WordData | undefined> {
     // Normalize the word to ensure consistent lookup
     const normalizedWord = word.toLowerCase().trim();
 
     // Debug log to track lookups
     console.log(`Looking up word in database: '${normalizedWord}'`);
 
-    const row = getWordStmt.get(normalizedWord);
+    return new Promise((resolve, reject) => {
+        db.get(
+            'SELECT word, indices, wiktionary FROM words WHERE word = ?',
+            [normalizedWord],
+            (err, row) => {
+                if (err) {
+                    console.error('Error getting word:', err);
+                    reject(err);
+                    return;
+                }
 
-    if (!row) {
-        console.log(`Word '${normalizedWord}' not found in database`);
-        return undefined;
-    }
+                if (!row) {
+                    console.log(`Word '${normalizedWord}' not found in database`);
+                    resolve(undefined);
+                    return;
+                }
 
-    console.log(`Found word '${normalizedWord}' in database`);
-    return {
-        word: row.word,
-        indices: JSON.parse(row.indices),
-        wiktionary: row.wiktionary
-    };
+                console.log(`Found word '${normalizedWord}' in database`);
+                resolve({
+                    word: row.word,
+                    indices: JSON.parse(row.indices),
+                    wiktionary: row.wiktionary
+                });
+            }
+        );
+    });
 }
 
-export function getAllWords(): WordData[] {
-    const rows = getAllWordsStmt.all();
-    return rows.map(row => ({
-        word: row.word,
-        indices: JSON.parse(row.indices),
-        wiktionary: row.wiktionary
-    }));
+export async function getAllWords(): Promise<WordData[]> {
+    return new Promise((resolve, reject) => {
+        db.all('SELECT word, indices, wiktionary FROM words', (err, rows) => {
+            if (err) {
+                console.error('Error getting all words:', err);
+                reject(err);
+                return;
+            }
+
+            resolve(rows.map(row => ({
+                word: row.word,
+                indices: JSON.parse(row.indices),
+                wiktionary: row.wiktionary
+            })));
+        });
+    });
 }
 
 // Function to check if the database is working correctly
-export function checkDatabase(): void {
+export async function checkDatabase(): Promise<void> {
     try {
         // Check if we can execute a simple query
-        const count = db.prepare('SELECT COUNT(*) as count FROM words').get();
+        const countPromise = new Promise<{ count: number }>((resolve, reject) => {
+            db.get('SELECT COUNT(*) as count FROM words', (err, row) => {
+                if (err) reject(err);
+                else resolve(row as { count: number });
+            });
+        });
+
+        const count = await countPromise;
         console.log(`Database check: Found ${count.count} words in the database`);
 
         // Try to insert and retrieve a test word
         const testWord = 'test_word_' + Date.now();
-        storeWordData(testWord, [0], 'Test definition');
-        const retrieved = getWordData(testWord);
+        await storeWordData(testWord, [0], 'Test definition');
+        const retrieved = await getWordData(testWord);
 
         if (retrieved && retrieved.word === testWord) {
             console.log('Database check: Successfully inserted and retrieved a test word');

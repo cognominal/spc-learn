@@ -1,6 +1,6 @@
 <script lang="ts">
   import "../app.css";
-  
+
   let { children } = $props();
 
   import { AppBar } from "@skeletonlabs/skeleton-svelte";
@@ -8,6 +8,7 @@
   import { Paperclip } from "lucide-svelte";
   import { Calendar } from "lucide-svelte";
   import { CircleUser } from "lucide-svelte";
+  // import { Github } from ???
 </script>
 
 <div class="sticky top-0 z-10 bg-red-500 backdrop-blur-sm">
@@ -20,9 +21,9 @@
       <Calendar size={20} />
       <CircleUser size={20} />
     {/snippet}
-    {#snippet headline()}
+    <!-- {#snippet headline()}
       <h2 class="h2">Headline</h2>
-    {/snippet}
+    {/snippet} -->
   </AppBar>
 </div>
 {@render children()}

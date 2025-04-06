@@ -18,7 +18,7 @@ async function processWords(words: string[]) {
                 new URL('./workers/wiktionaryWorker.ts', import.meta.url),
                 { type: 'module' }
             );
-            
+
             worker.postMessage({ word });
             return new Promise((resolve, reject) => {
                 worker.onmessage = (e) => {
@@ -45,11 +45,11 @@ export function contentProcessor(): Plugin {
         name: 'content-processor',
         async buildStart() {
             if (processed) return;
-            
+
             try {
                 console.log('📚 Starting content processing...');
                 const htmlContent = await fs.readFile(
-                    path.join(process.cwd(), 'static', 't.html'),
+                    path.join(process.cwd(), 'static', 'raw-file-from-grok.html'),
                     'utf-8'
                 );
 
@@ -65,7 +65,7 @@ export function contentProcessor(): Plugin {
                 const processedHtml = bodyMatch ? bodyMatch[1] : html;
 
                 await fs.writeFile(
-                    path.join(process.cwd(), 'static', 'processed.html'),
+                    path.join(process.cwd(), 'static', 'grok-processed-file.html'),
                     processedHtml,
                     'utf-8'
                 );

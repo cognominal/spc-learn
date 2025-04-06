@@ -38,7 +38,7 @@ async function main() {
     try {
         console.log('Reading HTML content...');
         const htmlContent = await fs.readFile(
-            path.join(process.cwd(), 'static', 't.html'),
+            path.join(process.cwd(), 'static', 'raw-file-from-grok.html'),
             'utf-8'
         );
 
@@ -47,7 +47,7 @@ async function main() {
 
         // Filter words that aren't in the database
         const newWords = words.filter(word => !getWordData(word));
-        
+
         if (newWords.length > 0) {
             console.log(`Processing ${newWords.length} new words...`);
             await processWords(newWords);
@@ -58,7 +58,7 @@ async function main() {
         const processedHtml = bodyMatch ? bodyMatch[1] : html;
 
         await fs.writeFile(
-            path.join(process.cwd(), 'static', 'processed.html'),
+            path.join(process.cwd(), 'static', 'grok-processed-file.html'),
             processedHtml,
             'utf-8'
         );

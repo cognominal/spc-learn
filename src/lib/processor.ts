@@ -47,11 +47,42 @@ function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function wrapEnglishSentences(doc: Document): void {
+    console.log("wrap en");
+    // Find all <li> elements
+    const listItems = document.querySelectorAll('li');
+
+    // Loop through each <li> to find the matching <strong>
+    listItems.forEach(li => {
+        const strong = li.querySelector('strong');
+        if (strong && strong.textContent!.trim() === 'English:') {
+            const nextSibling = strong.nextElementSibling;
+            if (nextSibling) {
+                // Create a new span element
+                const span = document.createElement('span');
+                span.setAttribute('data-lang', 'en-sent');
+
+                // Move both the <strong> and its next sibling into the span
+                span.appendChild(strong.cloneNode(true)); // Clone to avoid moving directly
+                span.appendChild(nextSibling.cloneNode(true));
+
+                // Replace the original <strong> with the new span
+                strong.parentNode!.insertBefore(span, strong);
+
+                // Remove the original <strong> and next sibling
+                strong.remove();
+                nextSibling.remove();
+            }
+        }
+    });
+}
+
 export async function processContent(html: string, fetchDefinitions: boolean = false) {
     const dom = new JSDOM(html);
     const doc = dom.window.document;
     const uniqueWords = new Set<string>();
     const wordIndices: Map<string, number[]> = new Map();
+    wrapEnglishSentences(doc);
 
     // Process text nodes and wrap Russian words with spans
     function processNode(node: Node) {
