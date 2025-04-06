@@ -137,7 +137,7 @@ export async function getWordData(word: string): Promise<WordData | undefined> {
     const normalizedWord = word.toLowerCase().trim();
 
     // Debug log to track lookups
-    console.log(`Looking up word in database: '${normalizedWord}'`);
+    // console.log(`Looking up word in database: '${normalizedWord}'`);
 
     return new Promise((resolve, reject) => {
         db.get(
@@ -151,12 +151,12 @@ export async function getWordData(word: string): Promise<WordData | undefined> {
                 }
 
                 if (!row) {
-                    console.log(`Word '${normalizedWord}' not found in database`);
+                    // console.log(`Word '${normalizedWord}' not found in database`);
                     resolve(undefined);
                     return;
                 }
 
-                console.log(`Found word '${normalizedWord}' in database`);
+                // console.log(`Found word '${normalizedWord}' in database`);
                 resolve({
                     word: row.word,
                     indices: JSON.parse(row.indices),
@@ -214,8 +214,56 @@ export async function checkDatabase(): Promise<void> {
     }
 }
 
-// Run the database check when the module is loaded
-checkDatabase();
+// Run the database check when explicitly called, not on module load
+// This allows proper control of when the check happens
 
 // Clean up when the application exits
-process.on('exit', () => db.close());
+// Use a flag to prevent multiple close attempts
+let dbClosed = false;
+
+// Function to safely close the database
+export function closeDatabase(): Promise<void> {
+    return new Promise((resolve, reject) => {
+        if (dbClosed) {
+            resolve();
+            return;
+        }
+
+        dbClosed = true;
+        db.close((err) => {
+            if (err) {
+                console.error('Error closing database:', err);
+                reject(err);
+            } else {
+                console.log('Database closed successfully');
+                resolve();
+            }
+        });
+    });
+}
+
+// Register cleanup handlers
+process.on('exit', () => {
+    if (!dbClosed) {
+        console.log('Process exiting, closing database synchronously');
+        // On exit we can only do synchronous operations
+        try {
+            db.close();
+        } catch (e) {
+            console.error('Error during synchronous database close:', e);
+        }
+    }
+});
+
+// Handle other termination signals
+process.on('SIGINT', async () => {
+    console.log('SIGINT received, closing database');
+    await closeDatabase();
+    process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+    console.log('SIGTERM received, closing database');
+    await closeDatabase();
+    process.exit(0);
+});

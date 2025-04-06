@@ -11,10 +11,11 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"process-content": "tsx scripts/processContent.ts",
-		"analyze-words": "tsx scripts/analyzeWords.ts",
-		"db:dump": "tsx scripts/dumpDatabase.ts",
-		"db:restore": "tsx scripts/restoreDatabase.ts"
+		"process-content": "tsx --tsconfig tsconfig.json scripts/processContent.ts",
+		"analyze-words": "tsx --tsconfig tsconfig.json scripts/analyzeWords.ts",
+		"db:dump": "tsx --tsconfig tsconfig.json scripts/dumpDatabase.ts",
+		"db:restore": "tsx --tsconfig tsconfig.json scripts/restoreDatabase.ts",
+		"augment-db": "tsx --tsconfig tsconfig.json scripts/augmentDB.ts"
 	},
 	"devDependencies": {
 		"@skeletonlabs/skeleton": "^3.1.2",

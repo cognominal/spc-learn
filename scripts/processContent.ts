@@ -1,17 +1,23 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { processContent } from '../src/lib/processor';
+import { processContent } from '$lib/processor';
+import { closeDatabase, checkDatabase } from '$lib/db';
 
 async function main() {
+    // Check if --no-fetch flag is provided
+    const shouldFetchDefinitions = !process.argv.includes('--no-fetch');
+
     try {
+        // Run database check at the beginning
+        await checkDatabase();
         console.log('Reading HTML content...');
         const htmlContent = await fs.readFile(
             path.join(process.cwd(), 'static', 'raw-file-from-grok.html'),
             'utf-8'
         );
 
-        console.log('Processing content and fetching Wiktionary definitions...');
-        const { html, words } = await processContent(htmlContent, true); // Set fetchDefinitions to true
+        console.log(`Processing content${shouldFetchDefinitions ? ' and fetching Wiktionary definitions' : ' without fetching definitions'}...`);
+        const { html, words } = await processContent(htmlContent, shouldFetchDefinitions);
 
         // Ensure we're only returning the body content
         const bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
@@ -31,6 +37,13 @@ async function main() {
         const errorMessage = e instanceof Error ? e.message : String(e);
         console.error('Error processing content:', errorMessage);
         process.exit(1);
+    } finally {
+        // Make sure to close the database connection
+        try {
+            await closeDatabase();
+        } catch (error) {
+            console.error('Error closing database:', error);
+        }
     }
 }
 

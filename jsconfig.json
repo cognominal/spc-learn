@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "$lib": ["src/lib"],
+      "$lib/*": ["src/lib/*"]
+    },
+    "checkJs": true,
+    "resolveJsonModule": true
+  },
+  "include": ["**/*.js", "**/*.ts", "**/*.svelte"],
+  "exclude": ["node_modules", ".svelte-kit"]
+}

@@ -3,6 +3,7 @@ words.db
 words.db-wal # keep them if we switch back to better-sqlite3
 words.db-shm
 words-dump.json
+grok-processed-file.html
 
 # personal saved files
 

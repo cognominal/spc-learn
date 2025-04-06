@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
-import { processContent } from '../src/lib/processor';
-import { getWordData } from '../src/lib/db';
+import { processContent } from '$lib/processor';
+import { getWordData } from '$lib/db';
 
 const CONCURRENT_WORKERS = 4; // Adjust based on your needs
 

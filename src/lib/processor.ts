@@ -143,6 +143,76 @@ function wrapEnglishSentences(doc: Document): void {
 }
 
 /**
+ * Recursively identifies and wraps Russian words in DOM nodes
+ *
+ * This function:
+ * 1. Identifies text nodes containing Russian words
+ * 2. Wraps each Russian word in a span with appropriate classes and data attributes
+ * 3. Collects information about each word's occurrences
+ * 4. Recursively processes child nodes
+ *
+ * @param node - The DOM node to process
+ * @param doc - The Document object containing the node
+ * @param uniqueWords - Set to collect unique Russian words
+ * @param wordIndices - Map to track word occurrences and their positions
+ */
+function findAndWrapRussianWords(node: Node, doc: Document, uniqueWords: Set<string>, wordIndices: Map<string, number[]>) {
+    if (node.nodeType === 3) { // Text node
+        const text = node.textContent || '';
+        const russianPattern = /[а-яёА-ЯЁ]+/g;
+        let match;
+
+        while ((match = russianPattern.exec(text)) !== null) {
+            const word = match[0].toLowerCase();
+            uniqueWords.add(word);
+
+            // Store the index for this occurrence
+            if (!wordIndices.has(word)) {
+                wordIndices.set(word, []);
+            }
+            wordIndices.get(word)?.push(match.index);
+        }
+
+        // Create spans for visual highlighting
+        const words = text.match(russianPattern) || [];
+        if (words.length > 0) {
+            const fragment = doc.createDocumentFragment();
+            let lastIndex = 0;
+
+            words.forEach(word => {
+                const index = text.indexOf(word, lastIndex);
+
+                if (index > lastIndex) {
+                    fragment.appendChild(
+                        doc.createTextNode(text.slice(lastIndex, index))
+                    );
+                }
+
+                const wrapper = doc.createElement('span');
+                wrapper.className = 'russian-word';
+                wrapper.setAttribute('data-word', word);
+                wrapper.textContent = word;
+                fragment.appendChild(wrapper);
+
+                lastIndex = index + word.length;
+            });
+
+            if (lastIndex < text.length) {
+                fragment.appendChild(
+                    doc.createTextNode(text.slice(lastIndex))
+                );
+            }
+
+            node.parentNode?.replaceChild(fragment, node);
+        }
+    } else {
+        Array.from(node.childNodes).forEach(childNode =>
+            findAndWrapRussianWords(childNode, doc, uniqueWords, wordIndices)
+        );
+    }
+}
+
+/**
  * Main function for processing HTML content with Russian text
  *
  * This function:
@@ -163,72 +233,8 @@ export async function processContent(html: string, fetchDefinitions: boolean = f
     const wordIndices: Map<string, number[]> = new Map();
     wrapEnglishSentences(doc);
 
-    /**
-     * Recursively processes nodes in the DOM to find and wrap Russian words
-     *
-     * This function:
-     * 1. Identifies text nodes containing Russian words
-     * 2. Wraps each Russian word in a span with appropriate classes and data attributes
-     * 3. Collects information about each word's occurrences
-     * 4. Recursively processes child nodes
-     *
-     * @param node - The DOM node to process
-     */
-    function processNode(node: Node) {
-        if (node.nodeType === 3) { // Text node
-            const text = node.textContent || '';
-            const russianPattern = /[а-яёА-ЯЁ]+/g;
-            let match;
-
-            while ((match = russianPattern.exec(text)) !== null) {
-                const word = match[0].toLowerCase();
-                uniqueWords.add(word);
-
-                // Store the index for this occurrence
-                if (!wordIndices.has(word)) {
-                    wordIndices.set(word, []);
-                }
-                wordIndices.get(word)?.push(match.index);
-            }
-
-            // Create spans for visual highlighting
-            const words = text.match(russianPattern) || [];
-            if (words.length > 0) {
-                const fragment = doc.createDocumentFragment();
-                let lastIndex = 0;
-
-                words.forEach(word => {
-                    const index = text.indexOf(word, lastIndex);
-
-                    if (index > lastIndex) {
-                        fragment.appendChild(
-                            doc.createTextNode(text.slice(lastIndex, index))
-                        );
-                    }
-
-                    const wrapper = doc.createElement('span');
-                    wrapper.className = 'russian-word';
-                    wrapper.setAttribute('data-word', word);
-                    wrapper.textContent = word;
-                    fragment.appendChild(wrapper);
-
-                    lastIndex = index + word.length;
-                });
-
-                if (lastIndex < text.length) {
-                    fragment.appendChild(
-                        doc.createTextNode(text.slice(lastIndex))
-                    );
-                }
-
-                node.parentNode?.replaceChild(fragment, node);
-            }
-        } else {
-            Array.from(node.childNodes).forEach(processNode);
-        }
-    }
-
-    processNode(doc.body);
+    // Process the document to find and wrap Russian words
+    findAndWrapRussianWords(doc.body, doc, uniqueWords, wordIndices);
 
     /**
      * Optional step: Fetch and store Wiktionary definitions for all found words
@@ -257,7 +263,7 @@ export async function processContent(html: string, fetchDefinitions: boolean = f
 
             if (existingWordData && existingWordData.wiktionary) {
                 // Word already exists with Wiktionary content, just update indices if needed
-                console.log(`Word '${word}' already in database, skipping fetch.`);
+                // console.log(`Word '${word}' already in database, skipping fetch.`);
 
                 // Update indices if they've changed
                 if (JSON.stringify(existingWordData.indices) !== JSON.stringify(indices)) {
@@ -275,7 +281,10 @@ export async function processContent(html: string, fetchDefinitions: boolean = f
 
                 // Add a small delay to avoid overwhelming the Wiktionary API
                 // Only delay for words that needed to be fetched
-                await delay(1000);
+                // This delay is only needed when actually fetching from Wiktionary
+                if (wiktionaryContent !== null) {
+                    await delay(1000);
+                }
             }
         }
     }
