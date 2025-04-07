@@ -12,10 +12,13 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"process-content": "tsx --tsconfig tsconfig.json scripts/processContent.ts",
+		"process-html": "tsx --tsconfig tsconfig.json scripts/processHtml.ts",
 		"analyze-words": "tsx --tsconfig tsconfig.json scripts/analyzeWords.ts",
+		"analyze-common-words": "tsx --tsconfig tsconfig.json scripts/analyze-common-words.ts",
 		"db:dump": "tsx --tsconfig tsconfig.json scripts/dumpDatabase.ts",
 		"db:restore": "tsx --tsconfig tsconfig.json scripts/restoreDatabase.ts",
-		"augment-db": "tsx --tsconfig tsconfig.json scripts/augmentDB.ts"
+		"augment-db": "tsx --tsconfig tsconfig.json scripts/augmentDB.ts",
+		"add-common-words": "tsx --tsconfig tsconfig.json scripts/add-common-words.ts"
 	},
 	"devDependencies": {
 		"@skeletonlabs/skeleton": "^3.1.2",

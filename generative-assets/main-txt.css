@@ -1,0 +1,84 @@
+/*
+ * Main CSS for processed text
+ * ==========================
+ *
+ * This file contains styles for the processed HTML content.
+ */
+
+/* Base styles */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+}
+
+/* Russian word styles */
+span[data-lang="ru"] {
+    color: #0066cc;
+    cursor: pointer;
+    position: relative;
+}
+
+span[data-lang="ru"]:hover {
+    background-color: #e6f0ff;
+    border-bottom: 1px dotted #0066cc;
+}
+
+/* Common Russian word styles */
+span[data-lang="ru"][data-common="true"] {
+    color: #6699cc; /* Lighter color for common words */
+    background-color: transparent;
+}
+
+span[data-lang="ru"][data-common="true"]:hover {
+    background-color: #f0f7ff;
+    border-bottom: 1px dotted #6699cc;
+}
+
+/* English word styles */
+span[data-lang="en-word"] {
+    color: #006600;
+    cursor: pointer;
+}
+
+span[data-lang="en-word"]:hover {
+    background-color: #e6ffe6;
+    border-bottom: 1px dotted #006600;
+}
+
+/* Tooltip styles (for future use) */
+.tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 100;
+    white-space: nowrap;
+    display: none;
+}
+
+span[data-lang="ru"]:hover .tooltip {
+    display: block;
+}
+
+/* Add a small arrow to the tooltip */
+.tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}

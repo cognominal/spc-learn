@@ -103,42 +103,71 @@ function delay(ms: number): Promise<void> {
 }
 
 /**
- * Wraps English translations in special span elements for styling and interaction
+ * Wraps individual English words in special span elements for styling and interaction
  *
- * This function finds all list items containing "English:" labels and wraps both
- * the label and the translation text in a span with a data attribute for targeting
- * with CSS and JavaScript.
+ * This function finds all text following "English:" labels and wraps each individual
+ * English word in a span with a data attribute for targeting with CSS and JavaScript.
  *
  * @param doc - The Document object to operate on
  */
-function wrapEnglishSentences(doc: Document): void {
+function wrapEnglishWords(doc: Document): void {
     console.log("wrap en");
-    // Find all <li> elements
-    const listItems = doc.querySelectorAll('li');
+    // Find all <strong> elements with 'English:' text
+    const englishLabels = Array.from(doc.querySelectorAll('strong')).filter(
+        strong => strong.textContent?.trim() === 'English:'
+    );
 
-    // Loop through each <li> to find the matching <strong>
-    listItems.forEach(li => {
-        const strong = li.querySelector('strong');
-        if (strong && strong.textContent!.trim() === 'English:') {
-            const nextSibling = strong.nextElementSibling;
-            if (nextSibling) {
-                // Create a new span element with a data attribute for targeting
-                const span = doc.createElement('span');
-                span.setAttribute('data-lang', 'en-sent');
+    console.log(`Found ${englishLabels.length} English labels to process`);
 
-                // Move both the <strong> and its next sibling into the span
-                // We clone the nodes to avoid DOM manipulation issues
-                span.appendChild(strong.cloneNode(true));
-                span.appendChild(nextSibling.cloneNode(true));
+    // Process each English label
+    englishLabels.forEach(strong => {
+        // Get the text node that follows the <strong> element
+        let currentNode = strong.nextSibling;
+        let englishText = '';
 
-                // Replace the original <strong> with the new span
-                strong.parentNode!.insertBefore(span, strong);
-
-                // Remove the original <strong> and next sibling
-                strong.remove();
-                nextSibling.remove();
-            }
+        // Collect all text until the next element or end of parent
+        while (currentNode && currentNode.nodeType === 3) { // Text node
+            englishText += currentNode.textContent;
+            const nextNode = currentNode.nextSibling;
+            currentNode.remove(); // Remove the text node as we process it
+            currentNode = nextNode;
         }
+
+        // Create a document fragment to hold the processed content
+        const fragment = doc.createDocumentFragment();
+
+        // Add the original strong element
+        fragment.appendChild(strong.cloneNode(true));
+
+        // Split the English text into words and wrap each word
+        const words = englishText.trim().split(/\s+/);
+        let wordCount = 0;
+
+        // Process each word
+        words.forEach((word, index) => {
+            // Skip empty words
+            if (!word) return;
+
+            // Create a span for the word
+            const wordSpan = doc.createElement('span');
+            wordSpan.setAttribute('data-lang', 'en');
+            wordSpan.textContent = word;
+
+            // Add the word span to the fragment
+            fragment.appendChild(wordSpan);
+            wordCount++;
+
+            // Add a space after each word (except the last one)
+            if (index < words.length - 1) {
+                fragment.appendChild(doc.createTextNode(' '));
+            }
+        });
+
+        // Replace the original <strong> with the fragment
+        strong.parentNode!.insertBefore(fragment, strong);
+        strong.remove();
+
+        console.log(`Wrapped ${wordCount} English words`);
     });
 }
 
@@ -224,14 +253,15 @@ function findAndWrapRussianWords(node: Node, doc: Document, uniqueWords: Set<str
  *
  * @param html - The HTML content to process
  * @param fetchDefinitions - Whether to fetch definitions from Wiktionary (default: false)
+ * @param skipDatabase - Whether to skip all database operations (default: false)
  * @returns An object containing the processed HTML and an array of unique words
  */
-export async function processContent(html: string, fetchDefinitions: boolean = false) {
+export async function processContent(html: string, fetchDefinitions: boolean = false, skipDatabase: boolean = false) {
     const dom = new JSDOM(html);
     const doc = dom.window.document;
     const uniqueWords = new Set<string>();
     const wordIndices: Map<string, number[]> = new Map();
-    wrapEnglishSentences(doc);
+    wrapEnglishWords(doc);
 
     // Process the document to find and wrap Russian words
     findAndWrapRussianWords(doc.body, doc, uniqueWords, wordIndices);
@@ -244,8 +274,10 @@ export async function processContent(html: string, fetchDefinitions: boolean = f
      * 2. If not, fetches its definition from Wiktionary
      * 3. Stores the word, its indices, and definition in the database
      * 4. Adds delays between requests to avoid overwhelming the Wiktionary API
+     *
+     * This step is skipped if skipDatabase is true
      */
-    if (fetchDefinitions) {
+    if (fetchDefinitions && !skipDatabase) {
         // Store all found words in the database with their Wiktionary content
         for (const word of uniqueWords) {
             const indices = wordIndices.get(word) || [];

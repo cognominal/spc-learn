@@ -118,7 +118,7 @@
   }
 </script>
 
-<main class="w-full h-screen mx-auto p-5 flex flex-col">
+<main class="w-full h-screen mx-auto p-5 flex flex-col overflow-hidden">
   <SplitPane
     type="vertical"
     id="main-split"
@@ -129,12 +129,13 @@
     --thickness="4px"
   >
     {#snippet a()}
-      <section class="overflow-y-auto text-black bg-white p-4 h-full">
+      <section class="text-black bg-white p-4 h-full w-full overflow-hidden">
         {#if data?.processedHtml}
           <div
-            class="w-full"
+            class="w-full h-full overflow-y-auto"
+            style="max-height: 100%; overflow-y: auto;"
             onclick={(e) => handleClick(e, pageState)}
-            onkeydown={(e) => e.key === "Enter" && handleClick(e)}
+            onkeydown={(e) => e.key === "Enter" && handleClick(e, pageState)}
             role="textbox"
             tabindex="0"
             aria-label="Russian text with clickable words"
@@ -173,7 +174,6 @@
     {/snippet}
   </SplitPane>
 </main>
-b
 
 <style>
   :global(.russian-word) {

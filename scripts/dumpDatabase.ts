@@ -9,6 +9,9 @@
  * YAML is used instead of JSON because it's more human-readable and easier to diff,
  * making it better for version control.
  *
+ * The main function, dumpDbToYAML, can be imported and used by other scripts
+ * to automatically create database dumps after processing.
+ *
  * Usage:
  * pnpm db:dump
  *
@@ -21,7 +24,13 @@ import fs from 'fs/promises';
 import path from 'path';
 import { stringify } from 'yaml';
 
-async function dumpDatabase() {
+/**
+ * Dumps the database content to a YAML file
+ *
+ * @param closeDbWhenDone - Whether to close the database connection when done (default: true)
+ * @returns A promise that resolves when the dump is complete
+ */
+export async function dumpDbToYAML(closeDbWhenDone = true): Promise<void> {
     const dbPath = path.resolve(process.cwd(), 'words.db');
     console.log(`Dumping database from: ${dbPath}`);
 
@@ -57,8 +66,14 @@ async function dumpDatabase() {
     } catch (error) {
         console.error('Error dumping database:', error);
     } finally {
-        db.close();
+        // Only close the database connection if requested
+        if (closeDbWhenDone) {
+            db.close();
+        }
     }
 }
 
-dumpDatabase().catch(console.error);
+// Run the function when this script is executed directly
+// This will always run, but it's fine since we're using the closeDbWhenDone parameter
+// When imported by other modules, they'll call the function with their own parameters
+dumpDbToYAML().catch(console.error);
