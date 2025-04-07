@@ -2,16 +2,25 @@
 
 I got up to a relatively sane state with a lot of code produced
 by augment which helps to develop from a semi real example, the
-Soljenitzine's address. This list should help to go forward.
+Soljenitzine's address. This list should help to go forward and track progress.
 
-* cleaning
+## cleaning
 
- [ ] words-dump.yaml should be done alphabetically for a smaller diff
+* [ ] words-dump.yaml should be done alphabetically for a smaller diff
 
-* new routes/pages
-  * [ ] a route for learning the grammars term so as to be able to read the wiktionary pages in the target language (now russian)
+## deploy
+
+* [ ] deploy on [vercel](https://vercel.com/)
+
+## new routes/pages
+* [ ] a route for learning the grammars terma so as to be able to read the wiktionary pages in the target language (now russian)
 * [ ] a route for the 1000 more common words grouped by their non inflexion form. Need to find examples.
 * [ ] an about page
+* [ ] and admin route to facilitate import of traductions, like verifying if the original and the translation match.
+
+## features
+
+* [ ] choice of wiktionary language (see /grammar route)
 
 * [ ] space repetition learning (the big item?)
 * [x] a cleant up [raw-file-from-grok.html](static/raw-file-from-grok.html)
@@ -27,13 +36,40 @@ Soljenitzine's address. This list should help to go forward.
     * [x] demphasize of common words (marked as data-common)
     * [ ] instead of a list of common words, derive it from the db. 
     * [ ] create a widget to change the proportion of words deemed as common
-  * [ ] tabbing over words and display defn of the current one
+  * [ ] tabbing over non common words and display defn of the current one. or maybe two modes. tabbing over sentences or words. Currently it navigates between the left over of grok items
   *  hovering a word should higlight the word and its translation
     * [ ] data comes from a teacher mode. The teacher should click a word then its translation so that hover one highlights the other
 * wiktionary definition panel
    * [ ] clicking on a word should produce its definition. It worked, now broken
    * [ ] it should also show the non inflexed form
 * [ ] using a ts adapter to sqlite
-* [ ] some logic to support many documents and their translation. How to ask grok to produce
+* [ ] some logic to support many documents and their translation. How to ask grok to produce suitable document
 * [ ] a list of documents. Little prince comess to mind. And some Poutine, Lavrov addresses, but that's my bias.
 * [ ] Using AI. I am using AI to produce the code. But AI should be used to learn russian as well. How ?
+* [ ] dark mode
+
+## Annoyances
+
+small bugs that should be fixed
+
+On initial click, we are on a new presentation with
+the current sentence emphasized and the rest deemphasized
+
+[ ] weird jump on initial click
+[ ] maybe some transition after clicking
+[ ] inconsistency. the strong "english/russian" are left on first click but hidden after
+[ ] the beginning of the address is lost
+[ ] there shouild be no lower panel at the beginning
+[ ] random icons on the header. make it functionnal
+
+## to investigate and fix
+
+I want to go full tw. But below the vanilla way and the tw way are not
+equivalent as they should be. Probably some css rule take precedence of the
+tw one.
+
+```svelte
+    {#snippet a()}
+      <!-- <div class="h-full p-4 overflow-y-auto"> -->
+      <div style="height: 100%; overflow-y: auto;"
+```

@@ -33,7 +33,7 @@ So I start with a clean slate.
 Note : specifying the desired feature is preparing a prompt to augment.
 
 Getting back the code of before with the features. Need better features that
-leverage a cleaner UI. 
+leverage a cleaner UI.
 
 
 Need a mode with only the russian sentences with the original paragraph layout.
@@ -65,26 +65,32 @@ Use a ts interace for sql.
 ## Technical Stack
 
 ### Core Framework & UI
-- **SvelteKit 2.16.0** - Full-stack web application framework
-- **Svelte 5.0.0** - Component framework with runes support
-- **TypeScript** - Type-safe JavaScript
-- **Vite 6.2.5** - Build tool and dev server
+- [**SvelteKit 2.16.0**](https://kit.svelte.dev/) - Full-stack web application framework ([GitHub](https://github.com/sveltejs/kit))
+- [**Svelte 5.0.0**](https://svelte.dev/) - Component framework with runes support ([GitHub](https://github.com/sveltejs/svelte))
+- [**TypeScript**](https://www.typescriptlang.org/) - Type-safe JavaScript ([GitHub](https://github.com/microsoft/TypeScript))
+- [**Vite 6.2.5**](https://vitejs.dev/) - Build tool and dev server ([GitHub](https://github.com/vitejs/vite))
 
 ### Styling & UI Components
-- **TailwindCSS 4.0.0** - Utility-first CSS framework
-- **@skeletonlabs/skeleton 3.1.2** - UI component library
-- **@tailwindcss/forms** - Form styling utilities
-- **@tailwindcss/typography** - Typography utilities
-- **lucide-svelte** - Icon library
+- [**TailwindCSS 4.0.0**](https://tailwindcss.com/) - Utility-first CSS framework ([GitHub](https://github.com/tailwindlabs/tailwindcss))
+- [**@skeletonlabs/skeleton 3.1.2**](https://www.skeleton.dev/) - UI component library ([GitHub](https://github.com/skeletonlabs/skeleton))
+- [**@tailwindcss/forms**](https://github.com/tailwindlabs/tailwindcss-forms) - Form styling utilities
+- [**@tailwindcss/typography**](https://tailwindcss.com/docs/typography-plugin) - Typography utilities ([GitHub](https://github.com/tailwindlabs/tailwindcss-typography))
+- [**lucide-svelte**](https://lucide.dev/docs/lucide-svelte) - Icon library ([GitHub](https://github.com/lucide-icons/lucide))
 
 ### Layout Components
-- **@rich_harris/svelte-split-pane 2.0.0** - Resizable split pane layouts
+- [**@rich_harris/svelte-split-pane 2.0.0**](https://www.npmjs.com/package/@rich_harris/svelte-split-pane) - Resizable split pane layouts ([GitHub](https://github.com/Rich-Harris/svelte-split-pane))
 
 ### Database & Content Processing
-- **better-sqlite3** - SQLite database interface
-- **jsdom** - DOM implementation for HTML processing
+- [**sqlite3**](https://github.com/sqlite/sqlite) - SQLite database interface
+- [**jsdom**](https://github.com/jsdom/jsdom) - DOM implementation for HTML processing
 
 ## Development
+
+We assume that the follwing are installed
+*  [nodejs](https://nodejs.org/en), the javascript runtime
+*  pnpm ([docs](https://pnpm.io/), [package](https://www.npmjs.com/package/pnpm)) .
+
+npm, installed with nodejs, should do though 
 
 Use `pnpm` for package management:
 
@@ -140,21 +146,12 @@ pnpm run preview
 - [ ] Add support for additional texts beyond the 1978 Solzhenitsyn address
 - [ ] Improve word definition caching
 
+See also [subgoals](subgoals.md).
+
 ## License
 
 [MIT](LICENSE)
 
-## to investigate and fix
-
-I want to go full tw. But below the vanilla way and the tw way are not
-equivalent as they should be. Probably some css rule take precedence of the
-tw one.
-
-```svelte
-    {#snippet a()}
-      <!-- <div class="h-full p-4 overflow-y-auto"> -->
-      <div style="height: 100%; overflow-y: auto;" 
-```
 
 ## File processing
 
@@ -167,7 +164,7 @@ We process it to suit our purpose. Most notably we create a
 span for each russian word
 
 ```html
-<span class="russian-word" data-word="Я">Я</span> 
+<span class="russian-word" data-word="Я">Я</span>
 ```
 
 When loading the page or when the page is loaded it.
