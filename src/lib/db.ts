@@ -29,7 +29,7 @@ import fs from 'fs/promises';
 import { existsSync } from 'fs';
 import { parse } from 'yaml';
 
-interface WordData {
+export interface WordData {
     word: string;
     indices: number[];
     wiktionary: string | null;

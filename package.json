@@ -1,10 +1,9 @@
 {
-	"name": "my-skeleton-app",
+	"name": "russian-learner",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"postinstall": "node scripts/postinstall.js",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
@@ -18,13 +17,13 @@
 		"db:dump": "tsx --tsconfig tsconfig.json scripts/dumpDatabase.ts",
 		"db:restore": "tsx --tsconfig tsconfig.json scripts/restoreDatabase.ts",
 		"augment-db": "tsx --tsconfig tsconfig.json scripts/augmentDB.ts",
-		"add-common-words": "tsx --tsconfig tsconfig.json scripts/add-common-words.ts"
+		"add-common-words": "tsx --tsconfig tsconfig.json scripts/add-common-words.ts",
+		"prepare-vercel": "node scripts/prepare-for-vercel.js"
 	},
 	"devDependencies": {
 		"@skeletonlabs/skeleton": "^3.1.2",
 		"@skeletonlabs/skeleton-svelte": "^1.1.0",
 		"@sveltejs/adapter-auto": "^4.0.0",
-		"@sveltejs/adapter-vercel": "^5.7.0",
 		"@sveltejs/kit": "^2.20.3",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
 		"@tailwindcss/forms": "^0.5.10",
@@ -43,7 +42,6 @@
 	},
 	"dependencies": {
 		"@rich_harris/svelte-split-pane": "^2.0.0",
-		"better-sqlite3": "^11.9.1",
 		"jsdom": "^26.0.0",
 		"sqlite3": "^5.1.7",
 		"yaml": "^2.7.1"

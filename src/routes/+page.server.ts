@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { getWordData, storeWordData } from '$lib/db';
+import { getWordData, storeWordData } from '$lib/db-adapter';
 import { fetchWiktionaryContent } from '$lib/processor';
 import fs from 'fs/promises';
 import path from 'path';
