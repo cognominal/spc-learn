@@ -11,8 +11,13 @@
   // import { Github } from ???
 </script>
 
-<div class="sticky top-0 z-10 bg-red-500 backdrop-blur-sm">
-  <AppBar>
+<nav class="sticky top-0 z-10 px-2 pt-2">
+  <AppBar
+    background="bg-rose-400"
+    shadow="shadow-lg"
+    border="rounded-lg"
+    classes="drop-shadow-md"
+  >
     {#snippet lead()}
       <ArrowLeft size={24} />
     {/snippet}
@@ -21,9 +26,7 @@
       <Calendar size={20} />
       <CircleUser size={20} />
     {/snippet}
-    <!-- {#snippet headline()}
-      <h2 class="h2">Headline</h2>
-    {/snippet} -->
+    <span class="text-lg font-semibold text-white">Russian Learning</span>
   </AppBar>
-</div>
+</nav>
 {@render children()}
