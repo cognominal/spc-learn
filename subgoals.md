@@ -7,10 +7,13 @@ Soljenitzine's address. This list should help to go forward and track progress.
 ## cleaning
 
 * [ ] words-dump.yaml should be done alphabetically for a smaller diff
+* [ ] use skeleton widgets
+* [ ] support devices of different sizes
 
 ## deploy
 
-* [ ] deploy on [vercel](https://vercel.com/)
+* [ ] deploy on [vercel](https://vercel.com/). vercel has a ro fs so it should not update
+the db.  [render](https://render.com/) should be the preferred choice. Augment has generated code to support both cases
 
 ## new routes/pages
 * [ ] a route for learning the grammars terma so as to be able to read the wiktionary pages in the target language (now russian)
@@ -40,8 +43,9 @@ Soljenitzine's address. This list should help to go forward and track progress.
   *  hovering a word should higlight the word and its translation
     * [ ] data comes from a teacher mode. The teacher should click a word then its translation so that hover one highlights the other
 * wiktionary definition panel
-   * [ ] clicking on a word should produce its definition. It worked, now broken
+   * [] clicking on a word should produce its definition. 
    * [ ] it should also show the non inflexed form
+   * [ ] clicking on a word outside the current section should change the section
 * [ ] using a ts adapter to sqlite
 * [ ] some logic to support many documents and their translation. How to ask grok to produce suitable document
 * [ ] a list of documents. Little prince comess to mind. And some Poutine, Lavrov addresses, but that's my bias.
