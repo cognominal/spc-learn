@@ -1,1 +1,1 @@
-export { handleClick, handleClickRussianWord, PageState } from './eventHandlers';
+export { handleClick, handleClickRussianWord, type PageState } from './eventHandlers';
