@@ -9,6 +9,8 @@ Soljenitzine's address. This list should help to go forward and track progress.
 * [ ] words-dump.yaml should be done alphabetically for a smaller diff
 * [ ] use skeleton widgets
 * [ ] support devices of different sizes
+* [ ] cleaning junk in the defn panel
+* [ ] how to focus on the translation in the defn panel
 
 ## deploy
 
@@ -16,14 +18,14 @@ Soljenitzine's address. This list should help to go forward and track progress.
 the db.  [render](https://render.com/) should be the preferred choice. Augment has generated code to support both cases
 
 ## new routes/pages
-* [ ] a route for learning the grammars terma so as to be able to read the wiktionary pages in the target language (now russian)
+* [ ] a route for learning the grammars terms so as to be able to read the wiktionary pages in the target language (now russian)
 * [ ] a route for the 1000 more common words grouped by their non inflexion form. Need to find examples.
 * [ ] an about page
 * [ ] and admin route to facilitate import of traductions, like verifying if the original and the translation match.
 
 ## features
 
-* [ ] choice of wiktionary language (see /grammar route)
+* [ ] choice of wiktionary language (see /grammar route). means changing the db schema
 
 * [ ] space repetition learning (the big item?)
 * [x] a cleant up [raw-file-from-grok.html](static/raw-file-from-grok.html)
@@ -54,17 +56,19 @@ the db.  [render](https://render.com/) should be the preferred choice. Augment h
 
 ## Annoyances
 
-small bugs that should be fixed
+small bugs that should be fixed. or minor missing features
 
 On initial click, we are on a new presentation with
 the current sentence emphasized and the rest deemphasized
 
-[ ] weird jump on initial click
+[ ] fix weird jump on initial click
 [ ] maybe some transition after clicking
 [ ] inconsistency. the strong "english/russian" are left on first click but hidden after
 [ ] the beginning of the address is lost
 [ ] there shouild be no lower panel at the beginning
 [ ] random icons on the header. make it functionnal
+[ ] navigating away from the defn should be more conspicuous. An easy way to get back to it should be provided
+[ ] better message when the defn is not found
 
 ## to investigate and fix
 
