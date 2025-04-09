@@ -43,7 +43,7 @@ the db.  [render](https://render.com/) should be the preferred choice. Augment h
   *  hovering a word should higlight the word and its translation
     * [ ] data comes from a teacher mode. The teacher should click a word then its translation so that hover one highlights the other
 * wiktionary definition panel
-   * [] clicking on a word should produce its definition. 
+   * [x] clicking on a word should produce its definition. 
    * [ ] it should also show the non inflexed form
    * [ ] clicking on a word outside the current section should change the section
 * [ ] using a ts adapter to sqlite

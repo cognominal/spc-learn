@@ -1,121 +1,139 @@
 <script lang="ts">
   /* @tailwind */
   import { SplitPane } from "@rich_harris/svelte-split-pane";
-  import { handleClick, PageState } from "$lib";
+  import { handleClick } from "$lib";
+  import type { PageState } from "$lib";
 
   let { data } = $props();
-  // let pageState.selectedWord: string | null = $state(null);
-  // let wordDefinition: string | null = $state(null);
-  // let iframeLoading = $state(true);
 
-  let pageState = $state(new PageState());
+  // Use individual reactive properties instead of a class instance
+  let selectedWord = $state<string | null>(null);
+  let wordDefinition = $state<string | null>(null);
+  let iframeLoading = $state(true);
 
-  async function handleIframeLoad(event: Event) {
-    const iframe = event.target as HTMLIFrameElement;
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+  // Create a pageState object that references the reactive variables
+  // This allows us to pass it to functions that expect a PageState object
+  const pageState: PageState = {
+    get selectedWord() {
+      return selectedWord;
+    },
+    set selectedWord(value) {
+      selectedWord = value;
+    },
 
-    if (!pageState.selectedWord) {
-      pageState.iframeLoading = false;
+    get wordDefinition() {
+      return wordDefinition;
+    },
+    set wordDefinition(value) {
+      wordDefinition = value;
+    },
+
+    get iframeLoading() {
+      return iframeLoading;
+    },
+    set iframeLoading(value) {
+      iframeLoading = value;
+    },
+
+    setSelectedWord(word: string | null) {
+      selectedWord = word;
+    },
+    setWordDefinition(definition: string | null) {
+      wordDefinition = definition;
+    },
+    setIframeLoading(loading: boolean) {
+      iframeLoading = loading;
+    },
+  };
+
+  let iframeElement: HTMLIFrameElement | null = $state(null);
+
+  // This function is only for initial iframe setup
+  function handleIframeLoad(event: Event) {
+    iframeElement = event.target as HTMLIFrameElement;
+    updateIframeContent();
+  }
+
+  // Separate function to update iframe content
+  function updateIframeContent() {
+    if (!iframeElement) return;
+
+    const iframeDoc =
+      iframeElement.contentDocument || iframeElement.contentWindow?.document;
+
+    if (!selectedWord) {
+      iframeLoading = false;
       return;
     }
 
     if (!iframeDoc) {
       console.error("Could not access iframe document");
-      pageState.iframeLoading = false;
+      iframeLoading = false;
       return;
     }
 
-    iframeDoc.body.innerHTML = `
-      <div class="p-4 text-center">
-        Loading definition for "${pageState.selectedWord}"...
-      </div>
-    `;
+    // If we have a definition, use it
+    if (wordDefinition) {
+      // Set the iframe content using the definition
+      iframeDoc.body.innerHTML = wordDefinition;
 
-    try {
-      const response = await fetch(
-        `/api/wiktionary/${encodeURIComponent(pageState.selectedWord)}`
-      );
-
-      if (!response.ok) {
-        iframeDoc.body.innerHTML = `<div class="p-4">Error loading definition for ${pageState.selectedWord}</div>`;
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const innerHtml = await response.text();
-
-      // Create a temporary div to parse the HTML
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = innerHtml;
-
-      // Find Russian section in the fetched content
-      const russianSection = tempDiv.querySelector("#Russian");
-      if (russianSection) {
-        const content = document.createElement("div");
-        content.id = "Russian-content";
-
-        // Add the Russian heading
-        const heading = russianSection.parentElement;
-        if (heading) content.appendChild(heading.cloneNode(true));
-
-        // Add all content until next h2
-        let currentElement = heading?.nextElementSibling;
-        while (currentElement && currentElement.tagName !== "H2") {
-          content.appendChild(currentElement.cloneNode(true));
-          currentElement = currentElement.nextElementSibling;
+      // Add styles
+      const style = iframeDoc.createElement("style");
+      style.textContent = `
+        body {
+          padding: 1rem !important;
+          margin: 0 !important;
+          font-family: system-ui, -apple-system, sans-serif;
         }
-
-        // Set the iframe content
-        iframeDoc.body.innerHTML = "";
-        iframeDoc.body.appendChild(content);
-
-        // Add styles
-        const style = iframeDoc.createElement("style");
-        style.textContent = `
-          body {
-            padding: 1rem !important;
-            margin: 0 !important;
-            font-family: system-ui, -apple-system, sans-serif;
-          }
-          #Russian-content {
-            max-width: 800px;
-            margin: 0 auto;
-          }
-          table {
-            border-collapse: collapse;
-            margin: 1rem 0;
-            width: 100%;
-          }
-          td, th {
-            border: 1px solid #ddd;
-            padding: 0.5rem;
-          }
-          h2 {
-            border-bottom: 2px solid #eee;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-          }
-          .IPA {
-            font-family: "Courier New", monospace;
-          }
-          a {
-            color: #2563eb;
-            text-decoration: none;
-          }
-          a:hover {
-            text-decoration: underline;
-          }
-        `;
-        iframeDoc.head.appendChild(style);
-      } else {
-        iframeDoc.body.innerHTML = `<div class="p-4">No Russian definition found for "${pageState.selectedWord}"</div>`;
-      }
-    } catch (error) {
-      console.error("Error processing content:", error);
-      iframeDoc.body.innerHTML = `<div class="p-4">Error loading definition for "${pageState.selectedWord}"</div>`;
-    } finally {
-      pageState.iframeLoading = false;
+        #Russian-content {
+          max-width: 800px;
+          margin: 0 auto;
+        }
+        table {
+          border-collapse: collapse;
+          margin: 1rem 0;
+          width: 100%;
+        }
+        td, th {
+          border: 1px solid #ddd;
+          padding: 0.5rem;
+        }
+        h2 {
+          border-bottom: 2px solid #eee;
+          padding-bottom: 0.5rem;
+          margin-bottom: 1rem;
+        }
+        .IPA {
+          font-family: "Courier New", monospace;
+        }
+        a {
+          color: #2563eb;
+          text-decoration: none;
+        }
+        a:hover {
+          text-decoration: underline;
+        }
+      `;
+      iframeDoc.head.appendChild(style);
+      iframeLoading = false;
+    } else if (selectedWord) {
+      // If we don't have a definition yet but have a selected word, show loading message
+      iframeDoc.body.innerHTML = `
+        <div class="p-4 text-center">
+          Loading definition for "${selectedWord}"...
+        </div>
+      `;
     }
   }
+
+  // Effect to update iframe content when wordDefinition changes
+  $effect(() => {
+    // This will run whenever wordDefinition changes
+    if (wordDefinition !== null) {
+      console.log("Definition changed, updating iframe");
+      updateIframeContent();
+    }
+  });
 </script>
 
 <main class="w-full h-screen mx-auto p-5 flex flex-col overflow-hidden">
@@ -147,9 +165,9 @@
     {/snippet}
 
     {#snippet b()}
-      {#if pageState.selectedWord}
+      {#if selectedWord}
         <div class="relative w-full h-full">
-          {#if pageState.iframeLoading}
+          {#if iframeLoading}
             <div
               class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75"
             >
@@ -161,6 +179,7 @@
             id="wiktionary-frame"
             srcdoc="<html><body></body></html>"
             onload={handleIframeLoad}
+            bind:this={iframeElement}
             class="w-full h-full border-none"
           ></iframe>
         </div>

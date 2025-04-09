@@ -1,27 +1,13 @@
 // state.ts
-export class PageState {
+export interface PageState {
     selectedWord: string | null;
     wordDefinition: string | null;
     iframeLoading: boolean;
 
-    constructor(selectedWord: string | null = null, wordDefinition: string | null = null, iframeLoading: boolean = true) {
-        this.selectedWord = selectedWord;
-        this.wordDefinition = wordDefinition;
-        this.iframeLoading = iframeLoading;
-    }
-
-    // Optional: Methods to update state
-    setSelectedWord(word: string | null) {
-        this.selectedWord = word;
-    }
-
-    setWordDefinition(definition: string | null) {
-        this.wordDefinition = definition;
-    }
-
-    setIframeLoading(loading: boolean) {
-        this.iframeLoading = loading;
-    }
+    // Methods to update state
+    setSelectedWord(word: string | null): void;
+    setWordDefinition(definition: string | null): void;
+    setIframeLoading(loading: boolean): void;
 }
 
 
@@ -112,6 +98,7 @@ async function showDefinition(word: string, pageState: PageState) {
             body: form,
         });
         const result = await response.json();
+        console.log(result);
         pageState.wordDefinition = result.data;
 
         if (pageState.wordDefinition) {
