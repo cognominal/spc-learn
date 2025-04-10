@@ -1,17 +1,10 @@
-// state.ts
+// Define the PageState interface
 export interface PageState {
     selectedWord: string | null;
     wordDefinition: string | null;
     iframeLoading: boolean;
-
-    // Methods to update state
-    setSelectedWord(word: string | null): void;
-    setWordDefinition(definition: string | null): void;
-    setIframeLoading(loading: boolean): void;
+    onePanel: boolean;
 }
-
-
-// return true if russian word clicked
 
 export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageState: PageState): boolean {
     console.log('click russian word?');
