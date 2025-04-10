@@ -7,9 +7,9 @@ Soljenitzine's address. This list should help to go forward and track progress.
 ## cleaning
 
 * [ ] words-dump.yaml should be done alphabetically for a smaller diff
-* [ ] use skeleton widgets
+* [ ] use skeleton widgets (already done for closing the wikt defn panel)
 * [ ] support devices of different sizes
-* [ ] cleaning junk in the defn panel
+* [x] cleaning junk in the wikt defn panel
 * [ ] how to focus on the translation in the defn panel
 
 ## deploy
@@ -25,6 +25,7 @@ the db.  [render](https://render.com/) should be the preferred choice. Augment h
 
 ## features
 
+* [ ] make tne many admin scripts one with a choice menu like the svelte sv script does 
 * [ ] choice of wiktionary language (see /grammar route). means changing the db schema
 
 * [ ] space repetition learning (the big item?)
@@ -45,9 +46,12 @@ the db.  [render](https://render.com/) should be the preferred choice. Augment h
   *  hovering a word should higlight the word and its translation
     * [ ] data comes from a teacher mode. The teacher should click a word then its translation so that hover one highlights the other
 * wiktionary definition panel
+   * [x] a x lucide widget to close the panel
    * [x] clicking on a word should produce its definition. 
    * [ ] it should also show the non inflexed form
    * [ ] clicking on a word outside the current section should change the section
+   * [ ]
+
 * [ ] using a ts adapter to sqlite
 * [ ] some logic to support many documents and their translation. How to ask grok to produce suitable document
 * [ ] a list of documents. Little prince comess to mind. And some Poutine, Lavrov addresses, but that's my bias.
