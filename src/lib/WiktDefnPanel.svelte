@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PageState } from "$lib";
+  import { X } from "lucide-svelte";
   let iframeElement: HTMLIFrameElement | null = $state(null);
 
   let { pageState }: { pageState: PageState } = $props();
@@ -15,6 +16,13 @@
   function handleIframeLoad(event: Event) {
     iframeElement = event.target as HTMLIFrameElement;
     updateIframeContent();
+  }
+
+  // Function to close the panel and reset state
+  function closePanel() {
+    pageState.onePanel = true;
+    pageState.selectedWord = null;
+    pageState.wordDefinition = null;
   }
 
   // Separate function to update iframe content
@@ -91,6 +99,16 @@
 </script>
 
 <div class="relative w-full h-full">
+  <!-- Close button -->
+  <button
+    class="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 hover:text-gray-900 shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    onclick={closePanel}
+    aria-label="Close panel"
+    title="Close panel"
+  >
+    <X size={18} strokeWidth={2.5} />
+  </button>
+
   {#if pageState.iframeLoading}
     <div
       class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75"
