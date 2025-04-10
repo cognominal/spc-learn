@@ -92,16 +92,43 @@ async function showDefinition(word: string, pageState: PageState) {
         });
         const result = await response.json();
         console.log(result);
-        pageState.wordDefinition = result.data;
+        let rawDefinition = result.data;
 
-        if (pageState.wordDefinition) {
-            pageState.wordDefinition = pageState.wordDefinition.replace(/\\u003C/g, "<");
-            pageState.wordDefinition = pageState.wordDefinition.replace(/\\n/g, "");
+        if (rawDefinition) {
+            // Clean up the raw definition
+            rawDefinition = rawDefinition.replace(/\\u003C/g, "<");
+            rawDefinition = rawDefinition.replace(/\\n/g, "");
+
+            // Remove any JSON artifacts that might be present
+            // First, log the first 50 characters to see exactly what we're dealing with
+            console.log(`First 50 chars of definition: '${rawDefinition.substring(0, 50)}'`);
+
+            // Try different approaches to remove the artifacts
+            // 1. Remove common JSON prefix patterns
+            rawDefinition = rawDefinition.replace(/^\[\{"definition":1\},"/, "");
+            rawDefinition = rawDefinition.replace(/^\[\{"definition":\d+\},"/, "");
+            rawDefinition = rawDefinition.replace(/^\[\{"?definition"?:?\d*\}?,?"?/, "");
+
+            // 2. Remove any remaining JSON-like prefix
+            rawDefinition = rawDefinition.replace(/^[\[\{].*?[\}\]],?"?/, "");
+
+            // 3. Remove trailing JSON artifacts
+            rawDefinition = rawDefinition.replace(/"?\]?$/, "");
+
+            // Log the first 50 characters after cleaning to verify
+            console.log(`After cleaning, first 50 chars: '${rawDefinition.substring(0, 50)}'`);
+
+            // Log information about the received definition
+            console.log(`Client received definition length: ${rawDefinition.length}`);
+            console.log(`Client received definition contains details tags: ${rawDefinition.includes('<details')}`);
+
+            // Set the word definition in the page state
+            pageState.wordDefinition = rawDefinition;
         } else {
-            pageState.wordDefinition = "Definition not found";
+            pageState.wordDefinition = "<div class='p-4 text-center text-red-600'>Definition not found</div>";
         }
     } catch (error) {
         console.error("Error fetching definition:", error);
-        pageState.wordDefinition = "Error loading definition";
+        pageState.wordDefinition = "<div class='p-4 text-center text-red-600'>Error loading definition</div>";
     }
 }

@@ -41,26 +41,31 @@ export const actions: Actions = {
             if (!wordData || !wordData.wiktionary) {
                 console.log(`Word '${word}' not found in database. Fetching from Wiktionary...`);
 
-                // Fetch the definition from Wiktionary
-                const wiktionaryContent = await fetchWiktionaryContent(word);
+                // Fetch and process the definition from Wiktionary
+                // The fetchWiktionaryContent function now includes the processing step
+                const processedContent = await fetchWiktionaryContent(word);
 
-                // Store the word data in the database
+                // Log to verify processing is happening
+                console.log(`Processed content length: ${processedContent?.length || 0}`);
+                console.log(`Processed content contains details tags: ${processedContent?.includes('<details') || false}`);
+
+                // Store the processed word data in the database
                 // If wordData exists but has no Wiktionary content, preserve its indices
                 const indices = wordData ? wordData.indices : [];
-                await storeWordData(word, indices, wiktionaryContent);
+                await storeWordData(word, indices, processedContent);
 
-                // Update wordData with the new Wiktionary content
+                // Update wordData with the new processed Wiktionary content
                 wordData = {
                     word,
                     indices,
-                    wiktionary: wiktionaryContent
+                    wiktionary: processedContent
                 };
 
                 console.log(`Stored definition for '${word}' in database.`);
             }
 
             return {
-                definition: wordData.wiktionary || 'Definition not found'
+                data: wordData.wiktionary || 'Definition not found'
             };
         } catch (e) {
             const errorMessage = e instanceof Error ? e.message : String(e);

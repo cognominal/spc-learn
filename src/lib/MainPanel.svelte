@@ -1,6 +1,7 @@
 <script lang="ts">
   import { handleClick } from "$lib";
   import type { PageState } from "$lib";
+  import { onMount } from "svelte";
 
   // Get pageState from props
   let { pageState } = $props();
@@ -34,7 +35,9 @@
   }
 
   // Load content when the component is mounted
-  loadContent();
+  onMount(() => {
+    loadContent();
+  });
 </script>
 
 <section class="text-black bg-white p-4 h-full w-full overflow-hidden">

@@ -54,34 +54,125 @@
           padding: 1rem !important;
           margin: 0 !important;
           font-family: system-ui, -apple-system, sans-serif;
+          color: #333;
+          line-height: 1.5;
         }
-        #Russian-content {
+
+        /* Wiktionary content styles */
+        .wiktionary-content {
           max-width: 800px;
           margin: 0 auto;
+          background-color: white;
         }
+
+        /* Section styles */
+        .wiktionary-section {
+          margin-bottom: 1rem;
+          border: 1px solid #e5e7eb;
+          border-radius: 0.375rem;
+          overflow: hidden;
+        }
+
+        .wiktionary-section-title {
+          padding: 0.75rem 1rem;
+          background-color: #f9fafb;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+
+        .wiktionary-section-title:hover {
+          background-color: #f3f4f6;
+        }
+
+        .wiktionary-section-content {
+          padding: 1rem;
+        }
+
+        /* Table styles */
         table {
           border-collapse: collapse;
           margin: 1rem 0;
           width: 100%;
+          font-size: 0.9rem;
         }
+
         td, th {
-          border: 1px solid #ddd;
+          border: 1px solid #e5e7eb;
           padding: 0.5rem;
         }
-        h2 {
-          border-bottom: 2px solid #eee;
-          padding-bottom: 0.5rem;
-          margin-bottom: 1rem;
+
+        th {
+          background-color: #f9fafb;
+          font-weight: 600;
         }
+
+        /* Heading styles */
+        h1 {
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin-bottom: 1rem;
+          color: #1e40af;
+          border-bottom: 2px solid #e5e7eb;
+          padding-bottom: 0.5rem;
+        }
+
+        h2 {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin: 1.5rem 0 1rem;
+          color: #1e40af;
+          border-bottom: 1px solid #e5e7eb;
+          padding-bottom: 0.25rem;
+        }
+
+        h3 {
+          font-size: 1.1rem;
+          font-weight: 600;
+          margin: 1.25rem 0 0.75rem;
+          color: #1e40af;
+        }
+
+        /* Other elements */
         .IPA {
           font-family: "Courier New", monospace;
+          background-color: #f3f4f6;
+          padding: 0.125rem 0.25rem;
+          border-radius: 0.25rem;
         }
+
         a {
           color: #2563eb;
           text-decoration: none;
+          transition: color 0.2s;
         }
+
         a:hover {
+          color: #1d4ed8;
           text-decoration: underline;
+        }
+
+        /* Lists */
+        ul, ol {
+          margin: 0.5rem 0 0.5rem 1.5rem;
+        }
+
+        li {
+          margin-bottom: 0.25rem;
+        }
+
+        /* Code and pre */
+        code, pre {
+          font-family: monospace;
+          background-color: #f3f4f6;
+          padding: 0.125rem 0.25rem;
+          border-radius: 0.25rem;
+        }
+
+        pre {
+          padding: 0.5rem;
+          overflow-x: auto;
+          margin: 0.5rem 0;
         }
       `;
       iframeDoc.head.appendChild(style);

@@ -25,6 +25,7 @@
 
 import { JSDOM } from 'jsdom';
 import { storeWordData, getWordData } from './db';
+import { processWiktionary } from './ProcessWiktionary';
 
 /**
  * Finds all Russian words in a given text string
@@ -75,16 +76,54 @@ export async function fetchWiktionaryContent(word: string): Promise<string | nul
         const russianSection = doc.querySelector("#Russian");
         if (!russianSection) return null;
 
+        // Get the Russian section header (H2)
+        const russianHeader = russianSection.parentElement;
+        if (!russianHeader) return null;
+
+        // Create a wrapper div for the content
+        const wrapper = doc.createElement('div');
+        wrapper.className = 'wiktionary-russian-section';
+
+        // Add the Russian section header to the wrapper
+        wrapper.appendChild(russianHeader.cloneNode(true));
+
         // Extract all content from the Russian section until the next language section
-        let content = "";
-        let currentElement: HTMLElement | null = russianSection.parentElement;
-        while ((currentElement = currentElement?.nextElementSibling as HTMLElement | null)) {
+        let currentElement: HTMLElement | null = russianHeader.nextElementSibling as HTMLElement | null;
+        while (currentElement) {
             // Stop when we reach the next language section (H2 heading)
             if (currentElement.tagName === "H2") break;
-            content += currentElement.outerHTML;
+            wrapper.appendChild(currentElement.cloneNode(true));
+            currentElement = currentElement.nextElementSibling as HTMLElement | null;
         }
 
-        return content;
+        // Get the HTML content of the wrapper
+        const russianSectionContent = wrapper.innerHTML;
+
+        // Log the content to debug
+        console.log(`Fetched content for Russian section. Contains h3: ${russianSectionContent.includes('<h3')}`);
+        console.log(`Content sample: ${russianSectionContent.substring(0, 200)}...`);
+
+        // Create a complete HTML document with the Russian section content
+        const completeHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>${word} - Wiktionary</title>
+            <meta charset="UTF-8">
+        </head>
+        <body>
+            ${russianSectionContent}
+        </body>
+        </html>
+        `;
+
+        // Process the HTML to convert h3 sections to details/summary elements
+        const processedHtml = processWiktionary(completeHtml);
+
+        // Log the processed content
+        console.log(`Processed content contains details tags: ${processedHtml.includes('<details')}`);
+
+        return processedHtml;
     } catch (error) {
         console.error(`Error fetching Wiktionary content for ${word}:`, error);
         return null;

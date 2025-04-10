@@ -8,6 +8,7 @@ grok-processed-file.html
 # personal saved files
 
 **/*.sv.*
+**/*.sv
 **/*.bak
 
 # building
