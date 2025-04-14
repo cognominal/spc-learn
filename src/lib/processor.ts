@@ -118,7 +118,8 @@ export async function fetchWiktionaryContent(word: string): Promise<string | nul
         `;
 
         // Process the HTML to convert h3 sections to details/summary elements
-        const processedHtml = processWiktionary(completeHtml);
+        // Keep only the Russian section and convert h3 elements to details/summary elements
+        const processedHtml = processWiktionary(completeHtml, "Russian");
 
         // Log the processed content
         console.log(`Processed content contains details tags: ${processedHtml.includes('<details')}`);

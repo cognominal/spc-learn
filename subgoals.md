@@ -25,7 +25,7 @@ the db.  [render](https://render.com/) should be the preferred choice. Augment h
 
 ## features
 
-* [ ] make tne many admin scripts one with a choice menu like the svelte sv script does 
+* [x] make tne many admin scripts one with a choice menu like the svelte sv script does 
 * [ ] choice of wiktionary language (see /grammar route). means changing the db schema
 
 * [ ] space repetition learning (the big item?)

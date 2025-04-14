@@ -90,7 +90,7 @@ We assume that the follwing are installed
 *  [nodejs](https://nodejs.org/en), the javascript runtime
 *  pnpm ([docs](https://pnpm.io/), [package](https://www.npmjs.com/package/pnpm)) .
 
-npm, installed with nodejs, should do though 
+npm, installed with nodejs, should do though
 
 Use `pnpm` for package management:
 
@@ -104,7 +104,14 @@ pnpm install
 pnpm run process-content
 ```
 
-3. Start the development server:
+3. Access the admin menu for various maintenance tasks:
+```bash
+pnpm run admin
+```
+
+The admin menu provides access to various scripts for database management, content processing, and other administrative tasks.
+
+4. Start the development server:
 ```bash
 pnpm run dev
 ```

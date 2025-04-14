@@ -73,7 +73,9 @@ export async function dumpDbToYAML(closeDbWhenDone = true): Promise<void> {
     }
 }
 
-// Run the function when this script is executed directly
-// This will always run, but it's fine since we're using the closeDbWhenDone parameter
-// When imported by other modules, they'll call the function with their own parameters
-dumpDbToYAML().catch(console.error);
+// Run the function only when this script is executed directly, not when imported
+// In ESM, we can check if the import.meta.url is the same as the file being executed
+const isMainModule = import.meta.url.endsWith(process.argv[1]);
+if (isMainModule) {
+    dumpDbToYAML().catch(console.error);
+}

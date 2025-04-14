@@ -74,7 +74,7 @@ export function handleClickSection(event: MouseEvent | KeyboardEvent, pageState:
 
 
 export function handleClick(event: MouseEvent | KeyboardEvent, pageState: PageState) {
-    if (handleClickRussianWord(event, pageState)) return;
+    handleClickRussianWord(event, pageState);
     if (handleClickSection(event, pageState)) return;
 
 }

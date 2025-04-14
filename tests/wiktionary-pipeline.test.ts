@@ -116,8 +116,8 @@ describe('Wiktionary Pipeline Integration', () => {
       const dom = new JSDOM(processedContent);
       const document = dom.window.document;
 
-      // Check that the Russian section is included
-      expect(document.querySelector('#Russian')).not.toBeNull();
+      // We're now only keeping the content after the Russian section, not the section header itself
+      // So we don't expect to find the Russian h2 element
 
       // Note: The current implementation doesn't completely remove other sections
       // but it does convert h3 elements to details/summary elements
