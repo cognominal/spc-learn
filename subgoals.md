@@ -10,7 +10,6 @@ Soljenitzine's address. This list should help to go forward and track progress.
 * [ ] use skeleton widgets (already done for closing the wikt defn panel)
 * [ ] support devices of different sizes
 * [x] cleaning junk in the wikt defn panel
-* [ ] how to focus on the translation in the defn panel
 
 ## deploy
 
@@ -27,6 +26,7 @@ the db.  [render](https://render.com/) should be the preferred choice. Augment h
 
 * [x] make tne many admin scripts one with a choice menu like the svelte sv script does 
 * [ ] choice of wiktionary language (see /grammar route). means changing the db schema
+* [ ] cache ~100 wikt word client side for better responsivness
 
 * [ ] space repetition learning (the big item?)
 * [x] a cleant up [raw-file-from-grok.html](static/raw-file-from-grok.html)
@@ -35,22 +35,25 @@ the db.  [render](https://render.com/) should be the preferred choice. Augment h
   * [ ] a github icon, which points to the sources
   
     * [x] add them to the db
-* text panel
-  *  better representation
-    * [x] show only english translation and showing a border for the current sentence. greying out the others
   * common words
     * [x] demphasize of common words (marked as data-common)
+    * [ ] a slider to set the percentage of common words
+
     * [ ] instead of a list of common words, derive it from the db. 
     * [ ] create a widget to change the proportion of words deemed as common
   * [ ] tabbing over non common words and display defn of the current one. or maybe two modes. tabbing over sentences or words. Currently it navigates between the left over of grok items
-  *  hovering a word should higlight the word and its translation
     * [ ] data comes from a teacher mode. The teacher should click a word then its translation so that hover one highlights the other
+* text panel
+  * [x] show only english translation and showing a border for the current sentence. greying out the others
+  * [x] clicking on a word should produce its definition. 
+  * [x] clicking on a word outside the current section should change the section but not the current word
+  * [x] the current word should be highlighted in red.
 * wiktionary definition panel
-   * [x] a x lucide widget to close the panel
-   * [x] clicking on a word should produce its definition. 
-   * [ ] it should also show the non inflexed form
-   * [ ] clicking on a word outside the current section should change the section
-   * [ ]
+  * [x] a x lucide widget to close the panel
+  * [ ] it should also show the non inflexed form
+  * [ ] correct massaging of replacing h3 by details/summary (currently incorredt)
+  * [ ] open details for translations
+
 
 * [ ] using a ts adapter to sqlite
 * [ ] some logic to support many documents and their translation. How to ask grok to produce suitable document

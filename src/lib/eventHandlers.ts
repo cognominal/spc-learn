@@ -1,14 +1,5 @@
 import { PageState } from '$lib/PageState.svelte.js';
 
-
-// Define the PageState interface
-// export interface PageState {
-//     selectedWord: string | null;
-//     wordDefinition: string | null;
-//     iframeLoading: boolean;
-//     onePanel: boolean;
-// }
-
 export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageState: PageState): boolean {
     console.log('click russian word?');
 
@@ -17,8 +8,9 @@ export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageSt
 
     const word = target.getAttribute("data-word");
     if (word) {
-        console.log('got word');
-
+        if (pageState.selectedElement)
+            pageState.selectedElement.style.removeProperty('color');
+        pageState.selectedElement = target;
         showDefinition(word, pageState);
     }
     return true;
@@ -40,7 +32,11 @@ export function handleClickSection(event: MouseEvent | KeyboardEvent, pageState:
             if (li === target) {
                 // For the target li, remove color property and set display to inline for all child elements except strong
                 li.querySelectorAll('*').forEach(element => {
-                    (element as HTMLElement).style.removeProperty('color');
+                    if (pageState.selectedElement === element) {
+                        (element as HTMLElement).style.color = '#EE0000';
+                    } else {
+                        (element as HTMLElement).style.removeProperty('color');
+                    }
                     // Set display to inline for all elements except strong
                     if (element.tagName.toLowerCase() !== 'strong') {
                         (element as HTMLElement).style.display = 'inline';
