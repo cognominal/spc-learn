@@ -25,9 +25,12 @@ export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageSt
 // When clicking a section but not a russian word, we grey out all the other sections and hide their translation
 
 export function handleClickSection(event: MouseEvent | KeyboardEvent, pageState: PageState): boolean {
-    // Reset all li elements to default state
-    const target = event.target as HTMLElement;
-    console.log(target);
+    let target = event.target as HTMLElement;
+    if (target.hasAttribute('data-word')) {
+        target = target.parentElement!;
+    }
+
+    console.log('handleClickSection', target);
     if (target.classList.contains('break-words')) {
         document.querySelectorAll('li.break-words').forEach(li => {
 
