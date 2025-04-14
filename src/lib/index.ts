@@ -1,2 +1,2 @@
-export { handleClick, handleClickRussianWord } from '$lib/eventHandlers';
-export type { PageState } from '$lib/eventHandlers';
+export { handleClick, handleClickRussianWord } from '$lib/eventHandlers.js';
+export { PageState } from '$lib/PageState.svelte.js';

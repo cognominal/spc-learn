@@ -1,10 +1,13 @@
+import { PageState } from '$lib/PageState.svelte.js';
+
+
 // Define the PageState interface
-export interface PageState {
-    selectedWord: string | null;
-    wordDefinition: string | null;
-    iframeLoading: boolean;
-    onePanel: boolean;
-}
+// export interface PageState {
+//     selectedWord: string | null;
+//     wordDefinition: string | null;
+//     iframeLoading: boolean;
+//     onePanel: boolean;
+// }
 
 export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageState: PageState): boolean {
     console.log('click russian word?');

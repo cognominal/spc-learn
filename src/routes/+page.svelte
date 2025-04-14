@@ -2,16 +2,11 @@
   import { SplitPane } from "@rich_harris/svelte-split-pane";
   import WiktDefnPanel from "$lib/WiktDefnPanel.svelte";
   import MainPanel from "$lib/MainPanel.svelte";
+  import {  PageState } from "$lib"
 
   // No need for data prop anymore as MainPanel fetches its own data
 
   // Define the PageState class with reactive members
-  export class PageState {
-    selectedWord = $state<string | null>(null);
-    wordDefinition = $state<string | null>(null);
-    iframeLoading = $state(true);
-    onePanel = $state(true);
-  }
 
   // Create an instance of PageState
   let pageState = new PageState();
