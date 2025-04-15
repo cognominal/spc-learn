@@ -51,8 +51,8 @@ the db.  [render](https://render.com/) should be the preferred choice. Augment h
 * wiktionary definition panel
   * [x] a x lucide widget to close the panel
   * [ ] it should also show the non inflexed form
-  * [ ] correct massaging of replacing h3 by details/summary (currently incorredt)
-  * [ ] open details for translations
+  * [x] correct massaging of replacing h3 by details/summary
+  * [x] open details for translations
 
 
 * [ ] using a ts adapter to sqlite
