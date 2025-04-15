@@ -27,6 +27,7 @@ the db.  [render](https://render.com/) should be the preferred choice. Augment h
 * [x] make tne many admin scripts one with a choice menu like the svelte sv script does 
 * [ ] choice of wiktionary language (see /grammar route). means changing the db schema
 * [ ] cache ~100 wikt word client side for better responsivness
+* [ ] better server message when server down or inaccessible
 
 * [ ] space repetition learning (the big item?)
 * [x] a cleant up [raw-file-from-grok.html](static/raw-file-from-grok.html)
