@@ -69,14 +69,14 @@ small bugs that should be fixed. or minor missing features
 On initial click, we are on a new presentation with
 the current sentence emphasized and the rest deemphasized
 
-[ ] fix weird jump on initial click
-[ ] maybe some transition after clicking
-[ ] inconsistency. the strong "english/russian" are left on first click but hidden after
-[ ] the beginning of the address is lost
-[ ] there shouild be no lower panel at the beginning
-[ ] random icons on the header. make it functionnal
-[ ] navigating away from the defn should be more conspicuous. An easy way to get back to it should be provided
-[ ] better message when the defn is not found
+* [ ] fix weird jump on initial click
+* [ ] maybe some transition after clicking
+* [ ] inconsistency. the strong "english/russian" are left on first click but hidden after
+* [ ] the beginning of the address is lost
+* [ ] there shouild be no lower panel at the beginning
+* [ ] random icons on the header. make it functionnal
+* [ ] navigating away from the defn should be more conspicuous. An easy way to get back to it should be provided
+* [ ] better message when the defn is not found
 
 ## to investigate and fix
 
