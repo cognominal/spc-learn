@@ -1,4 +1,4 @@
-import { fetchWiktionaryContent } from '../src/lib/processor';
+import { fetchWiktionaryContent } from '$lib/server';
 import { JSDOM } from 'jsdom';
 import fs from 'fs/promises';
 import path from 'path';

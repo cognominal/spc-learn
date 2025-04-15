@@ -10,72 +10,93 @@ import { JSDOM } from 'jsdom';
  * @param section - The section to keep (e.g., "Russian"). Only this section and its content will be kept.
  * @returns The processed HTML content with details/summary elements
  */
-export function processWiktionary(htmlContent: string, section: string = "Russian"): string {
+export function processWiktionary(htmlContent: string, section: string = 'Russian'): string {
+  // Log a sample of the HTML content
+  console.log(`HTML content sample (first 200 chars): ${htmlContent.substring(0, 200)}`);
 
   // Create a DOM from the HTML content
-  const odom = new JSDOM(htmlContent);
-  const doc = odom.window.document;
-
-  let { dom, success } = createDocumentFromChosenSection(doc, section)
-  createSummarySection(document);
-
-  // Get the processed HTML
-  const processedHtml = dom.serialize();
-
-  // Log a sample of the processed HTML
-  // console.log(`Processed HTML sample (first 200 chars): ${processedHtml.substring(0, 200)}`);
-  // console.log(`Processed HTML contains details tags: ${processedHtml.includes('<details')}`);
-
-  // Return the processed HTML
-  return processedHtml;
-}
-
-function createDocumentFromChosenSection(doc: Document, section: string): { dom: JSDOM, success: boolean } {
-
+  let dom = new JSDOM(htmlContent);
+  let document = dom.window.document;
 
   // Find an element with an ID matching the section name
-  const sectionElement = doc.getElementById(section);
-  const dom = new JSDOM('<!DOCTYPE html><html><head><title>Wiktionary</title></head><body></body></html>');
+  const sectionElement = document.getElementById(section);
+  console.log(`Found section element with ID ${section}: ${sectionElement ? 'yes' : 'no'}`);
+
   if (sectionElement) {
     // Create a new document with only the siblings of the section element's parent
-    const newDocument = dom.window.document;
+    const newDom = new JSDOM('<!DOCTYPE html><html><head><title>Wiktionary</title></head><body></body></html>');
+    const newDocument = newDom.window.document;
     const newBody = newDocument.querySelector('body');
 
-    // Get the parent of the section element
-    const parentElement = sectionElement.parentElement;
-    console.log(`Parent element: ${parentElement ? parentElement.tagName : 'null'}`);
+    if (newBody) {
+      // Get the parent of the section element
+      const parentElement = sectionElement.parentElement;
+      console.log(`Parent element: ${parentElement ? parentElement.tagName : 'null'}`);
 
-    if (parentElement) {
-      // Get all siblings of the parent element
-      let currentNode = parentElement.nextSibling;
+      if (parentElement) {
+        // Get all siblings of the parent element
+        let currentNode = parentElement.nextSibling;
 
-      while (currentNode) {
-        // Stop when we reach an h2 element
-        if (currentNode.nodeType === 1 && (currentNode as Element).tagName === 'H2') {
-          break;
+        while (currentNode) {
+          // Stop when we reach an h2 element
+          if (currentNode.nodeType === 1 && (currentNode as Element).tagName === 'H2') {
+            break;
+          }
+
+          // Add the sibling to the new document
+          newBody.appendChild(currentNode.cloneNode(true));
+          console.log(`Added node: ${currentNode.nodeName}`);
+
+          // Move to the next sibling
+          currentNode = currentNode.nextSibling;
+        }
+      }
+
+      // Replace the original DOM with the new one containing only the siblings of the parent
+      dom = newDom;
+      document = newDocument;
+    }
+  } else {
+    // Fallback to the old method if no element with the specified ID is found
+    console.log(`Falling back to searching for h2 with text content '${section}'`);
+    const sectionHeader = Array.from(document.querySelectorAll('h2')).find(h2 => {
+      return h2.textContent?.trim() === section;
+    });
+
+    if (sectionHeader) {
+      console.log(`Found section header: ${sectionHeader.textContent}`);
+
+      // Create a new document with only the specified section and its siblings
+      const newDom = new JSDOM('<!DOCTYPE html><html><head><title>Wiktionary</title></head><body></body></html>');
+      const newDocument = newDom.window.document;
+      const newBody = newDocument.querySelector('body');
+
+      if (newBody) {
+        // Get all siblings that follow the section header until the next h2
+        let currentNode = sectionHeader.nextSibling;
+
+        while (currentNode) {
+          // Stop when we reach the next h2
+          if (currentNode.nodeType === 1 && (currentNode as Element).tagName === 'H2') {
+            break;
+          }
+
+          // Add the sibling to the new document
+          newBody.appendChild(currentNode.cloneNode(true));
+
+          // Move to the next sibling
+          currentNode = currentNode.nextSibling;
         }
 
-        // Add the sibling to the new document
-        newBody!.appendChild(currentNode.cloneNode(true));
-        // console.log(`Added node: ${currentNode.nodeName}`);
-
-        // Move to the next sibling
-        currentNode = currentNode.nextSibling;
+        // Replace the original DOM with the new one containing only the siblings of the specified section
+        dom = newDom;
+        document = newDocument;
       }
+    } else {
+      console.log(`Section '${section}' not found in the HTML content`);
     }
-
-    // Replace the original DOM with the new one containing only the siblings of the parent
-    return { dom, success: true };
   }
-  const div = document.createElement('div')
-  const text = `Section "${section}" not found in the HTML content`
-  div.textContent = text
-  document.body.appendChild(div);
-  console.log(text);
-  return { dom, success: false }
-}
 
-function createSummarySection(doc: Document) {
   // create details/summary sections
   // Find all elements with class mw-heading3
   const headingElements = document.querySelectorAll('.mw-heading3');
@@ -122,12 +143,12 @@ function createSummarySection(doc: Document) {
     summary.setAttribute('class', 'wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium');
 
     // Get the original content of the heading element
-    const originalContent = headingElement.firstChild?.textContent;
+    const originalContent = headingElement.innerHTML;
 
     // Create a span with class "summary"
     const summarySpan = document.createElement('span');
     summarySpan.setAttribute('class', 'summary');
-    summarySpan.textContent = originalContent!;
+    summarySpan.innerHTML = originalContent;
 
     // Add the span to the summary
     summary.appendChild(summarySpan);
@@ -173,4 +194,14 @@ function createSummarySection(doc: Document) {
       }
     });
   });
+
+  // Get the processed HTML
+  const processedHtml = dom.serialize();
+
+  // Log a sample of the processed HTML
+  console.log(`Processed HTML sample (first 200 chars): ${processedHtml.substring(0, 200)}`);
+  console.log(`Processed HTML contains details tags: ${processedHtml.includes('<details')}`);
+
+  // Return the processed HTML
+  return processedHtml;
 }

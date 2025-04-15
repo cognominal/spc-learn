@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Component } from "svelte";
-  import type { Props } from "./types";
+  import type { Component } from 'svelte';
+  import type { Props } from './types';
 
   interface IconProps extends Props {
     Icon: Component;

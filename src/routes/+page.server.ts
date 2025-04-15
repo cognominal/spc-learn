@@ -1,7 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad, Actions } from './$types';
-import { getWordData, storeWordData } from '$lib/db-adapter';
-import { fetchWiktionaryContent } from '$lib/processor';
+import { getWordData, storeWordData, fetchWiktionaryContent } from '$lib/server';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -35,7 +34,7 @@ export const actions: Actions = {
             }
 
             // Check if the word exists in the database
-            let wordData = await getWordData(word);
+            let wordData = getWordData(word);
 
             // If the word doesn't exist in the database or has no Wiktionary content
             if (!wordData || !wordData.wiktionary) {
@@ -52,7 +51,7 @@ export const actions: Actions = {
                 // Store the processed word data in the database
                 // If wordData exists but has no Wiktionary content, preserve its indices
                 const indices = wordData ? wordData.indices : [];
-                await storeWordData(word, indices, processedContent);
+                await storeWordData(word, processedContent, indices);
 
                 // Update wordData with the new processed Wiktionary content
                 wordData = {
@@ -73,4 +72,4 @@ export const actions: Actions = {
             throw error(500, `Error fetching definition: ${errorMessage}`);
         }
     }
-};
+}

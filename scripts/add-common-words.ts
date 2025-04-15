@@ -18,8 +18,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { getWordData, storeWordData, closeDatabase, checkDatabase } from '$lib/db';
-import { fetchWiktionaryContent } from '$lib/processor';
+import { getWordData, storeWordData, closeDatabase, checkDatabase, fetchWiktionaryContent } from '$lib/server';
 import { dumpDbToYAML } from './dumpDatabase';
 
 /**
@@ -47,7 +46,8 @@ function delay(ms: number): Promise<void> {
 async function main(): Promise<void> {
     try {
         // Verify database connection and structure
-        await checkDatabase();
+        const dbInitialized = checkDatabase();
+        console.log(`Database initialized: ${dbInitialized}`);
 
         // Step 1: Read the list of common Russian words from the file
         console.log('Reading common words from file...');
@@ -77,7 +77,7 @@ async function main(): Promise<void> {
 
             try {
                 // Check if the word already exists in the database
-                const existingWordData = await getWordData(word);
+                const existingWordData = getWordData(word);
 
                 if (existingWordData && existingWordData.wiktionary) {
                     // Word already exists with Wiktionary content
@@ -89,7 +89,7 @@ async function main(): Promise<void> {
                     const wiktionaryContent = await fetchWiktionaryContent(word);
 
                     // Store the word with empty indices (since it's not from a specific text)
-                    await storeWordData(word, [], wiktionaryContent);
+                    await storeWordData(word, wiktionaryContent, []);
 
                     if (wiktionaryContent) {
                         console.log(`Added word '${word}' to database.`);

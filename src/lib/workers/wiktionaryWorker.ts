@@ -1,6 +1,4 @@
-import { fetchWiktionaryContent } from '../processor';
-import { getWordData, storeWordData } from '../db';
-import { handleRussian } from '../handleRussian';
+import { fetchWiktionaryContent, getWordData, storeWordData } from '$lib/server';
 
 self.onmessage = async (e: MessageEvent) => {
     const { word, indices } = e.data;
@@ -21,8 +19,8 @@ self.onmessage = async (e: MessageEvent) => {
         const wiktionaryContent = await fetchWiktionaryContent(word);
         if (wiktionaryContent) {
             // Store in database
-            storeWordData(word, indices || [], wiktionaryContent);
-            
+            storeWordData(word, wiktionaryContent, indices || []);
+
             self.postMessage({
                 type: 'success',
                 word,

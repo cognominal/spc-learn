@@ -1,6 +1,5 @@
 import type { Plugin } from 'vite';
-import { processContent } from './processor';
-import { getWordData } from './db';
+import { processContent, getWordData } from '$lib/server';
 import path from 'path';
 import fs from 'fs/promises';
 

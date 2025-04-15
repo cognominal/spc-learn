@@ -1,13 +1,13 @@
 /**
  * Admin Menu Script
  * ================
- * 
+ *
  * This script provides a centralized menu for executing various admin scripts.
  * It uses the 'prompts' package to display an interactive menu in the terminal.
- * 
+ *
  * This helps declutter the package.json file by consolidating multiple admin scripts
  * into a single entry point.
- * 
+ *
  * Usage:
  * npm run admin
  */
@@ -59,6 +59,11 @@ const adminScripts = [
     description: 'Purge Wiktionary content from the database'
   },
   {
+    title: 'Clear Database',
+    value: 'clearDatabase.ts',
+    description: '⚠️ CAUTION: Completely clear the database by dropping and recreating the words table'
+  },
+  {
     title: 'Augment Database',
     value: 'augmentDB.ts',
     description: 'Augment the database with additional data'
@@ -77,7 +82,7 @@ const adminScripts = [
 
 /**
  * Runs a script with the given arguments
- * 
+ *
  * @param scriptPath - The path to the script to run
  * @param args - The arguments to pass to the script
  * @returns A promise that resolves when the script completes
@@ -88,14 +93,14 @@ function runScript(scriptPath: string, args: string[] = []): Promise<void> {
     const isTypeScript = scriptPath.endsWith('.ts');
     const command = isTypeScript ? 'tsx' : 'node';
     const commandArgs = isTypeScript ? ['--tsconfig', 'tsconfig.json', scriptPath, ...args] : [scriptPath, ...args];
-    
+
     console.log(`Running: ${command} ${commandArgs.join(' ')}`);
-    
+
     const child = spawn(command, commandArgs, {
       stdio: 'inherit',
       shell: true
     });
-    
+
     child.on('close', (code) => {
       if (code === 0) {
         resolve();
@@ -103,7 +108,7 @@ function runScript(scriptPath: string, args: string[] = []): Promise<void> {
         reject(new Error(`Script exited with code ${code}`));
       }
     });
-    
+
     child.on('error', (err) => {
       reject(err);
     });
@@ -112,7 +117,7 @@ function runScript(scriptPath: string, args: string[] = []): Promise<void> {
 
 /**
  * Asks the user if they want to run another script
- * 
+ *
  * @returns A promise that resolves to true if the user wants to run another script
  */
 async function askForAnother(): Promise<boolean> {
@@ -122,13 +127,13 @@ async function askForAnother(): Promise<boolean> {
     message: 'Do you want to run another script?',
     initial: true
   });
-  
+
   return response.value;
 }
 
 /**
  * Asks the user for script arguments
- * 
+ *
  * @returns A promise that resolves to an array of arguments
  */
 async function askForArguments(): Promise<string[]> {
@@ -138,7 +143,7 @@ async function askForArguments(): Promise<string[]> {
     message: 'Enter script arguments (space-separated, or press Enter for none):',
     initial: ''
   });
-  
+
   return response.value ? response.value.split(' ') : [];
 }
 
@@ -147,9 +152,9 @@ async function askForArguments(): Promise<string[]> {
  */
 async function main() {
   console.log('=== Admin Scripts Menu ===\n');
-  
+
   let runAnother = true;
-  
+
   while (runAnother) {
     const response = await prompts({
       type: 'select',
@@ -158,19 +163,19 @@ async function main() {
       choices: adminScripts,
       initial: 0
     });
-    
+
     // Exit if the user cancelled (e.g., by pressing Ctrl+C)
     if (response.value === undefined) {
       console.log('\nExiting admin menu.');
       return;
     }
-    
+
     const selectedScript = response.value;
     const scriptPath = path.join(__dirname, selectedScript);
-    
+
     // Ask for arguments
     const args = await askForArguments();
-    
+
     try {
       // Run the selected script
       await runScript(scriptPath, args);
@@ -178,11 +183,11 @@ async function main() {
     } catch (error) {
       console.error(`\n❌ Error running script ${selectedScript}:`, error);
     }
-    
+
     // Ask if the user wants to run another script
     runAnother = await askForAnother();
   }
-  
+
   console.log('\nExiting admin menu. Goodbye!');
 }
 

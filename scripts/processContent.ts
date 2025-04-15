@@ -29,8 +29,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
-import { processContent } from '$lib/processor';
-import { closeDatabase, checkDatabase } from '$lib/db';
+import { processContent, closeDatabase, checkDatabase } from '$lib/server';
 import { dumpDbToYAML } from './dumpDatabase';
 
 /**
@@ -61,7 +60,8 @@ async function main() {
         // Only check database if we're not skipping database operations
         if (!skipDatabase) {
             // Verify database connection and structure
-            await checkDatabase();
+            const dbInitialized = checkDatabase();
+            console.log(`Database initialized: ${dbInitialized}`);
         }
 
         // Step 1: Read the raw HTML content from the source file
@@ -79,7 +79,7 @@ async function main() {
             console.log(`Processing content${effectiveFetchDefinitions ? ' and fetching Wiktionary definitions' : ' without fetching definitions'}...`);
         }
 
-        const { html, words } = await processContent(htmlContent, effectiveFetchDefinitions, skipDatabase);
+        const { html, words } = await processContent(htmlContent, effectiveFetchDefinitions);
 
         // Step 3: Extract just the body content from the processed HTML
         // This removes the <html>, <head>, and <body> tags, keeping only the content

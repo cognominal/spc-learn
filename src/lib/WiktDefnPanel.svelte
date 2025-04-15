@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PageState } from "$lib";
+  import type { PageState } from '$lib';
   import { X } from "lucide-svelte";
   let iframeElement: HTMLIFrameElement | null = $state(null);
 

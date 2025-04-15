@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { handleClick } from "$lib";
-  import type { PageState } from "$lib";
-  import { onMount } from "svelte";
+  import { handleClick } from '$lib';
+  import { onMount } from 'svelte';
 
   // Get pageState from props
   let { pageState } = $props();

@@ -3,11 +3,11 @@
 
   let { children } = $props();
 
-  import { AppBar } from "@skeletonlabs/skeleton-svelte";
-  import { ArrowLeft } from "lucide-svelte";
-  import { Paperclip } from "lucide-svelte";
-  import { Calendar } from "lucide-svelte";
-  import { CircleUser } from "lucide-svelte";
+  import { AppBar } from '@skeletonlabs/skeleton-svelte';
+  import { ArrowLeft } from 'lucide-svelte';
+  import { Paperclip } from 'lucide-svelte';
+  import { Calendar } from 'lucide-svelte';
+  import { CircleUser } from 'lucide-svelte';
   // import { Github } from ???
 </script>
 
