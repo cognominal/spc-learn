@@ -27,18 +27,6 @@ import { JSDOM } from 'jsdom';
 import { storeWordData, getWordData } from './db';
 import { processWiktionary } from './ProcessWiktionary';
 
-/**
- * Finds all Russian words in a given text string
- *
- * @param text - The text to search for Russian words
- * @returns A promise that resolves to an array of Russian words found in the text
- */
-export async function findRussianWords(text: string): Promise<string[]> {
-    // Regular expression to match Cyrillic characters (Russian alphabet)
-    const russianPattern = /[а-яёА-ЯЁ]+/g;
-    const matches = text.match(russianPattern) || [];
-    return matches;
-}
 
 /**
  * Removes all elements matching a CSS selector from a document
