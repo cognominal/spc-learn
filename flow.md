@@ -86,6 +86,19 @@ graph TD
     class M api;
     class C,H data;
     class AA,AB,AC,AD,AE,AF,AG,AH admin;
+
+    %% Add clickable links to GitHub repository
+    click B "https://github.com/cognominal/spc-learn/blob/main/src/lib/server/processor.ts" "View processContent.ts on GitHub"
+    click C "https://github.com/cognominal/spc-learn/blob/main/src/lib/server/db.ts" "View database implementation on GitHub"
+    click F "https://github.com/cognominal/spc-learn/blob/main/src/routes/+page.server.ts" "View +page.server.ts on GitHub"
+    click G "https://github.com/cognominal/spc-learn/blob/main/src/routes/+page.svelte" "View +page.svelte on GitHub"
+    click H "https://github.com/cognominal/spc-learn/blob/main/src/lib/PageState.svelte" "View PageState implementation on GitHub"
+    click I "https://github.com/cognominal/spc-learn/blob/main/src/lib/MainPanel.svelte" "View MainPanel.svelte on GitHub"
+    click J "https://github.com/cognominal/spc-learn/blob/main/src/lib/WiktDefnPanel.svelte" "View WiktDefnPanel.svelte on GitHub"
+    click K "https://github.com/cognominal/spc-learn/blob/main/src/lib/eventHandlers.ts#L3" "View handleClickRussianWord function on GitHub"
+    click N "https://github.com/cognominal/spc-learn/blob/main/src/lib/server/ProcessWiktionary.ts" "View processWiktionary implementation on GitHub"
+    click P "https://github.com/cognominal/spc-learn/blob/main/src/lib/eventHandlers.ts#L19" "View handleClickSection function on GitHub"
+    click AA "https://github.com/cognominal/spc-learn/blob/main/scripts/adminMenu.ts" "View Admin Menu implementation on GitHub"
 ```
 
 ## Diagram Explanation
@@ -137,7 +150,7 @@ The relevant section for the app are of the form.
 The processed html file breaks sentence into words like this.
 
 ```html
-<span data-lang="ru" data-word="падение">падение</span> 
+<span data-lang="ru" data-word="падение">падение</span>
 ```
 
 When interacting with the user, style information is added to the dom, to show,
