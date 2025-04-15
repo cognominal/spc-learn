@@ -152,3 +152,20 @@ Here with the word "это" selected.
                   </li>
 </ol>
 ```
+
+Two sentences, one emphasized, the other not.
+
+![sentences](assets/sentences.png)
+
+## wiktionary page processing
+
+Before processing, the wiktionary page looks like this.
+The processing will keep only the russian section, remove the edit buttons
+
+![wiktionary page](assets/wikt.png)
+
+After processing the page looks like this. The sections are now collapsible, with only the title visible when closed.
+The translations sections are opened.
+
+![wiktionary page](assets/wiktmassaged.png)
+
