@@ -113,10 +113,6 @@ async function main(): Promise<void> {
         const bodyMatch = serialized.match(bodyRegex);
         const bodyContent = bodyMatch ? bodyMatch[1] : serialized;
 
-        // Count div tags for debugging
-        const openingDivs = (bodyContent.match(/<div/g) || []).length;
-        const closingDivs = (bodyContent.match(/<\/div>/g) || []).length;
-        console.log(`HTML structure: ${openingDivs} opening <div> tags, ${closingDivs} closing </div> tags`);
 
         // Step 6: Create a complete HTML document with proper structure
         const processedHtml = `<!DOCTYPE html>
@@ -124,7 +120,7 @@ async function main(): Promise<void> {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Russian Text with Interactive Words</title>
+    <title>Interactive Words</title>
     <style>
 ${cssContent}
     </style>
@@ -213,7 +209,7 @@ function wrapEnglishWords(doc: Document): void {
         strong.parentNode!.insertBefore(fragment, strong);
         strong.remove();
 
-        console.log(`Wrapped ${wordCount} English words`);
+        // console.log(`Wrapped ${wordCount} English words`);
     });
 }
 
