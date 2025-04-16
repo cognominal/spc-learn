@@ -45,7 +45,7 @@ export function processWiktionary(htmlContent: string, section: string = 'Russia
 
           // Add the sibling to the new document
           newBody.appendChild(currentNode.cloneNode(true));
-          console.log(`Added node: ${currentNode.nodeName}`);
+          // console.log(`Added node: ${currentNode.nodeName}`);
 
           // Move to the next sibling
           currentNode = currentNode.nextSibling;
@@ -142,16 +142,32 @@ export function processWiktionary(htmlContent: string, section: string = 'Russia
     const summary = document.createElement('summary');
     summary.setAttribute('class', 'wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium');
 
-    // Get the original content of the heading element
+    // Remove all elements with class 'mw-editsection' from the heading
+    const editSections = headingElement.querySelectorAll('.mw-editsection');
+    editSections.forEach((el) => el.remove());
+
+    // Replace h3 with span in the heading
+    const h3 = headingElement.querySelector('h3');
+    if (h3) {
+      const span = document.createElement('span');
+      // Copy text content
+      span.textContent = h3.textContent;
+      // Copy classes and id
+      if (h3.getAttribute('id')) {
+        span.setAttribute('id', h3.getAttribute('id')!);
+      }
+      if (h3.getAttribute('class')) {
+        span.setAttribute('class', h3.getAttribute('class')!);
+      }
+      h3.parentNode?.replaceChild(span, h3);
+    }
+
+    // Get the original content of the heading element (now without mw-editsection and h3)
     const originalContent = headingElement.innerHTML;
 
-    // Create a span with class "summary"
-    const summarySpan = document.createElement('span');
-    summarySpan.setAttribute('class', 'summary');
-    summarySpan.innerHTML = originalContent;
+    // Put the heading content directly inside the summary
+    summary.innerHTML = originalContent;
 
-    // Add the span to the summary
-    summary.appendChild(summarySpan);
 
     // Add the summary to the details
     details.appendChild(summary);
