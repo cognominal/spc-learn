@@ -142,6 +142,8 @@ pnpm run preview
 
 - `/src/routes` - SvelteKit routes and components
 - `/src/lib` - Shared utilities and components
+- `src/lib/server` - Server-side processing and database interactions
+- `src/lib/workers` - Web workers 
 - `/static` - Static assets and sample HTML files
 - `/src/lib/db` - Database interactions and word processing
 - `/scripts` - Content processing scripts
@@ -153,7 +155,8 @@ pnpm run preview
 - [ ] Add support for additional texts beyond the 1978 Solzhenitsyn address
 - [ ] Improve word definition caching
 
-See also [subgoals](subgoals.md).
+See also [subgoals](subgoals.md), for a pointillist view of progress
+and [flow](./flow.md) for the general flow of information
 
 ## License
 
@@ -177,3 +180,16 @@ span for each russian word
 When loading the page or when the page is loaded it.
 We may chose to hide section (for example to keep only russian )
 [See](#later)
+
+# Syntactical conventions as per .prettierrc.yaml
+
+Apparently the format on save does not handle the trailingComma.
+
+```yaml
+singleQuote: true
+semi: false
+trailingComma: all
+tabWidth: 2
+useTabs: false
+printWidth: 80
+```
