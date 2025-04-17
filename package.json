@@ -11,10 +11,12 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"admin": "tsx --tsconfig tsconfig.json scripts/adminMenu.ts",
-		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.mjs",
-		"test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.mjs --watch"
+		"test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.mjs && npm run test:e2e",
+		"test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config=jest.config.mjs --watch",
+		"test:e2e": "playwright test"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.49.1",
 		"@skeletonlabs/skeleton": "^3.1.2",
 		"@skeletonlabs/skeleton-svelte": "^1.1.0",
 		"@sveltejs/adapter-auto": "^4.0.0",
@@ -47,5 +49,10 @@
 		"sqlite": "^5.1.1",
 		"sqlite3": "^5.1.7",
 		"yaml": "^2.7.1"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild"
+		]
 	}
 }

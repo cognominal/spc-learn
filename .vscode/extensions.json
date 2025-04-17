@@ -1,5 +1,6 @@
 {
     "recommendations": [
-        "hbenl.vscode-test-explorer"
+        "hbenl.vscode-test-explorer",
+        "ms-playwright.playwright"
     ]
 }

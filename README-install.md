@@ -36,3 +36,13 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+## testing 
+
+The vscode setting propose to install test vscode extension. do it. Next.
+
+``` bash
+npx playwright install chromium firefox webkit
+```
+
+Right now the playwright test is just a sample
