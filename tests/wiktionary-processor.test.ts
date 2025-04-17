@@ -1,8 +1,9 @@
-import { processWiktionary } from '../src/lib/ProcessWiktionary.js';
+import { processWiktionary } from '$lib/server';
 import { JSDOM } from 'jsdom';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { describe, test, expect } from 'vitest';
 
 // Get the directory name for the current module
 const currentFilePath = fileURLToPath(import.meta.url);

@@ -11,8 +11,6 @@ import { JSDOM } from 'jsdom';
  * @returns The processed HTML content with details/summary elements
  */
 export function processWiktionary(htmlContent: string, section: string = 'Russian'): string {
-  // Log a sample of the HTML content
-  console.log(`HTML content sample (first 200 chars): ${htmlContent.substring(0, 200)}`);
 
   // Create a DOM from the HTML content
   let dom = new JSDOM(htmlContent);
@@ -20,7 +18,7 @@ export function processWiktionary(htmlContent: string, section: string = 'Russia
 
   // Find an element with an ID matching the section name
   const sectionElement = document.getElementById(section);
-  console.log(`Found section element with ID ${section}: ${sectionElement ? 'yes' : 'no'}`);
+  // console.log(`Found section element with ID ${section}: ${sectionElement ? 'yes' : 'no'}`);
 
   if (sectionElement) {
     // Create a new document with only the siblings of the section element's parent
@@ -31,7 +29,7 @@ export function processWiktionary(htmlContent: string, section: string = 'Russia
     if (newBody) {
       // Get the parent of the section element
       const parentElement = sectionElement.parentElement;
-      console.log(`Parent element: ${parentElement ? parentElement.tagName : 'null'}`);
+      // console.log(`Parent element: ${parentElement ? parentElement.tagName : 'null'}`);
 
       if (parentElement) {
         // Get all siblings of the parent element
@@ -64,7 +62,7 @@ export function processWiktionary(htmlContent: string, section: string = 'Russia
     });
 
     if (sectionHeader) {
-      console.log(`Found section header: ${sectionHeader.textContent}`);
+      // console.log(`Found section header: ${sectionHeader.textContent}`);
 
       // Create a new document with only the specified section and its siblings
       const newDom = new JSDOM('<!DOCTYPE html><html><head><title>Wiktionary</title></head><body></body></html>');
@@ -100,7 +98,7 @@ export function processWiktionary(htmlContent: string, section: string = 'Russia
   // create details/summary sections
   // Find all elements with class mw-heading3
   const headingElements = document.querySelectorAll('.mw-heading3');
-  console.log(`Found ${headingElements.length} elements with class mw-heading3`);
+  // console.log(`Found ${headingElements.length} elements with class mw-heading3`);
 
   headingElements.forEach((headingElement) => {
     // Create a details element
@@ -135,7 +133,7 @@ export function processWiktionary(htmlContent: string, section: string = 'Russia
     // Set the details element to open if the second child is an ol
     if (foundOl) {
       details.setAttribute('open', '');
-      console.log('Found ol as second child, setting details to open');
+      // console.log('Found ol as second child, setting details to open');
     }
 
     // Create a summary element
@@ -215,8 +213,8 @@ export function processWiktionary(htmlContent: string, section: string = 'Russia
   const processedHtml = dom.serialize();
 
   // Log a sample of the processed HTML
-  console.log(`Processed HTML sample (first 200 chars): ${processedHtml.substring(0, 200)}`);
-  console.log(`Processed HTML contains details tags: ${processedHtml.includes('<details')}`);
+  // console.log(`Processed HTML sample (first 200 chars): ${processedHtml.substring(0, 200)}`);
+  // console.log(`Processed HTML contains details tags: ${processedHtml.includes('<details')}`);
 
   // Return the processed HTML
   return processedHtml;

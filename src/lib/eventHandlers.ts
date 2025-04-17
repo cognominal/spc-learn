@@ -1,7 +1,7 @@
 import { PageState } from '$lib/PageState.svelte.js';
+import { cleanProcessedHtml } from '$lib';
 
 export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageState: PageState): boolean {
-    console.log('click russian word?');
 
     const target = event.target as HTMLElement;
     if (target.getAttribute("data-lang") !== "ru") return false;
@@ -11,12 +11,12 @@ export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageSt
         if (pageState.selectedElement)
             pageState.selectedElement.style.removeProperty('color');
         pageState.selectedElement = target;
-        showDefinition(word, pageState);
+        getAndProcessDefinition(word, pageState);
     }
     return true;
 }
 
-//  A section is a russian sentence and its translation.
+//  A language section is a russian sentence and its translation.
 // When clicking a section but not a russian word, we grey out all the other sections and hide their translation
 
 export function handleClickSection(event: MouseEvent | KeyboardEvent, pageState: PageState): boolean {
@@ -25,7 +25,6 @@ export function handleClickSection(event: MouseEvent | KeyboardEvent, pageState:
         target = target.parentElement!;
     }
 
-    console.log('handleClickSection', target);
     if (target.classList.contains('break-words')) {
         document.querySelectorAll('li.break-words').forEach(li => {
 
@@ -80,57 +79,50 @@ export function handleClick(event: MouseEvent | KeyboardEvent, pageState: PageSt
     if (handleClickSection(event, pageState)) return;
 
 }
-
-async function showDefinition(word: string, pageState: PageState) {
-    pageState.selectedWord = word;
-    pageState.iframeLoading = true;
+async function getDefinition(word: string): Promise<string> {
     const form = new FormData();
     form.append("word", word);
 
     try {
-        const response = await fetch("?/getDefinition", {
+        const response: Response = await fetch("?/getDefinition", {
             method: "POST",
             body: form,
         });
-        const result = await response.json();
-        console.log(result);
-        let rawDefinition = result.data;
+        const result: { data: string } = await response.json();
+        const parsed = JSON.parse(result.data);
+        // why parsed has this form
+        // [
+        //     {
+        //         "word": 1,
+        //         "indices": 2,
+        //         "processedWiktionaryPage": 3
+        //     },
+        //     "это",
+        //     [],
+        //     "<!DOCTYPE ..."
+        // ]
 
-        if (rawDefinition) {
-            // Clean up the raw definition
-            rawDefinition = rawDefinition.replace(/\\u003C/g, "<");
-            rawDefinition = rawDefinition.replace(/\\n/g, "");
 
-            // Remove any JSON artifacts that might be present
-            // First, log the first 50 characters to see exactly what we're dealing with
-            console.log(`First 50 chars of definition: '${rawDefinition.substring(0, 50)}'`);
+        let defn = parsed[3];
+        return defn
 
-            // Try different approaches to remove the artifacts
-            // 1. Remove common JSON prefix patterns
-            rawDefinition = rawDefinition.replace(/^\[\{"definition":1\},"/, "");
-            rawDefinition = rawDefinition.replace(/^\[\{"definition":\d+\},"/, "");
-            rawDefinition = rawDefinition.replace(/^\[\{"?definition"?:?\d*\}?,?"?/, "");
+    } catch (error) { return "WTF" }
+}
 
-            // 2. Remove any remaining JSON-like prefix
-            rawDefinition = rawDefinition.replace(/^[\[\{].*?[\}\]],?"?/, "");
-
-            // 3. Remove trailing JSON artifacts
-            rawDefinition = rawDefinition.replace(/"?\]?$/, "");
-
-            // Log the first 50 characters after cleaning to verify
-            console.log(`After cleaning, first 50 chars: '${rawDefinition.substring(0, 50)}'`);
-
-            // Log information about the received definition
-            console.log(`Client received definition length: ${rawDefinition.length}`);
-            console.log(`Client received definition contains details tags: ${rawDefinition.includes('<details')}`);
-
-            // Set the word definition in the page state
-            pageState.wordDefinition = rawDefinition;
-        } else {
-            pageState.wordDefinition = "<div class='p-4 text-center text-red-600'>Definition not found</div>";
-        }
+async function getAndProcessDefinition(word: string, pageState: PageState) {
+    try {
+        pageState.selectedWord = word;
+        pageState.iframeLoading = true;
+        getDefinition(word).then((defn) => {
+            if (defn) {
+                pageState.wordDefinition = defn;
+            } else {
+                pageState.wordDefinition = "<div class='p-4 text-center text-red-600'>Definition not found</div>";
+            }
+        })
     } catch (error) {
         console.error("Error fetching definition:", error);
         pageState.wordDefinition = "<div class='p-4 text-center text-red-600'>Error loading definition</div>";
     }
+
 }

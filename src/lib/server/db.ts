@@ -24,7 +24,7 @@
  */
 
 import sqlite3 from 'sqlite3';
-import { open } from 'sqlite';
+import { open, Database } from 'sqlite';
 import fs from 'fs/promises';
 import path from 'path';
 import yaml from 'yaml';
@@ -34,7 +34,7 @@ const DB_PATH = path.join(process.cwd(), 'data', 'words.db');
 const YAML_PATH = path.join(process.cwd(), 'data', 'words.yaml');
 
 // Database connection
-let db: any = null;
+let db: Database<sqlite3.Database> | null = null;
 
 /**
  * Initializes the database connection and creates tables if they don't exist
@@ -100,17 +100,21 @@ function normalizeWord(word: string): string {
  * @param indices - Optional array of indices where the word appears
  * @returns A promise that resolves when the word is stored
  */
-export async function storeWordData(
-    word: string,
-    wiktionary: string,
-    indices: number[] = []
-): Promise<void> {
+
+
+export type WordData = {
+    word: string;
+    indices: number[];
+    processedWiktionaryPage: string;
+}
+
+export async function storeWordDataIndB(wd: WordData): Promise<void> {
     try {
-        // Initialize the database if needed
-        await initializeDatabase();
+        // Ensure database is initialized
+        db = await initializeDatabase();
 
         // Normalize the word
-        const normalizedWord = normalizeWord(word);
+        const normalizedWord = normalizeWord(wd.word);
 
         // Check if the word already exists
         const existingWord = await db.get('SELECT * FROM words WHERE word = ?', normalizedWord);
@@ -118,13 +122,13 @@ export async function storeWordData(
         if (existingWord) {
             // Merge indices if the word exists
             const existingIndices = JSON.parse(existingWord.indices || '[]');
-            const mergedIndices = [...new Set([...existingIndices, ...indices])];
+            const mergedIndices = [...new Set([...existingIndices, ...wd.indices])];
 
             // Update the existing word
             await db.run(
                 'UPDATE words SET indices = ?, wiktionary = ? WHERE word = ?',
                 JSON.stringify(mergedIndices),
-                wiktionary || existingWord.wiktionary,
+                wd.processedWiktionaryPage || existingWord.wiktionary,
                 normalizedWord
             );
         } else {
@@ -132,35 +136,26 @@ export async function storeWordData(
             await db.run(
                 'INSERT INTO words (word, indices, wiktionary) VALUES (?, ?, ?)',
                 normalizedWord,
-                JSON.stringify(indices),
-                wiktionary
+                JSON.stringify(wd.indices),
+                wd.processedWiktionaryPage
             );
         }
     } catch (error) {
-        console.error(`Error storing word data for "${word}":`, error);
+        console.error(`Error storing word data for "${wd.word}":`, error);
         throw error;
     }
 }
 
-/**
- * Retrieves word data from the database
- *
- * @param word - The word to retrieve
- * @returns The word data or null if not found
- */
-export function getWordData(word: string): { word: string; indices: number[]; wiktionary: string } | null {
+export async function getWordDataFromDbOrNull(word: string): Promise<WordData | null> {
     try {
+        // Ensure database is initialized
+        db = await initializeDatabase();
+
         // Normalize the word
         const normalizedWord = normalizeWord(word);
 
-        // Check if the database is initialized
-        if (!db) {
-            console.warn('Database not initialized. Call initializeDatabase() first.');
-            return null;
-        }
-
         // Get the word data
-        const wordData = db.get('SELECT * FROM words WHERE word = ?', normalizedWord);
+        const wordData = await db.get('SELECT * FROM words WHERE word = ?', normalizedWord);
 
         if (!wordData) {
             return null;
@@ -172,7 +167,7 @@ export function getWordData(word: string): { word: string; indices: number[]; wi
         return {
             word: wordData.word,
             indices,
-            wiktionary: wordData.wiktionary
+            processedWiktionaryPage: wordData.wiktionary
         };
     } catch (error) {
         console.error(`Error getting word data for "${word}":`, error);
@@ -180,28 +175,23 @@ export function getWordData(word: string): { word: string; indices: number[]; wi
     }
 }
 
-/**
- * Dumps the database to a YAML file
- *
- * @returns A promise that resolves when the database is dumped
- */
 export async function dumpDatabaseToYAML(): Promise<void> {
     try {
-        // Initialize the database if needed
-        await initializeDatabase();
+        // Ensure database is initialized
+        db = await initializeDatabase();
 
         // Get all words from the database
         const words = await db.all('SELECT * FROM words');
 
         // Convert to a more YAML-friendly format
-        const data = words.map(word => ({
+        const data = words.map((word: WordData) => ({
             word: word.word,
-            indices: JSON.parse(word.indices || '[]'),
-            wiktionary: word.wiktionary
+            indices: word.indices || '[]',
+            wiktionary: word.processedWiktionaryPage
         }));
 
         // Convert to YAML
-        const yamlData = yaml.dump(data);
+        const yamlData = yaml.stringify(data);
 
         // Write to file
         await fs.writeFile(YAML_PATH, yamlData, 'utf8');
@@ -213,11 +203,6 @@ export async function dumpDatabaseToYAML(): Promise<void> {
     }
 }
 
-/**
- * Restores the database from a YAML file
- *
- * @returns A promise that resolves when the database is restored
- */
 export async function restoreFromYAML(): Promise<void> {
     try {
         // Check if the YAML file exists
@@ -228,14 +213,14 @@ export async function restoreFromYAML(): Promise<void> {
             return;
         }
 
-        // Initialize the database if needed
-        await initializeDatabase();
+        // Ensure database is initialized
+        db = await initializeDatabase();
 
         // Read the YAML file
         const yamlData = await fs.readFile(YAML_PATH, 'utf8');
 
         // Parse the YAML
-        const data = yaml.load(yamlData) as Array<{
+        const data = yaml.parse(yamlData) as Array<{
             word: string;
             indices: number[];
             wiktionary: string;
@@ -272,12 +257,8 @@ export async function restoreFromYAML(): Promise<void> {
     }
 }
 
-/**
- * Closes the database connection
- *
- * @returns A promise that resolves when the database is closed
- */
 export async function closeDatabase(): Promise<void> {
+    db = await initializeDatabase();
     if (db) {
         await db.close();
         db = null;

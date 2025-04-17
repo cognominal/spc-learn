@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite';
-import { processContent, getWordData } from '$lib/server';
+import { processContent, getWordDataFromDbOrNull } from '$lib/server';
 import path from 'path';
 import fs from 'fs/promises';
 
@@ -53,7 +53,7 @@ export function contentProcessor(): Plugin {
                 );
 
                 const { html, words } = await processContent(htmlContent, false);
-                const newWords = words.filter(word => !getWordData(word));
+                const newWords = words.filter(word => !getWordDataFromDbOrNull(word));
 
                 if (newWords.length > 0) {
                     console.log(`🔍 Processing ${newWords.length} new words...`);

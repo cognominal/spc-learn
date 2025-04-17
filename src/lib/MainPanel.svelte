@@ -1,42 +1,44 @@
 <script lang="ts">
-  import { handleClick } from '$lib';
-  import { onMount } from 'svelte';
+  import { handleClick } from '$lib'
+  import { onMount } from 'svelte'
 
   // Get pageState from props
-  let { pageState } = $props();
+  let { pageState } = $props()
 
   // State for the processed HTML content
-  let processedHtml = $state<string | null>(null);
-  let loading = $state(true);
-  let error = $state<string | null>(null);
+  let processedHtml = $state<string | null>(null)
+  let loading = $state(true)
+  let error = $state<string | null>(null)
 
   // Load the processed HTML content
   async function loadContent() {
     try {
-      loading = true;
-      error = null;
+      loading = true
+      error = null
 
       // Fetch the processed HTML content
-      const response = await fetch("/api/content");
+      const response = await fetch('/api/content')
 
       if (!response.ok) {
-        throw new Error(`Failed to load content: ${response.statusText}`);
+        throw new Error(`Failed to load content: ${response.statusText}`)
       }
 
-      const data = await response.json();
-      processedHtml = data.processedHtml;
+      const data = await response.json()
+      // console.log('Main panel : Fetched content:', data)
+
+      processedHtml = data.processedHtml
     } catch (err) {
-      console.error("Error loading content:", err);
-      error = err instanceof Error ? err.message : String(err);
+      console.error('Error loading content:', err)
+      error = err instanceof Error ? err.message : String(err)
     } finally {
-      loading = false;
+      loading = false
     }
   }
 
   // Load content when the component is mounted
   onMount(() => {
-    loadContent();
-  });
+    loadContent()
+  })
 </script>
 
 <section class="text-black bg-white p-4 h-full w-full overflow-hidden">
@@ -53,7 +55,7 @@
       class="w-full h-full overflow-y-auto"
       style="max-height: 100%; overflow-y: auto;"
       onclick={(e) => handleClick(e, pageState)}
-      onkeydown={(e) => e.key === "Enter" && handleClick(e, pageState)}
+      onkeydown={(e) => e.key === 'Enter' && handleClick(e, pageState)}
       role="textbox"
       tabindex="0"
       aria-label="Russian text with clickable words"

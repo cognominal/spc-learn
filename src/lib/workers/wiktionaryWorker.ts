@@ -1,25 +1,30 @@
-import { fetchWiktionaryContent, getWordData, storeWordData } from '$lib/server';
+import { fetchWiktionaryPageAndProcessIt, getWordDataFromDbOrNull, storeWordDataIndB, type WordData } from '$lib/server';
 
 self.onmessage = async (e: MessageEvent) => {
     const { word, indices } = e.data;
 
     try {
         // Check if word exists in database
-        const existingData = getWordData(word);
-        if (existingData?.wiktionary) {
+        const existingData = await getWordDataFromDbOrNull(word);
+        if (existingData?.processedWiktionaryPage) {
             self.postMessage({
                 type: 'success',
                 word,
-                content: existingData.wiktionary
+                content: existingData.processedWiktionaryPage
             });
             return;
         }
 
         // Fetch and process new word
-        const wiktionaryContent = await fetchWiktionaryContent(word);
+        const wiktionaryContent = await fetchWiktionaryPageAndProcessIt(word);
         if (wiktionaryContent) {
+            const wd: WordData = {
+                word,
+                indices: indices || [],
+                processedWiktionaryPage: wiktionaryContent.processedWiktionaryPage || ''
+            }
             // Store in database
-            storeWordData(word, wiktionaryContent, indices || []);
+            await storeWordDataIndB(wd);
 
             self.postMessage({
                 type: 'success',

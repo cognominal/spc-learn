@@ -24,7 +24,7 @@
  */
 
 import { JSDOM } from 'jsdom';
-import { storeWordData, getWordData } from './db';
+import { storeWordDataIndB, getWordDataFromDbOrNull, type WordData } from '$lib/server';
 import { processWiktionary } from './ProcessWiktionary';
 
 
@@ -54,13 +54,15 @@ export function findRussianWords(text: string): string[] {
     return matches;
 }
 
+export type ProcessedWiktPage = { status: string, processedWiktionaryPage?: string }
+
 /**
  * Fetches content from Wiktionary for a given Russian word
  *
  * @param word - The Russian word to look up
  * @returns A promise that resolves to the processed HTML content from Wiktionary
  */
-export async function fetchWiktionaryContent(word: string): Promise<string> {
+export async function fetchWiktionaryPageAndProcessIt(word: string): Promise<ProcessedWiktPage> {
     try {
         // Encode the word for use in a URL
         const encodedWord = encodeURIComponent(word);
@@ -79,12 +81,17 @@ export async function fetchWiktionaryContent(word: string): Promise<string> {
         const htmlContent = await response.text();
 
         // Process the content to extract only the Russian section and transform it
-        const processedContent = processWiktionary(htmlContent, 'Russian');
+        const processedWiktionaryPage = processWiktionary(htmlContent, 'Russian');
+        console.log(`Fetched definition for "${word}"`);
+        console.log(`Processed content length: ${processedWiktionaryPage}`);
 
-        return processedContent;
+
+        return { status: 'success', processedWiktionaryPage };
     } catch (error) {
         console.error('Error fetching Wiktionary content:', error);
-        return `<p>Error fetching definition for "${word}": ${error instanceof Error ? error.message : String(error)}</p>`;
+        return {
+            status: `Error fetching definition for "${word}": ${error instanceof Error ? error.message : String(error)} }`
+        }
     }
 }
 
@@ -160,7 +167,7 @@ export async function processContent(
 
     // Fetch definitions for words not in the database
     if (fetchDefinitions) {
-        const wordsToFetch = wordsArray.filter(word => !getWordData(word));
+        const wordsToFetch = wordsArray.filter(word => !getWordDataFromDbOrNull(word));
 
         if (wordsToFetch.length > 0) {
             console.log(`Fetching definitions for ${wordsToFetch.length} words...`);
@@ -169,10 +176,19 @@ export async function processContent(
             for (const word of wordsToFetch) {
                 try {
                     console.log(`Fetching definition for "${word}"...`);
-                    const definition = await fetchWiktionaryContent(word);
+                    const { status, processedWiktionaryPage } = await fetchWiktionaryPageAndProcessIt(word);
 
                     // Store the definition in the database
-                    await storeWordData(word, definition);
+                    let wd: WordData;
+                    if (status !== 'success') {
+                        // I lost track of what `indices` was supposed to be
+                        wd = { word, processedWiktionaryPage: processedWiktionaryPage!, indices: [] }
+
+                    } else {
+                        // An error result into a processedWiktionaryPage == ''
+                        wd = { word, processedWiktionaryPage: "", indices: [] }
+                    }
+                    await storeWordDataIndB(wd);
 
                     console.log(`Stored definition for "${word}"`);
                 } catch (error) {
@@ -190,6 +206,7 @@ export async function processContent(
         words: wordsArray
     };
 }
+
 
 /**
  * Gets all text nodes in an element
@@ -263,6 +280,7 @@ export function processEnglishTranslations(htmlContent: string): string {
     return dom.serialize();
 }
 
+
 /**
  * Processes a section of HTML content to highlight and make interactive specific elements
  *
@@ -329,6 +347,7 @@ export function extractWiktionaryContent(htmlContent: string): string {
 
     return newDom.serialize();
 }
+
 
 /**
  * Processes a Wiktionary page to extract and format the Russian section

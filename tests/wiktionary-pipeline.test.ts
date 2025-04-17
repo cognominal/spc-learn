@@ -1,8 +1,9 @@
-import { fetchWiktionaryContent } from '$lib/server';
+import { fetchWiktionaryPageAndProcessIt } from '$lib/server';
 import { JSDOM } from 'jsdom';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { describe, test, expect, beforeEach, afterAll } from 'vitest';
 
 // Get the directory name for the current module
 const currentFilePath = fileURLToPath(import.meta.url);
@@ -68,34 +69,56 @@ const mockNoRussianPage = `
 const originalFetch = global.fetch;
 
 // Helper function to create a mock response
-function createMockResponse(html) {
+function createMockResponse(html: string): Response {
+  // Use a minimal Response-like object for fetch mocking
   return {
     ok: true,
-    text: () => Promise.resolve(html)
-  };
+    status: 200,
+    statusText: 'OK',
+    headers: new Headers(),
+    url: '',
+    redirected: false,
+    type: 'basic',
+    body: null,
+    clone() { return this as unknown as Response; },
+    arrayBuffer: async () => new ArrayBuffer(0),
+    blob: async () => new Blob(),
+    formData: async () => new FormData(),
+    json: async () => html,
+    text: async () => html,
+    bodyUsed: false,
+  } as unknown as Response;
 }
 
 describe('Wiktionary Pipeline Integration', () => {
   // Before each test, set up the mock fetch
   beforeEach(() => {
-    // Save the original fetch function
-    global.fetch = async (url) => {
-      // Check if the URL is for Wiktionary
+    global.fetch = async (url: RequestInfo | URL) => {
       if (url.toString().includes('wiktionary.org')) {
-        // Check the word in the URL
         if (url.toString().includes('testword')) {
           return createMockResponse(mockWiktionaryPage);
         } else if (url.toString().includes('norussian')) {
           return createMockResponse(mockNoRussianPage);
         }
       }
-
-      // For other URLs, return a 404
+      // For other URLs, return a 404-like Response
       return {
         ok: false,
         status: 404,
-        statusText: 'Not Found'
-      };
+        statusText: 'Not Found',
+        headers: new Headers(),
+        url: '',
+        redirected: false,
+        type: 'basic',
+        body: null,
+        clone() { return this as unknown as Response; },
+        arrayBuffer: async () => new ArrayBuffer(0),
+        blob: async () => new Blob(),
+        formData: async () => new FormData(),
+        json: async () => ({}),
+        text: async () => '',
+        bodyUsed: false,
+      } as unknown as Response;
     };
   });
 
@@ -105,15 +128,11 @@ describe('Wiktionary Pipeline Integration', () => {
   });
 
   test('fetchWiktionaryContent extracts Russian section and converts h3 to details', async () => {
-    // Call the fetchWiktionaryContent function with a test word
-    const processedContent = await fetchWiktionaryContent('testword');
-
-    // Verify that the content is not null
+    const processedContent = await fetchWiktionaryPageAndProcessIt('testword');
     expect(processedContent).not.toBeNull();
-
-    if (processedContent) {
-      // Create a DOM from the processed content
-      const dom = new JSDOM(processedContent);
+    if (processedContent && processedContent.processedWiktionaryPage) {
+      const html = processedContent.processedWiktionaryPage;
+      const dom = new JSDOM(html);
       const document = dom.window.document;
 
       // We're now only keeping the content after the Russian section, not the section header itself
@@ -135,9 +154,9 @@ describe('Wiktionary Pipeline Integration', () => {
       expect(summaryElements.length).toBeGreaterThan(0);
 
       // Check for specific content from the Russian section
-      expect(processedContent.includes('This is the Russian etymology')).toBe(true);
-      expect(processedContent.includes('This is the Russian pronunciation')).toBe(true);
-      expect(processedContent.includes('This is the Russian noun definition')).toBe(true);
+      expect(html.includes('This is the Russian etymology')).toBe(true);
+      expect(html.includes('This is the Russian pronunciation')).toBe(true);
+      expect(html.includes('This is the Russian noun definition')).toBe(true);
 
       // Note: The current implementation doesn't completely remove content from other sections
       // It focuses on converting h3 elements to details/summary elements
@@ -151,7 +170,7 @@ describe('Wiktionary Pipeline Integration', () => {
       const outputDir = path.join(currentDirPath, 'output');
       try {
         await fs.mkdir(outputDir, { recursive: true });
-        await fs.writeFile(path.join(outputDir, 'pipeline-processed.html'), processedContent);
+        await fs.writeFile(path.join(outputDir, 'pipeline-processed.html'), html);
         console.log(`Saved pipeline processed HTML to ${path.join(outputDir, 'pipeline-processed.html')}`);
       } catch (error) {
         console.error('Failed to save processed HTML:', error);
@@ -161,7 +180,7 @@ describe('Wiktionary Pipeline Integration', () => {
 
   test('fetchWiktionaryContent handles words without Russian section', async () => {
     // Call the fetchWiktionaryContent function
-    const processedContent = await fetchWiktionaryContent('norussian');
+    const processedContent = await fetchWiktionaryPageAndProcessIt('norussian');
 
     // Verify that the content is null (no Russian section)
     expect(processedContent).toBeNull();
@@ -174,7 +193,7 @@ describe('Wiktionary Pipeline Integration', () => {
     };
 
     // Call the fetchWiktionaryContent function
-    const processedContent = await fetchWiktionaryContent('errorword');
+    const processedContent = await fetchWiktionaryPageAndProcessIt('errorword');
 
     // Verify that the content is null (error occurred)
     expect(processedContent).toBeNull();
