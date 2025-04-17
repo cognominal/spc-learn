@@ -4,7 +4,6 @@ words.db
 words.db-wal
 words.db-shm
 words-dump.json
-grok-processed-file.html
 
 # personal saved files
 
