@@ -1,7 +1,7 @@
-
 import adapterVercel from '@sveltejs/adapter-vercel';
 import adapterNode from '@sveltejs/adapter-node';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
+import path from 'path';
 
 const adapter =
 	process.env.ADAPTER === 'vercel'
@@ -21,10 +21,8 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter,
 		alias: {
-			$c: 'src/c',
-			$lib: 'src/lib',
-			$stores: 'src/stores',
-			$utils: 'src/utils'
+			'$c': path.resolve('./src/c'),
+			'$c/*': path.resolve('./src/c/*'),
 		},
 	}
 };
