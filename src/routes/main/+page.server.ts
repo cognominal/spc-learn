@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad, Actions } from './$types';
+import type { PageServerLoad, Actions } from '../$types';
 import { getWordDataFromDbOrNull, storeWordDataIndB, fetchWiktionaryPageAndProcessIt, type WordData, type ProcessedWiktPage } from '$lib/server';
 import fs from 'fs/promises';
 import path from 'path';

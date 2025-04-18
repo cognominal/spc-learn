@@ -1,13 +1,17 @@
 <script lang="ts">
-  import "../app.css";
+  import '../app.css'
 
-  let { children } = $props();
+  let { children } = $props()
 
-  import { AppBar } from '@skeletonlabs/skeleton-svelte';
-  import { ArrowLeft } from 'lucide-svelte';
-  import { Paperclip } from 'lucide-svelte';
-  import { Calendar } from 'lucide-svelte';
-  import { CircleUser } from 'lucide-svelte';
+  import { AppBar } from '@skeletonlabs/skeleton-svelte'
+  import { ArrowLeft } from 'lucide-svelte'
+  import { Paperclip } from 'lucide-svelte'
+  import { Calendar } from 'lucide-svelte'
+  import { CircleUser } from 'lucide-svelte'
+  import { Navigation } from '@skeletonlabs/skeleton-svelte'
+
+  // State
+  let value = $state('files')
   // import { Github } from ???
 </script>
 
@@ -26,6 +30,12 @@
       <Calendar size={20} />
       <CircleUser size={20} />
     {/snippet}
+    <Navigation.Bar {value} onValueChange={(newValue) => (value = newValue)}>
+      <Navigation.Tile id="files" label="Files"></Navigation.Tile>
+      <Navigation.Tile id="images" label="Images"></Navigation.Tile>
+      <Navigation.Tile id="music" label="Music"></Navigation.Tile>
+      <Navigation.Tile id="videos" label="Videos"></Navigation.Tile>
+    </Navigation.Bar>
     <span class="text-lg font-semibold text-white">Russian Learning</span>
   </AppBar>
 </nav>
