@@ -10,26 +10,32 @@ Soljenitzine's address. This list should help to go forward and track progress.
 * [ ] use skeleton widgets (already done for closing the wikt defn panel)
 * [ ] support devices of different sizes
 * [x] cleaning junk in the wikt defn panel
+* [ ] fix fresh install of sqlite
+
+## ui
 
 ## deploy
 
+* [ ] 
+
 * [ ] deploy on [vercel](https://vercel.com/). vercel has a ro fs so it should not update
 the db.  [render](https://render.com/) should be the preferred choice. Augment has generated code to support both cases
+[ ] dockerfile
 
 ## new routes/pages
-* [ ] a route for learning the grammars terms so as to be able to read the wiktionary pages in the target language (now russian)
+* [ ] a /grammar route for learning the grammars terms so as to be able to read the wiktionary pages in the target language (now russian)
 * [ ] a route for the 1000 more common words grouped by their non inflexion form. Need to find examples.
-* [ ] an about page
-* [ ] and admin route to facilitate import of traductions, like verifying if the original and the translation match.
+* [ ] an /about page
+* [ ] and /admin route to facilitate import of traductions, like verifying if the original and the translation match.
 
 ## features
 
+* [ ] space repetition learning (the big item?)
 * [x] make tne many admin scripts one with a choice menu like the svelte sv script does 
-* [ ] choice of wiktionary language (see /grammar route). means changing the db schema
+* [x] choice of wiktionary language (see /grammar route). means changing the db schema
 * [ ] cache ~100 wikt word client side for better responsivness
 * [ ] better server message when server down or inaccessible
 
-* [ ] space repetition learning (the big item?)
 * [x] a cleant up [raw-file-from-grok.html](static/raw-file-from-grok.html)
 * general UI
   * So many things to be defined

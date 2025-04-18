@@ -9,12 +9,13 @@
   import { Calendar } from 'lucide-svelte'
   import { CircleUser } from 'lucide-svelte'
   import { Navigation } from '@skeletonlabs/skeleton-svelte'
+  import { goto } from '$app/navigation'
 
   // State
-  let value = $state('files')
-  // import { Github } from ???
+  let routeLabel: string = $state('create')
 </script>
 
+<div>{routeLabel}</div>
 <nav class="sticky top-0 z-10 px-2 pt-2">
   <AppBar
     background="bg-rose-400"
@@ -30,11 +31,13 @@
       <Calendar size={20} />
       <CircleUser size={20} />
     {/snippet}
-    <Navigation.Bar {value} onValueChange={(newValue) => (value = newValue)}>
-      <Navigation.Tile id="files" label="Files"></Navigation.Tile>
-      <Navigation.Tile id="images" label="Images"></Navigation.Tile>
-      <Navigation.Tile id="music" label="Music"></Navigation.Tile>
-      <Navigation.Tile id="videos" label="Videos"></Navigation.Tile>
+    <Navigation.Bar
+      value={routeLabel}
+      onValueChange={(newValue) => (routeLabel = newValue)}
+    >
+      <Navigation.Tile href="/" label="Home"></Navigation.Tile>
+      <Navigation.Tile href="/create-document" label="Create"></Navigation.Tile>
+      <Navigation.Tile href="/admin" label="Admin"></Navigation.Tile>
     </Navigation.Bar>
     <span class="text-lg font-semibold text-white">Russian Learning</span>
   </AppBar>

@@ -3,6 +3,8 @@
   import { type PageState, getAndProcessDefinition } from '$lib'
   import { X } from 'lucide-svelte'
   import { Segment } from '@skeletonlabs/skeleton-svelte'
+  import Spinner from '$c/Spinner.svelte'
+
   let iframeElement: HTMLIFrameElement | null = $state(null)
 
   let { pageState }: { pageState: PageState } = $props()
@@ -109,9 +111,8 @@
 </script>
 
 <div class="relative w-full h-full">
-  <div>{pageState.lang}</div>
   <!-- Language selection segment group -->
-  <div class="flex gap-4 items-center mb-4">
+  <span class="flex gap-4 items-center mb-4 bg-gray-200">
     <Segment
       value={pageState.lang}
       name="lang-group"
@@ -124,7 +125,8 @@
         <Segment.Item value={lang}>{lang.toUpperCase()}</Segment.Item>
       {/each}
     </Segment>
-  </div>
+    <span class="h-full flex items-center bg-gray-700"><Spinner ></Spinner></span>
+  </span>
   <!-- Close button -->
   <button
     class="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 hover:text-gray-900 shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
