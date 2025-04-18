@@ -28,7 +28,8 @@ export const actions: Actions = {
         try {
             const data = await request.formData();
             const word = data.get('word')?.toString();
-            console.log(`Word '${word}'`);
+            const lang = data.get('lang')?.toString();
+            console.log(`Word '${word}' with language '${lang}'`);
 
 
             if (!word) {
@@ -36,7 +37,7 @@ export const actions: Actions = {
             }
 
             // Check if the word exists in the database
-            let wordData = await getWordDataFromDbOrNull(word);
+            let wordData = await getWordDataFromDbOrNull(word, lang!);
             // console.log(`Word data: ${JSON.stringify(wordData)}`);
 
 
@@ -46,13 +47,14 @@ export const actions: Actions = {
 
                 // Fetch and process the definition from Wiktionary
                 // The fetchWiktionaryContent function now includes the processing step
-                const p: ProcessedWiktPage = await fetchWiktionaryPageAndProcessIt(word);
+                const p: ProcessedWiktPage = await fetchWiktionaryPageAndProcessIt(word, lang!);
                 console.log(p.status);
 
 
                 // If wordData exists but has no Wiktionary content, preserve its indices
                 wordData = {
                     word,
+                    lang: lang!,
                     indices: [],
                     processedWiktionaryPage: p.processedWiktionaryPage!
                 };

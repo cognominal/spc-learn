@@ -106,71 +106,58 @@ export type WordData = {
     word: string;
     indices: number[];
     processedWiktionaryPage: string;
+    lang: string;
 }
 
 export async function storeWordDataIndB(wd: WordData): Promise<void> {
     try {
-        // Ensure database is initialized
         db = await initializeDatabase();
-
-        // Normalize the word
         const normalizedWord = normalizeWord(wd.word);
-
-        // Check if the word already exists
-        const existingWord = await db.get('SELECT * FROM words WHERE word = ?', normalizedWord);
-
+        // Check if the word already exists for the given lang
+        const existingWord = await db.get('SELECT * FROM words WHERE word = ? AND lang = ?', normalizedWord, wd.lang);
         if (existingWord) {
-            // Merge indices if the word exists
             const existingIndices = JSON.parse(existingWord.indices || '[]');
             const mergedIndices = [...new Set([...existingIndices, ...wd.indices])];
-
-            // Update the existing word
             await db.run(
-                'UPDATE words SET indices = ?, wiktionary = ? WHERE word = ?',
+                'UPDATE words SET indices = ?, wiktionary = ? WHERE word = ? AND lang = ?',
                 JSON.stringify(mergedIndices),
                 wd.processedWiktionaryPage || existingWord.wiktionary,
-                normalizedWord
+                normalizedWord,
+                wd.lang
             );
         } else {
-            // Insert a new word
             await db.run(
-                'INSERT INTO words (word, indices, wiktionary) VALUES (?, ?, ?)',
+                'INSERT INTO words (word, lang, indices, wiktionary) VALUES (?, ?, ?, ?)',
                 normalizedWord,
+                wd.lang,
                 JSON.stringify(wd.indices),
                 wd.processedWiktionaryPage
             );
         }
     } catch (error) {
-        console.error(`Error storing word data for "${wd.word}":`, error);
+        console.error(`Error storing word data for "${wd.word}" (lang: ${wd.lang}):`, error);
         throw error;
     }
 }
 
-export async function getWordDataFromDbOrNull(word: string): Promise<WordData | null> {
+export async function getWordDataFromDbOrNull(word: string, lang: string): Promise<WordData | null> {
     try {
-        // Ensure database is initialized
         db = await initializeDatabase();
-
-        // Normalize the word
         const normalizedWord = normalizeWord(word);
-
-        // Get the word data
-        const wordData = await db.get('SELECT * FROM words WHERE word = ?', normalizedWord);
-
+        // Query for the word and lang
+        const wordData = await db.get('SELECT * FROM words WHERE word = ? AND lang = ?', normalizedWord, lang);
         if (!wordData) {
             return null;
         }
-
-        // Parse the indices
         const indices = JSON.parse(wordData.indices || '[]');
-
         return {
             word: wordData.word,
             indices,
-            processedWiktionaryPage: wordData.wiktionary
+            processedWiktionaryPage: wordData.wiktionary,
+            lang: wordData.lang
         };
     } catch (error) {
-        console.error(`Error getting word data for "${word}":`, error);
+        console.error(`Error getting word data for "${word}" (lang: ${lang}):`, error);
         return null;
     }
 }

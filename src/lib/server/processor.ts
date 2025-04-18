@@ -62,13 +62,13 @@ export type ProcessedWiktPage = { status: string, processedWiktionaryPage?: stri
  * @param word - The Russian word to look up
  * @returns A promise that resolves to the processed HTML content from Wiktionary
  */
-export async function fetchWiktionaryPageAndProcessIt(word: string): Promise<ProcessedWiktPage> {
+export async function fetchWiktionaryPageAndProcessIt(word: string, lang: string): Promise<ProcessedWiktPage> {
     try {
         // Encode the word for use in a URL
         const encodedWord = encodeURIComponent(word);
 
         // Construct the Wiktionary URL
-        const url = `https://en.wiktionary.org/wiki/${encodedWord}`;
+        const url = `https://${lang}.wiktionary.org/wiki/${encodedWord}`;
 
         // Fetch the content
         const response = await fetch(url);
@@ -83,7 +83,7 @@ export async function fetchWiktionaryPageAndProcessIt(word: string): Promise<Pro
         // Process the content to extract only the Russian section and transform it
         const processedWiktionaryPage = processWiktionary(htmlContent, 'Russian');
         console.log(`Fetched definition for "${word}"`);
-        console.log(`Processed content length: ${processedWiktionaryPage}`);
+
 
 
         return { status: 'success', processedWiktionaryPage };
@@ -104,6 +104,7 @@ export async function fetchWiktionaryPageAndProcessIt(word: string): Promise<Pro
  */
 export async function processContent(
     htmlContent: string,
+    lang: string,
     fetchDefinitions: boolean = true
 ): Promise<{ html: string; words: string[] }> {
     // Create a DOM from the HTML content
@@ -167,7 +168,7 @@ export async function processContent(
 
     // Fetch definitions for words not in the database
     if (fetchDefinitions) {
-        const wordsToFetch = wordsArray.filter(word => !getWordDataFromDbOrNull(word));
+        const wordsToFetch = wordsArray.filter(word => !getWordDataFromDbOrNull(word, lang));
 
         if (wordsToFetch.length > 0) {
             console.log(`Fetching definitions for ${wordsToFetch.length} words...`);
@@ -176,17 +177,17 @@ export async function processContent(
             for (const word of wordsToFetch) {
                 try {
                     console.log(`Fetching definition for "${word}"...`);
-                    const { status, processedWiktionaryPage } = await fetchWiktionaryPageAndProcessIt(word);
+                    const { status, processedWiktionaryPage } = await fetchWiktionaryPageAndProcessIt(word, lang);
 
                     // Store the definition in the database
                     let wd: WordData;
                     if (status !== 'success') {
                         // I lost track of what `indices` was supposed to be
-                        wd = { word, processedWiktionaryPage: processedWiktionaryPage!, indices: [] }
+                        wd = { word, lang, processedWiktionaryPage: processedWiktionaryPage!, indices: [] }
 
                     } else {
                         // An error result into a processedWiktionaryPage == ''
-                        wd = { word, processedWiktionaryPage: "", indices: [] }
+                        wd = { word, lang, processedWiktionaryPage: "", indices: [] }
                     }
                     await storeWordDataIndB(wd);
 

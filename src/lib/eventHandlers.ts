@@ -1,5 +1,6 @@
 import { PageState } from '$lib/PageState.svelte.js';
 import { cleanProcessedHtml } from '$lib';
+import { page } from '$app/state';
 
 export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageState: PageState): boolean {
 
@@ -11,7 +12,8 @@ export function handleClickRussianWord(event: MouseEvent | KeyboardEvent, pageSt
         if (pageState.selectedElement)
             pageState.selectedElement.style.removeProperty('color');
         pageState.selectedElement = target;
-        getAndProcessDefinition(word, pageState);
+        pageState.selectedWord = word;
+        getAndProcessDefinition(pageState);
     }
     return true;
 }
@@ -79,9 +81,10 @@ export function handleClick(event: MouseEvent | KeyboardEvent, pageState: PageSt
     if (handleClickSection(event, pageState)) return;
 
 }
-async function getDefinition(word: string): Promise<string> {
+async function getDefinition(word: string, lang: string): Promise<string> {
     const form = new FormData();
     form.append("word", word);
+    form.append("lang", lang);
 
     try {
         const response: Response = await fetch("?/getDefinition", {
@@ -109,11 +112,14 @@ async function getDefinition(word: string): Promise<string> {
     } catch (error) { return "WTF" }
 }
 
-async function getAndProcessDefinition(word: string, pageState: PageState) {
+export async function getAndProcessDefinition(pageState: PageState) {
     try {
-        pageState.selectedWord = word;
+        const word = pageState.selectedWord;
+        // pageState.selectedWord = word;
         pageState.iframeLoading = true;
-        getDefinition(word).then((defn) => {
+        console.log(`getAndProc Fetching definition for word: ${word} and lang: ${pageState.lang}`);
+
+        getDefinition(word!, pageState.lang).then((defn) => {
             if (defn) {
                 pageState.wordDefinition = defn;
             } else {

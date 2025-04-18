@@ -1,6 +1,8 @@
 <script lang="ts">
-  import type { PageState } from '$lib'
+  // import { PageServerData } from './../../.svelte-kit/types/src/routes/t/$types.d.ts'
+  import { type PageState, getAndProcessDefinition } from '$lib'
   import { X } from 'lucide-svelte'
+  import { Segment } from '@skeletonlabs/skeleton-svelte'
   let iframeElement: HTMLIFrameElement | null = $state(null)
 
   let { pageState }: { pageState: PageState } = $props()
@@ -8,10 +10,17 @@
   // State to hold processed HTML
   let processedHtml: string | null = $state(null)
 
+  const langs = ['en', 'ru', 'fr'] // hardwired for now
+  console.log('pslang', pageState.lang)
+
+  pageState.lang = langs[0]
+
   // Effect to extract and process words when wordDefinition changes
   $effect(() => {
+    if (pageState.lang && pageState.selectedWord) {
+      getAndProcessDefinition(pageState)
+    }
     if (pageState.wordDefinition !== null) {
-      console.log('Extracting words from definition...')
       extractAndProcessWords(pageState.wordDefinition)
     }
   })
@@ -32,7 +41,7 @@
         // a!.href = 'https://en.wiktionary.org/' + a!.href
         // console.log(a.outerHTML)
         // words.push(a.outerHTML)
-        return `<button onclick=> ${a.textContent}</button>` 
+        return `<button onclick=> ${a.textContent}</button>`
       }
     })
     // Example processing: list words, and include the original definition
@@ -58,7 +67,7 @@
   // Function to close the panel and reset state
   function closePanel() {
     pageState.onePanel = true
-    pageState.selectedWord = null
+    // pageState.selectedWord = null
     pageState.wordDefinition = null
   }
 
@@ -97,22 +106,25 @@
 
     pageState.iframeLoading = false
   }
-
-  //   iframeDoc.head.appendChild(style);
-  //   pageState.iframeLoading = false;
-  // }
-  // else if (selectedWord) {
-  //   // If we don't have a definition yet but have a selected word, show loading message
-  //   iframeDoc.body.innerHTML = `
-  //     <div class="p-4 text-center">
-  //       Loading definition for "${selectedWord}"...
-  //     </div>
-  //   `;
-  // }
-  // }
 </script>
 
 <div class="relative w-full h-full">
+  <div>{pageState.lang}</div>
+  <!-- Language selection segment group -->
+  <div class="flex gap-4 items-center mb-4">
+    <Segment
+      value={pageState.lang}
+      name="lang-group"
+      onValueChange={(e) => {
+        pageState.lang = e.value!
+        console.log(`Selected language: ${e.value}`)
+      }}
+    >
+      {#each langs as lang}
+        <Segment.Item value={lang}>{lang.toUpperCase()}</Segment.Item>
+      {/each}
+    </Segment>
+  </div>
   <!-- Close button -->
   <button
     class="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 hover:text-gray-900 shadow-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -130,6 +142,7 @@
       <div class="text-lg text-gray-600">Loading...</div>
     </div>
   {/if}
+
   <iframe
     title="wiktionary"
     id="wiktionary-frame"
