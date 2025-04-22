@@ -21,10 +21,16 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter,
 		alias: {
-			'$c': path.resolve('./src/c'),
-			'$c/*': path.resolve('./src/c/*'),
+			'$c': path.resolve('./src/lib/c'),
+			'$c/*': path.resolve('./src/lib/c/*'),
 		},
-	}
+	},
+
+	vitePlugin: {
+		inspector: {
+			toggleButtonPos: 'top-right',
+			},
+	},
 };
 
 export default config;

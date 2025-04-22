@@ -1,15 +1,50 @@
 <script lang="ts">
   //   import Spinner from '$c/Spinner.svelte'
   import { SplitPane } from '@rich_harris/svelte-split-pane'
-  import type { PageData } from './$types'
-  import EditPage from '$c/EditPage.svelte'
+  import Inspect from 'svelte-inspect-value'
+  import { dev } from '$app/environment'
 
-  let { data }: { data: PageData } = $props()
+  import EditPage from '$lib/c/EditSiteWithCssSelectors.svelte'
+
+  let data = $props()
+  let keys = Object.keys(data)
+  // console.log('data', data)
+
+  // convoluted way to update `JsonForCookie`
+  // A +page.svelte cannot export symbols so the function `updateJson`
+  // is passed as a prop to
+  // EditPage. The function `updatejson` is called from the child component
+  //  in a $effect  and updates `jsonForCookie`
+  // Must be a simpler way
+  type EditComponentState = {
+    url: string
+    title: string
+    selectors: string[]
+  }
+  let editComponentsState: EditComponentState[] = []
+
+  let jsonForCookie = $state('')
+  function updateJson(index: number, state: EditComponentState) {
+    editComponentsState[index] = state
+    jsonForCookie = JSON.stringify(editComponentsState)
+  }
+
+  $effect(() => {
+    const formData = new FormData()
+    formData.append('cookieValue', jsonForCookie)
+
+    fetch('?/setCookie', {
+      method: 'POST',
+      body: formData,
+    })
+  })
+
+  const data1 = { a: 'a', b: 'b' }
 </script>
 
 <!-- <Spinner /> -->
-
-<div class="h-full w-full flex-1 border-gray-100 border-solid"> 
+<Inspect.Values {data} />
+<div class="h-full w-full flex-1 border-gray-100 border-solid">
   <SplitPane
     type="horizontal"
     id="lower-split"
@@ -20,11 +55,11 @@
     --thickness="4px"
   >
     {#snippet a()}
-      <EditPage name="first editpage"></EditPage>
+      <EditPage index="0" {updateJson} />
     {/snippet}
 
     {#snippet b()}
-      <EditPage></EditPage>
+      <EditPage index="1" {updateJson} />
     {/snippet}
   </SplitPane>
 </div>

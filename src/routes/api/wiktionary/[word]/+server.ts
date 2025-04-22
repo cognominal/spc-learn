@@ -1,6 +1,5 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-// import { log } from 'console';
 
 export const GET: RequestHandler = async ({ params }) => {
     try {

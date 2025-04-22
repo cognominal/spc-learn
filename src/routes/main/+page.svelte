@@ -1,7 +1,7 @@
 <script lang="ts">
   import { SplitPane } from "@rich_harris/svelte-split-pane";
-  import WiktDefnPanel from "$lib/WiktDefnPanel.svelte";
-  import MainPanel from "$lib/MainPanel.svelte";
+  import WiktDefnPanel from "$lib/c/WiktDefnPanel.svelte";
+  import MainPanel from "$lib/c/MainPanel.svelte";
   import {  PageState } from "$lib"
 
   // No need for data prop anymore as MainPanel fetches its own data

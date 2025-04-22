@@ -3,7 +3,7 @@
   import { type PageState, getAndProcessDefinition } from '$lib'
   import { X } from 'lucide-svelte'
   import { Segment } from '@skeletonlabs/skeleton-svelte'
-  import Spinner from '$c/Spinner.svelte'
+  import Spinner from '$lib/c/Spinner.svelte'
 
   let iframeElement: HTMLIFrameElement | null = $state(null)
 

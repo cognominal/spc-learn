@@ -24,6 +24,7 @@
 		"@sveltejs/adapter-vercel": "^5.7.0",
 		"@sveltejs/kit": "^2.20.3",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
+		"@sveltejs/vite-plugin-svelte-inspector": "^4.0.1",
 		"@tailwindcss/forms": "^0.5.10",
 		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.1.2",
@@ -50,11 +51,21 @@
 		"jsdom": "^26.0.0",
 		"sqlite": "^5.1.1",
 		"sqlite3": "^5.1.7",
+		"svelte-inspect-value": "^0.6.2",
 		"yaml": "^2.7.1"
 	},
 	"pnpm": {
 		"onlyBuiltDependencies": [
-			"esbuild"
+			"sqlite3"
+		]
+	},
+	"main": "./src/extension.ts",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.runClearPnpmDev",
+				"title": "Run clear; pnpm dev in Terminal"
+			}
 		]
 	}
 }

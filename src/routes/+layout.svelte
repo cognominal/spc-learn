@@ -15,13 +15,16 @@
   let routeLabel: string = $state('create')
 </script>
 
-<div>{routeLabel}</div>
-<nav class="sticky top-0 z-10 px-2 pt-2">
+<nav
+  class="sticky top-0 z-10 px-2 pt-2"
+  style="background: linear-gradient(90deg, #fbb6ce 0%, #fbcfe8 100%); height: fit-content;"
+>
   <AppBar
-    background="bg-rose-400"
+    background="bg-rose-200"
     shadow="shadow-lg"
     border="rounded-lg"
     classes="drop-shadow-md"
+    style="height: fit-content; min-height: 0;"
   >
     {#snippet lead()}
       <ArrowLeft size={24} />
@@ -31,15 +34,43 @@
       <Calendar size={20} />
       <CircleUser size={20} />
     {/snippet}
-    <Navigation.Bar
-      value={routeLabel}
-      onValueChange={(newValue) => (routeLabel = newValue)}
+    <div
+      class="flex items-center w-auto max-w-max"
+      style="height: fit-content; min-height: 0;"
     >
-      <Navigation.Tile href="/" label="Home"></Navigation.Tile>
-      <Navigation.Tile href="/create-document" label="Create"></Navigation.Tile>
-      <Navigation.Tile href="/admin" label="Admin"></Navigation.Tile>
-    </Navigation.Bar>
-    <span class="text-lg font-semibold text-white">Russian Learning</span>
+      <span class="text-lg font-semibold text-white mr-6">Russian Learning</span
+      >
+      <Navigation.Bar
+        value={routeLabel}
+        onValueChange={(newValue) => (routeLabel = newValue)}
+        background="bg-white/70"
+        backgroundActive="bg-rose-200"
+        rounded="full"
+        roundedActive="full"
+        shadow="none"
+        border="none"
+        class="text-rose-700"
+      >
+        <Navigation.Tile
+          href="/"
+          label="Home"
+          background="bg-white/0"
+          rounded="full"
+        />
+        <Navigation.Tile
+          href="/create-document"
+          label="Create"
+          background="bg-white/0"
+          rounded="full"
+        />
+        <Navigation.Tile
+          href="/admin"
+          label="Admin"
+          background="bg-white/0"
+          rounded="full"
+        />
+      </Navigation.Bar>
+    </div>
   </AppBar>
 </nav>
 {@render children()}

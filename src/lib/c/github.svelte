@@ -19,7 +19,7 @@
    * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
    *
    */
-  import Icon from '../Icon.svelte';
+  import Icon from './Icon.svelte';
   const iconNode = [
     [
       "path",

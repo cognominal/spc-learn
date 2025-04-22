@@ -523,12 +523,6 @@
     - 83
     - 30
   wiktionary: null
-- word: почти
-  indices:
-    - 60
-    - 63
-    - 61
-  wiktionary: null
 - word: неизменно
   indices:
     - 66
@@ -751,23 +745,9 @@
   indices:
     - 50
   wiktionary: null
-- word: тем
-  indices:
-    - 64
-    - 68
-    - 31
-  wiktionary: null
 - word: тогда
   indices:
     - 75
-  wiktionary: null
-- word: мир
-  indices:
-    - 1
-    - 10
-    - 22
-    - 1
-    - 1
   wiktionary: null
 - word: раскололся
   indices:
@@ -846,13 +826,6 @@
     - 174
     - 170
     - 186
-  wiktionary: null
-- word: можно
-  indices:
-    - 73
-    - 7
-    - 95
-    - 23
   wiktionary: null
 - word: увидеть
   indices:
@@ -1101,14 +1074,6 @@
     - 7
     - 80
   wiktionary: null
-- word: мужества
-  indices:
-    - 8
-    - 14
-    - 155
-    - 13
-    - 51
-  wiktionary: null
 - word: возможно
   indices:
     - 18
@@ -1163,11 +1128,6 @@
 - word: дни
   indices:
     - 157
-  wiktionary: null
-- word: западный
-  indices:
-    - 1
-    - 13
   wiktionary: null
 - word: потерял
   indices:
@@ -1326,13 +1286,6 @@
   indices:
     - 65
   wiktionary: null
-- word: эту
-  indices:
-    - 88
-    - 102
-    - 23
-    - 21
-  wiktionary: null
 - word: слабость
   indices:
     - 92
@@ -1409,10 +1362,6 @@
   indices:
     - 375
   wiktionary: null
-- word: временами
-  indices:
-    - 23
-  wiktionary: null
 - word: до
   indices:
     - 69
@@ -1421,56 +1370,18 @@
   indices:
     - 80
   wiktionary: null
-- word: представляет
-  indices:
-    - 94
-  wiktionary: null
 - word: test_word_1743935302948
   indices:
     - 0
-  wiktionary: null
-- word: собой
-  indices:
-    - 107
-    - 144
-    - 64
   wiktionary: null
 - word: недостаток
   indices:
     - 143
     - 165
   wiktionary: null
-- word: силы
-  indices:
-    - 185
-    - 144
-  wiktionary: null
-- word: сегодняшний
-  indices:
-    - 1
-  wiktionary: null
-- word: доказал
-  indices:
-    - 26
-  wiktionary: null
-- word: готов
-  indices:
-    - 62
-  wiktionary: null
 - word: отступить
   indices:
     - 68
-  wiktionary: null
-- word: перед
-  indices:
-    - 78
-    - 164
-    - 77
-    - 6
-    - 76
-    - 94
-    - 54
-    - 131
   wiktionary: null
 - word: даже
   indices:
@@ -1498,10 +1409,6 @@
     - 3
     - 71
     - 61
-  wiktionary: null
-- word: вызов
-  indices:
-    - 141
   wiktionary: null
 - word: решительности
   indices:
@@ -1576,10 +1483,6 @@
   indices:
     - 6
     - 80
-  wiktionary: null
-- word: указать
-  indices:
-    - 14
   wiktionary: null
 - word: процесс
   indices:
@@ -36884,14 +36787,6 @@
   indices:
     - 358
   wiktionary: null
-- word: доходящее
-  indices:
-    - 53
-  wiktionary: null
-- word: полного
-  indices:
-    - 72
-  wiktionary: null
 - word: слабого
   indices:
     - 95
@@ -37167,6 +37062,57 @@
   indices:
     - 1
   wiktionary: null
+- word: лицом
+  indices:
+    - 84
+    - 12
+    - 100
+  wiktionary: null
+- word: утрату
+  indices:
+    - 27
+  wiktionary: null
+- word: воли
+  indices:
+    - 154
+    - 54
+  wiktionary: null
+- word: доходящее
+  indices:
+    - 53
+  wiktionary: null
+- word: тем
+  indices:
+    - 64
+    - 68
+    - 31
+  wiktionary: null
+- word: готов
+  indices:
+    - 62
+  wiktionary: null
+- word: собой
+  indices:
+    - 107
+    - 144
+    - 64
+  wiktionary: null
+- word: перед
+  indices:
+    - 78
+    - 164
+    - 77
+    - 6
+    - 76
+    - 94
+    - 54
+    - 131
+  wiktionary: null
+- word: требует
+  indices:
+    - 147
+    - 126
+  wiktionary: null
 - word: духовной
   indices:
     - 176
@@ -37174,193 +37120,81 @@
     - 61
     - 48
   wiktionary: null
+- word: доказал
+  indices:
+    - 26
+  wiktionary: null
+- word: мир
+  indices:
+    - 1
+    - 10
+    - 22
+    - 1
+    - 1
+  wiktionary: null
+- word: западный
+  indices:
+    - 1
+    - 13
+  wiktionary: null
+- word: представляет
+  indices:
+    - 94
+  wiktionary: null
+- word: временами
+  indices:
+    - 23
+  wiktionary: null
+- word: сегодняшний
+  indices:
+    - 1
+  wiktionary: null
+- word: почти
+  indices:
+    - 60
+    - 63
+    - 61
+  wiktionary: null
+- word: полного
+  indices:
+    - 72
+  wiktionary: null
+- word: указать
+  indices:
+    - 14
+  wiktionary: null
+- word: эту
+  indices:
+    - 88
+    - 102
+    - 23
+    - 21
+  wiktionary: null
+- word: вызов
+  indices:
+    - 141
+  wiktionary: null
 - word: падение
   indices:
     - 5
   wiktionary: null
-- word: лицом
+- word: можно
   indices:
-    - 84
-    - 12
-    - 100
+    - 73
+    - 7
+    - 95
+    - 23
   wiktionary: null
-- word: требует
+- word: мужества
   indices:
-    - 147
-    - 126
+    - 8
+    - 14
+    - 155
+    - 13
+    - 51
   wiktionary: null
-- word: утрату
+- word: силы
   indices:
-    - 27
+    - 185
+    - 144
   wiktionary: null
-- word: воли
-  indices:
-    - 154
-    - 54
-  wiktionary: null
- mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md" open=""><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Etymology</summary><div class="wiktionary-section-content p-3"></div></details></div><p><i class="Cyrl mention" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D1%81%D1%82%D1%8C#Russian" title="пасть">па́д-</a></i> <span class="mention-gloss-paren annotation-paren">(</span><span lang="ru-Latn" class="mention-tr tr Latn">pád-</span><span class="mention-gloss-paren annotation-paren">)</span> +‎ <i class="Cyrl mention" lang="ru"><a href="/wiki/-%D0%B5%D0%BD%D0%B8%D0%B5#Russian" title="-ение">-е́ние</a></i> <span class="mention-gloss-paren annotation-paren">(</span><span lang="ru-Latn" class="mention-tr tr Latn">-énije</span><span class="mention-gloss-paren annotation-paren">)</span>
-    </p><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md"><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Pronunciation</summary><div class="wiktionary-section-content p-3"></div></details></div><ul><li><a href="/wiki/Wiktionary:International_Phonetic_Alphabet" title="Wiktionary:International Phonetic Alphabet">IPA</a><sup>(<a href="/wiki/Appendix:Russian_pronunciation" title="Appendix:Russian pronunciation">key</a>)</sup>: <span class="IPA">[pɐˈdʲenʲɪje]</span></li>
-    <li><style data-mw-deduplicate="TemplateStyles:r50165410">.mw-parser-output .k-player .k-attribution{visibility:hidden}</style><table class="audiotable" style="vertical-align: middle; display: inline-block; list-style: none; line-height: 1em; border-collapse: collapse; margin: 0;"><tbody><tr><td>Audio<span class="ib-colon qualifier-colon">:</span></td><td class="audiofile"><span typeof="mw:File"><span><audio id="mwe_player_0" controls="" preload="none" data-mw-tmh="" class="mw-file-element" width="175" style="width:175px;" data-durationhint="1" data-mwtitle="Ru-падение.ogg" data-mwprovider="wikimediacommons"><source src="//upload.wikimedia.org/wikipedia/commons/transcoded/8/8f/Ru-%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5.ogg/Ru-%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5.ogg.mp3" type="audio/mpeg" data-transcodekey="mp3" data-width="0" data-height="0"><source src="//upload.wikimedia.org/wikipedia/commons/8/8f/Ru-%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5.ogg" type="audio/ogg; codecs=&quot;vorbis&quot;" data-width="0" data-height="0"></audio></span></span></td><td class="audiometa" style="font-size: 80%;">(<a href="/wiki/File:Ru-%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5.ogg" title="File:Ru-падение.ogg">file</a>)</td></tr></tbody></table></li>
-    <li>Rhymes: <a href="/wiki/Rhymes:Russian/en%CA%B2%C9%AA%C9%AA%CC%AF%C9%99" title="Rhymes:Russian/enʲɪɪ̯ə"><span class="IPA">-enʲɪɪ̯ə</span></a></li></ul><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md"><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Noun</summary><div class="wiktionary-section-content p-3"></div></details></div><p><span class="headword-line"><strong class="Cyrl headword" lang="ru">паде́ние</strong> <a href="/wiki/Wiktionary:Russian_transliteration" title="Wiktionary:Russian transliteration">•</a> (<span lang="ru-Latn" class="headword-tr tr Latn" dir="ltr">padénije</span>)&nbsp;<span class="gender"><abbr title="neuter gender">n</abbr>&nbsp;<abbr title="inanimate">inan</abbr></span> (<i>genitive</i> <b class="Cyrl" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F#Russian" title="падения">паде́ния</a></b>, <i>nominative plural</i> <b class="Cyrl" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F#Russian" title="падения">паде́ния</a></b>, <i>genitive plural</i> <b class="Cyrl" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D0%B9#Russian" title="падений">паде́ний</a></b>)</span>
-    </p><ol><li><a href="/wiki/fall" title="fall">fall</a>, <a href="/wiki/collapse" title="collapse">collapse</a>, <a href="/wiki/drop" title="drop">drop</a>, <a href="/wiki/sinking" title="sinking">sinking</a></li>
-    <li><span class="usage-label-sense"><span class="ib-brac label-brac">(</span><span class="ib-content label-content"><a href="/wiki/government" title="government">government</a></span><span class="ib-brac label-brac">)</span></span> <a href="/wiki/fall" title="fall">fall</a>, <a href="/wiki/downfall" title="downfall">downfall</a>, <a href="/wiki/overthrow" title="overthrow">overthrow</a></li>
-    <li><span class="usage-label-sense"><span class="ib-brac label-brac">(</span><span class="ib-content label-content"><a href="/wiki/geology" title="geology">geology</a></span><span class="ib-brac label-brac">)</span></span> <a href="/wiki/dip" title="dip">dip</a></li>
-    <li><span class="usage-label-sense"><span class="ib-brac label-brac">(</span><span class="ib-content label-content"><a href="/wiki/physics" title="physics">physics</a></span><span class="ib-brac label-brac">)</span></span> <a href="/wiki/incidence" title="incidence">incidence</a></li></ol><div class="mw-heading mw-heading4"><h4 id="Declension">Declension</h4></div><div>
-    <div class="NavFrame" data-toggle-category="declension" style="max-width:45em">
-    <div class="NavHead" style="background:var(--wikt-palette-lighterblue, #ebf4ff);">Declension of <b lang="ru" class="Cyrl"><span class="Cyrl" lang="ru"><strong class="selflink">паде́ние</strong></span></b><span style="font-weight:normal;"> (<span style="font-size: smaller;"><a href="/wiki/Appendix:Russian_nouns#Declension_tables" title="Appendix:Russian nouns">inan neut-form i-stem accent-a</a></span>)</span>&nbsp;</div>
-    <div class="NavContent">
-    <table style="table-layout:fixed; text-align:center; max-width:45em; width:100%;" class="inflection inflection-table">
-
-    <tbody><tr class="rowgroup">
-    <th style="width:10em;background:var(--wikt-palette-lightblue, #d9ebff);">
-    </th>
-    <th style="background:var(--wikt-palette-lightblue, #d9ebff);">singular
-    </th>
-    <th style="background:var(--wikt-palette-lightblue, #d9ebff);">plural
-    </th></tr>
-    <tr>
-    <th style="background:var(--wikt-palette-lighterblue, #ebf4ff);">nominative
-    </th>
-    <td><span class="Cyrl form-of lang-ru nom|s-form-of origin-паде́ние origin_transliteration-" lang="ru"><strong class="selflink">паде́ние</strong></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénije</span>
-    </td>
-    <td><span class="Cyrl form-of lang-ru nom|p-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F#Russian" title="падения">паде́ния</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénija</span>
-    </td></tr>
-    <tr>
-    <th style="background:var(--wikt-palette-lighterblue, #ebf4ff);">genitive
-    </th>
-    <td><span class="Cyrl form-of lang-ru gen|s-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F#Russian" title="падения">паде́ния</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénija</span>
-    </td>
-    <td><span class="Cyrl form-of lang-ru gen|p-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D0%B9#Russian" title="падений">паде́ний</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénij</span>
-    </td></tr>
-    <tr>
-    <th style="background:var(--wikt-palette-lighterblue, #ebf4ff);">dative
-    </th>
-    <td><span class="Cyrl form-of lang-ru dat|s-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D1%8E#Russian" title="падению">паде́нию</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padéniju</span>
-    </td>
-    <td><span class="Cyrl form-of lang-ru dat|p-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F%D0%BC#Russian" title="падениям">паде́ниям</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénijam</span>
-    </td></tr>
-    <tr>
-    <th style="background:var(--wikt-palette-lighterblue, #ebf4ff);">accusative
-    </th>
-    <td><span class="Cyrl form-of lang-ru acc|s-form-of origin-паде́ние origin_transliteration-" lang="ru"><strong class="selflink">паде́ние</strong></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénije</span>
-    </td>
-    <td><span class="Cyrl form-of lang-ru acc|p-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F#Russian" title="падения">паде́ния</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénija</span>
-    </td></tr>
-    <tr>
-    <th style="background:var(--wikt-palette-lighterblue, #ebf4ff);">instrumental
-    </th>
-    <td><span class="Cyrl form-of lang-ru ins|s-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D0%B5%D0%BC#Russian" title="падением">паде́нием</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénijem</span>
-    </td>
-    <td><span class="Cyrl form-of lang-ru ins|p-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F%D0%BC%D0%B8#Russian" title="падениями">паде́ниями</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénijami</span>
-    </td></tr>
-    <tr>
-    <th style="background:var(--wikt-palette-lighterblue, #ebf4ff);">prepositional
-    </th>
-    <td><span class="Cyrl form-of lang-ru pre|s-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D0%B8#Russian" title="падении">паде́нии</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénii</span>
-    </td>
-    <td><span class="Cyrl form-of lang-ru pre|p-form-of origin-паде́ние origin_transliteration-" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B5%D0%BD%D0%B8%D1%8F%D1%85#Russian" title="падениях">паде́ниях</a></span><br><span lang="ru-Latn" class="tr Latn" style="color: #888;">padénijax</span>
-    </td></tr>
-    </tbody></table></div></div></div><div class="mw-heading mw-heading4"><h4 id="Related_terms">Related terms</h4></div><ul><li><span class="Cyrl" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D0%B0%D1%82%D1%8C#Russian" title="падать">па́дать</a></span>&nbsp;<span class="gender"><abbr title="imperfective aspect">impf</abbr></span> <span class="mention-gloss-paren annotation-paren">(</span><span lang="ru-Latn" class="tr Latn">pádatʹ</span><span class="mention-gloss-paren annotation-paren">)</span></li>
-    <li><span class="Cyrl" lang="ru"><a href="/wiki/%D0%BF%D0%B0%D0%B4%D1%88%D0%B8%D0%B9#Russian" title="падший">па́дший</a></span> <span class="mention-gloss-paren annotation-paren">(</span><span lang="ru-Latn" class="tr Latn">pádšij</span><span class="mention-gloss-paren annotation-paren">)</span></li></ul>
-            
-            
-            </body></html>
-- word: лицом
-  indices:
-    - 84
-    - 12
-    - 100
-  wiktionary: >-
-    <!DOCTYPE html><html><head>
-                <title>лицом - Wiktionary</title>
-                <meta charset="UTF-8">
-            </head>
-            <body>
-                <div class="mw-heading mw-heading2"><h2 id="Russian">Russian</h2></div><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md" open=""><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Pronunciation</summary><div class="wiktionary-section-content p-3"></div></details></div><ul><li><a href="/wiki/Wiktionary:International_Phonetic_Alphabet" title="Wiktionary:International Phonetic Alphabet">IPA</a><sup>(<a href="/wiki/Appendix:Russian_pronunciation" title="Appendix:Russian pronunciation">key</a>)</sup>: <span class="IPA">[lʲɪˈt͡som]</span></li></ul><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md"><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Noun</summary><div class="wiktionary-section-content p-3"></div></details></div><p><span class="headword-line"><strong class="Cyrl headword" lang="ru">лицо́м</strong> <a href="/wiki/Wiktionary:Russian_transliteration" title="Wiktionary:Russian transliteration">•</a> (<span lang="ru-Latn" class="headword-tr tr Latn" dir="ltr">licóm</span>)&nbsp;<span class="gender"><abbr title="neuter gender">n</abbr>&nbsp;<abbr title="inanimate">inan</abbr> or <abbr title="neuter gender">n</abbr>&nbsp;<abbr title="animate">anim</abbr></span></span>
-    </p><ol><li><span class="form-of-definition use-with-mention"><a
-    href="/wiki/Appendix:Glossary#instrumental_case"
-    title="Appendix:Glossary">instrumental</a> <a
-    href="/wiki/Appendix:Glossary#singular_number"
-    title="Appendix:Glossary">singular</a> of <span
-    class="form-of-definition-link"><i class="Cyrl mention" lang="ru"><a
-    href="/wiki/%D0%BB%D0%B8%D1%86%D0%BE#Russian" title="лицо">лицо́</a></i>
-    <span class="mention-gloss-paren annotation-paren">(</span><span
-    lang="ru-Latn" class="mention-tr tr Latn">licó</span><span
-    class="mention-gloss-paren
-    annotation-paren">)</span></span></span></li></ol>
-            
-            
-            </body></html>
-- word: требует
-  indices:
-    - 147
-    - 126
-  wiktionary: |-
-    <!DOCTYPE html><html><head>
-                <title>требует - Wiktionary</title>
-                <meta charset="UTF-8">
-            </head>
-            <body>
-                <div class="mw-heading mw-heading2"><h2 id="Russian">Russian</h2></div><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md" open=""><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Pronunciation</summary><div class="wiktionary-section-content p-3"></div></details></div><ul><li><a href="/wiki/Wiktionary:International_Phonetic_Alphabet" title="Wiktionary:International Phonetic Alphabet">IPA</a><sup>(<a href="/wiki/Appendix:Russian_pronunciation" title="Appendix:Russian pronunciation">key</a>)</sup>: <span class="IPA">[ˈtrʲebʊ(j)ɪt]</span></li></ul><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md"><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Verb</summary><div class="wiktionary-section-content p-3"></div></details></div><p><span class="headword-line"><strong class="Cyrl headword" lang="ru">тре́бует</strong> <a href="/wiki/Wiktionary:Russian_transliteration" title="Wiktionary:Russian transliteration">•</a> (<span lang="ru-Latn" class="headword-tr tr Latn" dir="ltr">trébujet</span>)</span>
-    </p><ol><li><span class="form-of-definition use-with-mention"><a href="/wiki/Appendix:Glossary#third_person" title="Appendix:Glossary">third-person</a> <a href="/wiki/Appendix:Glossary#singular_number" title="Appendix:Glossary">singular</a> <a href="/wiki/Appendix:Glossary#present_tense" title="Appendix:Glossary">present</a> <a href="/wiki/Appendix:Glossary#indicative_mood" title="Appendix:Glossary">indicative</a> <a href="/wiki/Appendix:Glossary#imperfective" title="Appendix:Glossary">imperfective</a> of <span class="form-of-definition-link"><i class="Cyrl mention" lang="ru"><a href="/wiki/%D1%82%D1%80%D0%B5%D0%B1%D0%BE%D0%B2%D0%B0%D1%82%D1%8C#Russian" title="требовать">тре́бовать</a></i> <span class="mention-gloss-paren annotation-paren">(</span><span lang="ru-Latn" class="mention-tr tr Latn">trébovatʹ</span><span class="mention-gloss-paren annotation-paren">)</span></span></span>
-    <ul><li><div class="citation-whole"><span class="cited-source"><span class="None" lang="und"><b>1876</b></span>, <cite><a href="https://en.wikipedia.org/wiki/Russian_Synodal_Bible" class="extiw" title="w:Russian Synodal Bible">Russian Synodal Bible</a></cite>, <span class="None" lang="und"><a href="https://en.wikipedia.org/wiki/Gospel_of_Mark" class="extiw" title="w:Gospel of Mark">Mark</a> <a href="https://en.wikisource.org/wiki/ru:%D0%9E%D1%82_%D0%9C%D0%B0%D1%80%D0%BA%D0%B0_%D1%81%D0%B2%D1%8F%D1%82%D0%BE%D0%B5_%D0%B1%D0%BB%D0%B0%D0%B3%D0%BE%D0%B2%D0%B5%D1%81%D1%82%D0%B2%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D0%B5#8:12" class="extiw" title="s:ru:От Марка святое благовествование">8:12</a></span>:</span><dl><dd><div class="h-quotation"><span class="Cyrl e-quotation cited-passage" lang="ru">И Он, глубоко вздохнув, сказал: для чего род сей <b>требует</b> знамения? Истинно говорю вам, не дастся роду сему знамение.</span><dl><dd><i lang="ru-Latn" class="e-transliteration tr Latn">I On, gluboko vzdoxnuv, skazal: dlja čevo rod sej <b>trebujet</b> znamenija? Istinno govorju vam, ne dastsja rodu semu znamenije.</i></dd><dd><small>(please <a href="/wiki/Wiktionary:Quotations#Adding_translations_to_quotations" title="Wiktionary:Quotations">add an English translation</a> of this quotation)</small></dd></dl></div></dd></dl></div></li></ul></li></ol>
-            
-            
-            </body></html>
-- word: утрату
-  indices:
-    - 27
-  wiktionary: |-
-    <!DOCTYPE html><html><head>
-                <title>утрату - Wiktionary</title>
-                <meta charset="UTF-8">
-            </head>
-            <body>
-                <div class="mw-heading mw-heading2"><h2 id="Russian">Russian</h2></div><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md" open=""><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Pronunciation</summary><div class="wiktionary-section-content p-3"></div></details></div><ul><li><a href="/wiki/Wiktionary:International_Phonetic_Alphabet" title="Wiktionary:International Phonetic Alphabet">IPA</a><sup>(<a href="/wiki/Appendix:Russian_pronunciation" title="Appendix:Russian pronunciation">key</a>)</sup>: <span class="IPA">[ʊˈtratʊ]</span></li></ul><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md"><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Noun</summary><div class="wiktionary-section-content p-3"></div></details></div><p><span class="headword-line"><strong class="Cyrl headword" lang="ru">утра́ту</strong> <a href="/wiki/Wiktionary:Russian_transliteration" title="Wiktionary:Russian transliteration">•</a> (<span lang="ru-Latn" class="headword-tr tr Latn" dir="ltr">utrátu</span>)&nbsp;<span class="gender"><abbr title="feminine gender">f</abbr>&nbsp;<abbr title="inanimate">inan</abbr></span></span>
-    </p><ol><li><span class="form-of-definition use-with-mention"><a href="/wiki/Appendix:Glossary#accusative_case" title="Appendix:Glossary">accusative</a> <a href="/wiki/Appendix:Glossary#singular_number" title="Appendix:Glossary">singular</a> of <span class="form-of-definition-link"><i class="Cyrl mention" lang="ru"><a href="/wiki/%D1%83%D1%82%D1%80%D0%B0%D1%82%D0%B0#Russian" title="утрата">утра́та</a></i> <span class="mention-gloss-paren annotation-paren">(</span><span lang="ru-Latn" class="mention-tr tr Latn">utráta</span><span class="mention-gloss-paren annotation-paren">)</span></span></span></li></ol><div class="mw-heading mw-heading2"><h2 id="Ukrainian">Ukrainian</h2></div><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md"><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Pronunciation</summary><div class="wiktionary-section-content p-3"></div></details></div><ul><li><a href="/wiki/Wiktionary:International_Phonetic_Alphabet" title="Wiktionary:International Phonetic Alphabet">IPA</a><sup>(<a href="/wiki/Appendix:Ukrainian_pronunciation" title="Appendix:Ukrainian pronunciation">key</a>)</sup>: <span class="IPA">[ʊˈtratʊ]</span></li></ul><style data-mw-deduplicate="TemplateStyles:r83928332">.mw-parser-output .maintenance-box{width:90%;margin:0.75em auto;border-width:1px;border-style:dashed;padding:0.25em}.mw-parser-output .request-box{margin:0.75em 1em 0.75em 1em;border:1px dashed var(--border-color-base,#999999);padding:0.25em;background:var(--background-color-base,#FFFFFF)}body.skin-minerva .mw-parser-output .request-box table{margin-top:0.25em;margin-bottom:0.25em}.mw-parser-output .maintenance-box-blue{background-color:#E6E6FF;border-color:#000061}.mw-parser-output .maintenance-box-red{background-color:#FFE6E6;border-color:#610000}.mw-parser-output .maintenance-box-yellow{background-color:#FFFFE6;border-color:#616100}.mw-parser-output .maintenance-box-grey{background-color:#F2F2F2;border-color:#303030}.mw-parser-output .maintenance-box-orange{background-color:#FFF2E6;border-color:#612F00}@media screen{html.skin-theme-clientpref-night .mw-parser-output .maintenance-box-blue{background-color:#1D1D44;border-color:#73737F}html.skin-theme-clientpref-night .mw-parser-output .maintenance-box-red{background-color:#441D1D;border-color:#7F7373}html.skin-theme-clientpref-night .mw-parser-output .maintenance-box-yellow{background-color:#323216;border-color:#7F7F73}html.skin-theme-clientpref-night .mw-parser-output .maintenance-box-grey{background-color:#303030;border-color:#797979}html.skin-theme-clientpref-night .mw-parser-output .maintenance-box-orange{background-color:#44301D;border-color:#7F7973}}@media screen and (prefers-color-scheme:dark){html.skin-theme-clientpref-os .mw-parser-output .maintenance-box-blue{background-color:#1D1D44;border-color:#73737F}html.skin-theme-clientpref-os .mw-parser-output .maintenance-box-red{background-color:#441D1D;border-color:#7F7373}html.skin-theme-clientpref-os .mw-parser-output .maintenance-box-yellow{background-color:#323216;border-color:#7F7F73}html.skin-theme-clientpref-os .mw-parser-output .maintenance-box-grey{background-color:#303030;border-color:#797979}html.skin-theme-clientpref-os .mw-parser-output .maintenance-box-orange{background-color:#44301D;border-color:#7F7973}}</style><div class="noprint request-box" style="width: fit-content">
-    <table>
-    <tbody><tr>
-    <td><span typeof="mw:File"><a href="/wiki/File:Headset_icon.svg" class="mw-file-description"><img src="//upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Headset_icon.svg/20px-Headset_icon.svg.png" decoding="async" width="20" height="23" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Headset_icon.svg/40px-Headset_icon.svg.png 1.5x" data-file-width="119" data-file-height="136"></a></span>
-    </td>
-    <td>This entry needs an <a href="/wiki/Category:Requests_for_audio_pronunciation_in_Ukrainian_entries" title="Category:Requests for audio pronunciation in Ukrainian entries">audio pronunciation</a>. If you are a native speaker with a microphone, please <a href="/wiki/Help:Audio_pronunciations" title="Help:Audio pronunciations">record this word</a>. The recorded pronunciation <a class="external text" href="https://commons.wikimedia.org/wiki/Category:Lingua_Libre_pronunciation-ukr?from=%D1%83%D1%82%D1%80%D0%B0%D1%82%D1%83">will appear here</a> when it's ready.
-    </td></tr></tbody></table></div><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md"><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Noun</summary><div class="wiktionary-section-content p-3"></div></details></div><p><span class="headword-line"><strong class="Cyrl headword" lang="uk">утра́ту</strong> <a href="/wiki/Wiktionary:Ukrainian_transliteration" title="Wiktionary:Ukrainian transliteration">•</a> (<span lang="uk-Latn" class="headword-tr tr Latn" dir="ltr">utrátu</span>)&nbsp;<span class="gender"><abbr title="feminine gender">f</abbr>&nbsp;<abbr title="inanimate">inan</abbr></span></span>
-    </p><ol><li><span class="form-of-definition use-with-mention"><a href="/wiki/Appendix:Glossary#accusative_case" title="Appendix:Glossary">accusative</a> <a href="/wiki/Appendix:Glossary#singular_number" title="Appendix:Glossary">singular</a> of <span class="form-of-definition-link"><i class="Cyrl mention" lang="uk"><a href="/wiki/%D1%83%D1%82%D1%80%D0%B0%D1%82%D0%B0#Ukrainian" title="утрата">утра́та</a></i> <span class="mention-gloss-paren annotation-paren">(</span><span lang="uk-Latn" class="mention-tr tr Latn">utráta</span><span class="mention-gloss-paren annotation-paren">)</span></span></span></li></ol>
-            
-            
-            </body></html>
-- word: воли
-  indices:
-    - 154
-    - 54
-  wiktionary: >-
-    <!DOCTYPE html><html><head>
-                <title>воли - Wiktionary</title>
-                <meta charset="UTF-8">
-            </head>
-            <body>
-                <div class="mw-heading mw-heading2"><h2 id="Russian">Russian</h2></div><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md" open=""><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Pronunciation</summary><div class="wiktionary-section-content p-3"></div></details></div><ul><li><a href="/wiki/Wiktionary:International_Phonetic_Alphabet" title="Wiktionary:International Phonetic Alphabet">IPA</a><sup>(<a href="/wiki/Appendix:Russian_pronunciation" title="Appendix:Russian pronunciation">key</a>)</sup>: <span class="IPA">[ˈvolʲɪ]</span></li></ul><div class="mw-heading mw-heading3"><details class="wiktionary-section mb-4 border border-gray-200 rounded-md"><summary class="wiktionary-section-title p-2 bg-gray-50 hover:bg-gray-100 cursor-pointer font-medium">Noun</summary><div class="wiktionary-section-content p-3"></div></details></div><p><span class="headword-line"><strong class="Cyrl headword" lang="ru">во́ли</strong> <a href="/wiki/Wiktionary:Russian_transliteration" title="Wiktionary:Russian transliteration">•</a> (<span lang="ru-Latn" class="headword-tr tr Latn" dir="ltr">vóli</span>)&nbsp;<span class="gender"><abbr title="feminine gender">f</abbr>&nbsp;<abbr title="inanimate">inan</abbr> or <abbr title="feminine gender">f</abbr>&nbsp;<abbr title="inanimate">inan</abbr>&nbsp;<abbr title="plural number">pl</abbr></span></span>
-    </p><ol><li><span class="form-of-definition use-with-mention">inflection of
-    <span class="form-of-definition-link"><i class="Cyrl mention" lang="ru"><a
-    href="/wiki/%D0%B2%D0%BE%D0%BB%D1%8F#Russian" title="воля">во́ля</a></i>
-    <span class="mention-gloss-paren annotation-paren">(</span><span
-    lang="ru-Latn" class="mention-tr tr Latn">vólja</span><span
-    class="mention-gloss-paren annotation-paren">)</span></span>:</span>
-
-    <ol><li><span class="form-of-definition use-with-mention"><a
-    href="/wiki/Appendix:Glossary#genitive_case"
-    title="Appendix:Glossary">genitive</a> <a
-    href="/wiki/Appendix:Glossary#singular_number"
-    title="Appendix:Glossary">singular</a></span></li>
-
-    <li><span class="form-of-definition use-with-mention"><span
-    class="inflection-of-conjoined"><a
-    href="/wiki/Appendix:Glossary#nominative_case"
-    title="Appendix:Glossary">nominative</a><span
-    class="inflection-of-sep">/</span><a
-    href="/wiki/Appendix:Glossary#accusative_case"
-    title="Appendix:Glossary">accusative</a></span> <a
-    href="/wiki/Appendix:Glossary#plural_number"
-    title="Appendix:Glossary">plural</a></span></li></ol></li></ol>
-            
-            
-            </body></html>
