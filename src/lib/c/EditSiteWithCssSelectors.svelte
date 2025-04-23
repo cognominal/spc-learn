@@ -9,33 +9,14 @@ in the edited frame.
 <script lang="ts">
   import { onMount, tick } from 'svelte'
   import Selector from './Selector.svelte'
-  import {
-    getNonTailwindClasses,
-    isValidUrl,
-    isValidSelector,
-  } from '$lib/utils'
+  import { getNonTailwindClasses, isValidUrl, isValidSelector } from '$lib'
+  // temporary setting
   let url = $state(
     'http://users.uoa.gr/~nektar/arts/tributes/antoine_de_saint-exupery_le_petit_prince/the_little_prince.htm',
   )
 
-  let content = $derived(() => {
-    const formData = new FormData()
-    formData.append('cookieValue', url)
-    fetch('/api/getpage', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        return data.content // Assuming the response has a 'content' field
-      })
-      .catch((error) => {
-        console.error('Error fetching content:', error)
-        return '' // Return empty string on error
-      })
+  $effect(() => {
+    // Add any derived state logic here if needed
   })
 
   let title = $state('')
@@ -44,23 +25,69 @@ in the edited frame.
   let elt: HTMLElement | null = null
   let iframe1 = $state<HTMLIFrameElement | null>(null)
   let iframe2 = $state<HTMLIFrameElement | null>(null)
+  let fetchError = $state<string | null>(null)
 
   let { index, updateJson } = $props()
 
+  // Function to fetch and inject HTML into both iframes
+  async function updateIframesWithPageHTML() {
+    fetchError = null
+    if (!isValidUrl(url) || !iframe1 || !iframe2) return
+
+    let result: Response = await fetch('api/getpage', {
+      headers: {
+        'Content-Type': '*/*',
+      },
+    })
+
+    let content
+    if (!result.ok) {
+      fetchError = `Error fetching page: ${result.statusText}`
+      return
+    } else {
+      content = await result.text()
+    }
+
+    if (!content) {
+      fetchError = 'No content returned.'
+      return
+    }
+    // Write to iframe1
+    if (iframe1.contentDocument) {
+      iframe1.contentDocument.open()
+      iframe1.contentDocument.documentElement.innerHTML = content
+      iframe1.contentDocument.close()
+    }
+    // Write to iframe2
+    if (iframe2.contentDocument) {
+      iframe2.contentDocument.open()
+      iframe2.contentDocument.documentElement.innerHTML = content
+      iframe2.contentDocument.close()
+    }
+  }
+
   $effect(() => {
+    // Update JSON as before
     updateJson(index, { url, title, selectors })
+    // Update iframes when url changes and is valid
+    if (isValidUrl(url) && iframe1 && iframe2) {
+      updateIframesWithPageHTML()
+    }
   })
 
-  let iframe1Doc = $derived<Document | null>(
-    (iframe1?.contentDocument || iframe1?.contentWindow?.document) ?? null,
-  )
-  let iframe2Doc = $derived<Document | null>(
-    (iframe2?.contentDocument || iframe2?.contentWindow?.document) ?? null,
-  )
+  onMount(() => {
+    if (isValidUrl(url) && iframe1 && iframe2) {
+      updateIframesWithPageHTML()
+    }
+  })
 
-  // let { name, indice  } : { name: string, indice: number }= $props()
-
-  onMount(() => {})
+  let focusedIndex: number | null = null
+  function handleFocus(i: number) {
+    focusedIndex = i
+  }
+  function handleBlur() {
+    focusedIndex = null
+  }
 </script>
 
 <div class="flex flex-col h-full w-full gap-4 p-4">
@@ -74,32 +101,19 @@ in the edited frame.
   {#if !isValidUrl(url)}
     <span style="color: red"> Invalid URL </span>
   {/if}
+  {#if fetchError}
+    <span style="color: red"> {fetchError} </span>
+  {/if}
   <div class="flex flex-col gap-2">
     {#each selectors as selector, index}
       <Selector
         {index}
         bind:selectors
         bind:selectorInputs
-        {iframe1Doc}
-        {iframe2Doc}
-      ></Selector>
-
-      <!-- {@const validSel = isValidSelector(selector)}
-      <span>
-        <input
-          class="mb-2 p-2 border rounded block"
-          type="text"
-          placeholder="Enter css selector"
-          bind:value={selectors[index]}
-          class:bad-entry={!isValidSelector(selector)}
-          bind:this={selectorInputs[index]}
-          onkeydown={(e) => handleSelectorKeydown(e, index)}
-        />
-        {#if !validSel}
-          <span style="color: red"> Invalid selector </span>
-        {/if}
-      </span>
-      <span></span> -->
+        {focusedIndex}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
     {/each}
   </div>
   <button
