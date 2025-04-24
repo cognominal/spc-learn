@@ -1,14 +1,14 @@
 <script lang="ts">
+  // Selectors components are used to match using a css selector in a document and navigate the matches
   import {
     getNonTailwindClasses,
-    isValidUrl,
     isValidSelector,
     countSelectorMatches,
   } from '$lib/utils'
   import { onMount, tick } from 'svelte'
 
   let {
-    iframe1Doc,
+    iframe1Doc = $bindable(),
     iframe2Doc,
     index,
     selectors = $bindable(),
@@ -17,8 +17,8 @@
     onFocus,
     onBlur,
   }: {
-    iframe1Doc: Document
-    iframe2Doc: Document
+    iframe1Doc: Document | null
+    iframe2Doc: Document | null
     index: number
     selectors: string[]
     selectorInputs: HTMLInputElement[] | null
@@ -28,8 +28,18 @@
   } = $props()
 
   //   validSel = isValidSelector(selectors[index])
-  let isHovered = $state(false);
-  let isInputFocused = $state(false);
+  let isHovered = $state(false)
+  let isInputFocused = $state(false)
+  let selectorStates = $state<{ visible: boolean }[]>(
+    selectors.map(() => ({ visible: true })),
+  )
+
+  $effect(() => {
+    // Keep selectorStates in sync with selectors length
+    while (selectorStates.length < selectors.length)
+      selectorStates.push({ visible: true })
+    while (selectorStates.length > selectors.length) selectorStates.pop()
+  })
 
   async function handleSelectorKeydown(e: KeyboardEvent, i: number) {
     // console.log("keydown", e.key);
@@ -56,6 +66,7 @@
 
 <span
   class="selector-row flex items-center gap-2 group"
+  style:display={selectorStates[index]?.visible ? undefined : 'none'}
   onmouseenter={() => (isHovered = true)}
   onmouseleave={() => (isHovered = false)}
   aria-label="CSS selector input row"
@@ -73,6 +84,7 @@
     onclick={() => {
       if (selectors.length > 1) {
         selectors.splice(index, 1)
+        selectorStates.splice(index, 1)
         tick().then(() => {
           const prevIndex = index > 0 ? index - 1 : 0
           selectorInputs && selectorInputs[prevIndex]?.focus()
@@ -84,6 +96,13 @@
   >
     ×
   </button>
+  <input
+    type="checkbox"
+    class="ml-1 mr-2 align-middle"
+    aria-label="hide selected element on procesed document"
+    onchange={(e) =>
+      (selectorStates[index].visible = (e.target as HTMLInputElement).checked)}
+  />
   <button
     class="selector-btn transition-opacity duration-200 bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
     class:opacity-100={isInputFocused || isHovered}
@@ -125,12 +144,19 @@
     bind:value={selectors[index]}
     class:bad-entry={!isValidSelector(selectors[index])}
     bind:this={selectorInputs![index]}
-    onfocus={() => { onFocus(index); isInputFocused = true; }}
-    onblur={() => { isInputFocused = false; onBlur(); }}
+    onfocus={() => {
+      onFocus(index)
+      isInputFocused = true
+    }}
+    onblur={() => {
+      isInputFocused = false
+      onBlur()
+    }}
     onkeydown={(e) => handleSelectorKeydown(e, index)}
     aria-label="CSS selector input"
     tabindex="0"
   />
+
   {#if isValidSelector(selectors[index])}
     {@const matches = countSelectorMatches(iframe1Doc, selectors[index])}
     {@const matchStr = matches === 1 ? 'match' : 'matches'}

@@ -4,7 +4,7 @@
   import Inspect from 'svelte-inspect-value'
   import { dev } from '$app/environment'
 
-  import EditPage from '$lib/c/EditSiteWithCssSelectors.svelte'
+  import EditSiteWithCssSelectors from '$lib/c/EditSiteWithCssSelectors.svelte'
 
   let data = $props()
   let keys = Object.keys(data)
@@ -22,9 +22,10 @@
     selectors: string[]
   }
   let editComponentsState: EditComponentState[] = []
-
   let jsonForCookie = $state('')
-  function updateJson(index: number, state: EditComponentState) {
+
+  
+  function updateCookieJson(index: number, state: EditComponentState) {
     editComponentsState[index] = state
     jsonForCookie = JSON.stringify(editComponentsState)
   }
@@ -55,11 +56,11 @@
     --thickness="4px"
   >
     {#snippet a()}
-      <EditPage index="0" {updateJson} />
+      <EditSiteWithCssSelectors index="0" {updateCookieJson} />
     {/snippet}
 
     {#snippet b()}
-      <EditPage index="1" {updateJson} />
+      <EditSiteWithCssSelectors index="1" {updateCookieJson} />
     {/snippet}
   </SplitPane>
 </div>

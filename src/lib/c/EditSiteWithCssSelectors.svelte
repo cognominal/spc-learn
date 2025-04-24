@@ -9,11 +9,12 @@ in the edited frame.
 <script lang="ts">
   import { onMount, tick } from 'svelte'
   import Selector from './Selector.svelte'
-  import { getNonTailwindClasses, isValidUrl, isValidSelector } from '$lib'
+  import { getNonTailwindClasses, validUrl, isValidSelector } from '$lib'
   // temporary setting
-  let url = $state(
+  let urlString = $state(
     'http://users.uoa.gr/~nektar/arts/tributes/antoine_de_saint-exupery_le_petit_prince/the_little_prince.htm',
   )
+  let url = $derived(validUrl(urlString))
 
   $effect(() => {
     // Add any derived state logic here if needed
@@ -26,60 +27,49 @@ in the edited frame.
   let iframe1 = $state<HTMLIFrameElement | null>(null)
   let iframe2 = $state<HTMLIFrameElement | null>(null)
   let fetchError = $state<string | null>(null)
+  let iframe1Doc = $state<Document | null>(null)
 
-  let { index, updateJson } = $props()
+  let { index, updateCookieJson } = $props()
 
   // Function to fetch and inject HTML into both iframes
-  async function updateIframesWithPageHTML() {
-    fetchError = null
-    if (!isValidUrl(url) || !iframe1 || !iframe2) return
-
+  async function getPageHTML(url: URL): Promise<string> {
     let result: Response = await fetch('api/getpage', {
       headers: {
         'Content-Type': '*/*',
+        'X-URL': url.toString(),
       },
     })
 
-    let content
     if (!result.ok) {
-      fetchError = `Error fetching page: ${result.statusText}`
-      return
-    } else {
-      content = await result.text()
+      fetchError = `Error fetching document page at ${url.toString()}: ${result.statusText}`
+      return ''
     }
-
+    const content = await result.text()
     if (!content) {
       fetchError = 'No content returned.'
-      return
+      return ''
     }
-    // Write to iframe1
-    if (iframe1.contentDocument) {
-      iframe1.contentDocument.open()
-      iframe1.contentDocument.documentElement.innerHTML = content
-      iframe1.contentDocument.close()
-    }
-    // Write to iframe2
-    if (iframe2.contentDocument) {
-      iframe2.contentDocument.open()
-      iframe2.contentDocument.documentElement.innerHTML = content
-      iframe2.contentDocument.close()
-    }
+    return content
   }
 
   $effect(() => {
-    // Update JSON as before
-    updateJson(index, { url, title, selectors })
-    // Update iframes when url changes and is valid
-    if (isValidUrl(url) && iframe1 && iframe2) {
-      updateIframesWithPageHTML()
+    if (url) {
+      updateCookieJson(index, { url: urlString, title, selectors })
+      const updateIframes = async () => {
+        let content = await getPageHTML(url)
+        iframe1.srcdoc = content
+        iframe2.srcdoc = content
+        iframe1Doc = iframe1.contentDocument
+      }
+      updateIframes()
     }
   })
 
-  onMount(() => {
-    if (isValidUrl(url) && iframe1 && iframe2) {
-      updateIframesWithPageHTML()
-    }
-  })
+  // onMount(() => {
+  //   if (isValidUrl(url) && iframe1 && iframe2) {
+  //     updateIframesWithPageHTML()
+  //   }
+  // })
 
   let focusedIndex: number | null = null
   function handleFocus(i: number) {
@@ -90,15 +80,16 @@ in the edited frame.
   }
 </script>
 
+<!-- overflow would not work because overflow from layout takes over ? -->
 <div class="flex flex-col h-full w-full gap-4 p-4">
   <input
     type="text"
     placeholder="Enter URL"
-    bind:value={url}
-    class:bad-entry={!isValidUrl(url)}
+    bind:value={urlString}
+    class:bad-entry={!validUrl(urlString)}
     class="mb-2 p-2 border rounded"
   />
-  {#if !isValidUrl(url)}
+  {#if !url}
     <span style="color: red"> Invalid URL </span>
   {/if}
   {#if fetchError}
@@ -107,6 +98,7 @@ in the edited frame.
   <div class="flex flex-col gap-2">
     {#each selectors as selector, index}
       <Selector
+        {iframe1Doc}
         {index}
         bind:selectors
         bind:selectorInputs
@@ -134,7 +126,6 @@ in the edited frame.
       frameborder="0"
       scrolling="auto"
       class="w-full h-full rounded border"
-      src={url || undefined}
       style="display: block; min-height: 0; height: 100%; width: 100%; overflow: auto;"
     >
     </iframe>
@@ -148,7 +139,7 @@ in the edited frame.
       frameborder="0"
       scrolling="auto"
       class="w-full h-full rounded border"
-      src={url || undefined}
+      src={urlString || undefined}
       style="display: block; min-height: 0; height: 100%; width: 100%; overflow: auto;"
     >
     </iframe>

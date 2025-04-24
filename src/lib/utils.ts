@@ -13,14 +13,8 @@ export function cleanProcessedHtml(raw: string) {
   return txt.value;
 }
 
-export function isValidUrl(url: string): boolean {
-  try {
-
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
+export function validUrl(url: string): URL | false {
+  try { return new URL(url) } catch { return false }
 }
 
 export function isValidSelector(selector: string): boolean {
@@ -57,11 +51,15 @@ export function getNonTailwindClasses(doc: Document): Set<string> {
   return allClasses;
 }
 
-export function countSelectorMatches(doc: Document, selector: string): number {
-  console.log(`doc: ${doc} countSelectorMatches: ${selector}`);
 
+export function countSelectorMatches(doc: Document, selector: string): number {
+
+  if (selector.trim() === "") return 0; // No selector
+  console.log(`doc: ${doc} countSelectorMatches: ${selector}`);
   try {
-    return doc.querySelectorAll(selector).length;
+    const matches = doc.querySelectorAll(selector).length;
+
+    return matches;
   } catch {
     // If the selector is invalid, return 0
     return 0;
@@ -69,4 +67,6 @@ export function countSelectorMatches(doc: Document, selector: string): number {
 }
 
 
-
+export function isAbsoluteUrl(url: string): boolean {
+  return /^(?:[a-z]+:)?\/\//i.test(url);
+}

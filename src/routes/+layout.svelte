@@ -38,7 +38,8 @@
       class="flex items-center w-auto max-w-max"
       style="height: fit-content; min-height: 0;"
     >
-      <span class="text-lg font-semibold text-white mr-6">Russian Learning</span
+      <span class="text-lg font-semibold text-white mr-6"
+        >Language Learning</span
       >
       <Navigation.Bar
         value={routeLabel}
@@ -63,6 +64,13 @@
           background="bg-white/0"
           rounded="full"
         />
+        <Navigation.Tile
+          href="/processed-documents"
+          label="Documents"
+          background="bg-white/0"
+          rounded="full"
+        />
+
         <Navigation.Tile
           href="/admin"
           label="Admin"
