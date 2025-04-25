@@ -96,13 +96,24 @@
   >
     ×
   </button>
-  <input
-    type="checkbox"
-    class="ml-1 mr-2 align-middle"
-    aria-label="hide selected element on procesed document"
-    onchange={(e) =>
-      (selectorStates[index].visible = (e.target as HTMLInputElement).checked)}
-  />
+  <span
+    class="ml-1 mr-2 align-middle transition-opacity duration-200 bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
+    class:opacity-100={isInputFocused || isHovered}
+    class:pointer-events-auto={isInputFocused || isHovered}
+    class:opacity-0={!isInputFocused && !isHovered}
+    class:pointer-events-none={!isInputFocused && !isHovered}
+    class:ring-2={focusedIndex === index}
+    class:ring-indigo-400={focusedIndex === index}
+  >
+    <input
+      type="checkbox"
+      aria-label="hide selected element on procesed document"
+      onchange={(e) =>
+        (selectorStates[index].visible = (
+          e.target as HTMLInputElement
+        ).checked)}
+    />
+  </span>
   <button
     class="selector-btn transition-opacity duration-200 bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
     class:opacity-100={isInputFocused || isHovered}
