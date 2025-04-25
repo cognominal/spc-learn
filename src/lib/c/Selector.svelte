@@ -30,11 +30,16 @@
   //   validSel = isValidSelector(selectors[index])
   let isHovered = $state(false)
   let isInputFocused = $state(false)
+  let inputText = $state('')
+  let visibleButtons = $derived(
+    isHovered || (isInputFocused && isValidSelector(inputText)),
+  )
   let selectorStates = $state<{ visible: boolean }[]>(
     selectors.map(() => ({ visible: true })),
   )
 
   $effect(() => {
+    selectors[index] = inputText // Update the selector with the inputText
     // Keep selectorStates in sync with selectors length
     while (selectorStates.length < selectors.length)
       selectorStates.push({ visible: true })
@@ -152,8 +157,8 @@
     class="mb-2 p-2 border rounded block"
     type="text"
     placeholder="Enter css selector"
-    bind:value={selectors[index]}
-    class:bad-entry={!isValidSelector(selectors[index])}
+    bind:value={inputText}
+    class:bad-entry={!isValidSelector(inputText)}
     bind:this={selectorInputs![index]}
     onfocus={() => {
       onFocus(index)
