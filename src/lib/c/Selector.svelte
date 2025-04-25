@@ -157,15 +157,17 @@
     tabindex="0"
   />
 
-  {#if isValidSelector(selectors[index])}
-    {@const matches = countSelectorMatches(iframe1Doc, selectors[index])}
-    {@const matchStr = matches === 1 ? 'match' : 'matches'}
-    <span class="whitespace-nowrap">{matches} {matchStr}</span>
-  {:else}
-    <span
-      class="text-red-600 whitespace-nowrap"
-      role="status"
-      aria-live="polite">Invalid selector</span
-    >
+  {#if selectors[index].trim() !== ''}
+    {#if isValidSelector(selectors[index])}
+      {@const matches = countSelectorMatches(iframe1Doc, selectors[index])}
+      {@const matchStr = matches === 1 ? 'match' : 'matches'}
+      <span class="whitespace-nowrap">{matches} {matchStr}</span>
+    {:else}
+      <span
+        class="text-red-600 whitespace-nowrap"
+        role="status"
+        aria-live="polite">Invalid selector</span
+      >
+    {/if}
   {/if}
 </span>
