@@ -28,6 +28,7 @@ in the edited frame.
   let iframe2 = $state<HTMLIFrameElement | null>(null)
   let fetchError = $state<string | null>(null)
   let iframe1Doc = $state<Document | null>(null)
+  let focusedIndex: number | null = $state(null)
 
   let { index, updateCookieJson } = $props()
 
@@ -52,9 +53,10 @@ in the edited frame.
     return content
   }
 
+  // Only fetch and update iframe content when the URL changes
   $effect(() => {
     if (url) {
-      updateCookieJson(index, { url: urlString, title, selectors })
+      console.log('set frame content:', url)
       const updateIframes = async () => {
         let content = await getPageHTML(url)
         iframe1.srcdoc = content
@@ -65,13 +67,19 @@ in the edited frame.
     }
   })
 
+  // Keep selectors and other state in sync, but don't reload iframes
+  $effect(() => {
+    if (url) {
+      updateCookieJson(index, { url: urlString, title, selectors })
+    }
+  })
+
   // onMount(() => {
   //   if (isValidUrl(url) && iframe1 && iframe2) {
   //     updateIframesWithPageHTML()
   //   }
   // })
 
-  let focusedIndex: number | null = null
   function handleFocus(i: number) {
     focusedIndex = i
   }
