@@ -76,8 +76,8 @@
 
 <!-- <span
   >visibleButtons {visibleButtons} inactiveButtons {inactiveButtons} activeButtons
-  {activeButtons}</span -->
->
+  {activeButtons}</span> -->
+
 <div
   class="flex items-center gap-2"
   aria-label="CSS selector input row"
@@ -85,8 +85,6 @@
 >
   <span
     class="selector-row flex items-center gap-2 group"
-    class:ring-2={inputFocused}
-    class:ring-red-400={inputFocused}
     onmouseenter={() => (hovered = true)}
     onmouseleave={() => (hovered = false)}
     aria-label="CSS selector input row"
