@@ -42,9 +42,55 @@
     selectors.map(() => ({ visible: true })),
   )
 
+  let currentMatchIndex = $state(0)
+
+  let lastInputText = ''
+  $effect(() => {
+    if (inputText === lastInputText) return
+    lastInputText = inputText
+    console.log('scroll to match', `'${inputText}'`, currentMatchIndex)
+    if (!emptySelector) scrollToMatch(iframe1Doc, inputText, currentMatchIndex)
+  })
+
+  function scrollToMatch(
+    doc: Document | null,
+    selector: string,
+    matchIndex: number,
+  ) {
+    if (!doc || !isValidSelector(selector)) return
+    const matches = Array.from(doc.querySelectorAll(selector))
+    if (matches.length === 0) return
+    const idx =
+      ((matchIndex % matches.length) + matches.length) % matches.length // wrap around
+    const el = matches[idx]
+    if (el && typeof el.scrollIntoView === 'function') {
+      el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest',
+      })
+    }
+  }
+
+  function handlePrevMatch() {
+    if (!activeButtons) return
+    const matches = iframe1Doc?.querySelectorAll(inputText) ?? []
+    if (matches.length === 0) return
+    currentMatchIndex =
+      (currentMatchIndex - 1 + matches.length) % matches.length
+  }
+
+  function handleNextMatch() {
+    if (!activeButtons) return
+    const matches = iframe1Doc?.querySelectorAll(inputText) ?? []
+    if (matches.length === 0) return
+    currentMatchIndex = (currentMatchIndex + 1) % matches.length
+  }
+
+  // Reset currentMatchIndex when selector changes
   $effect(() => {
     selectors[index] = inputText // Update the selector with the inputText
-
+    currentMatchIndex = 0
     // Keep selectorStates in sync with selectors length
     while (selectorStates.length < selectors.length)
       selectorStates.push({ visible: true })
@@ -73,10 +119,6 @@
     }
   }
 </script>
-
-<!-- <span
-  >visibleButtons {visibleButtons} inactiveButtons {inactiveButtons} activeButtons
-  {activeButtons}</span> -->
 
 <div
   class="flex items-center gap-2"
@@ -127,53 +169,56 @@
       <button
         class="selector-btn bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
         aria-label="Previous selector"
-        onclick={() => {
-          /* Add your click handler logic here */
-        }}
+        onclick={handlePrevMatch}
         type="button"
         tabindex="0"
+        disabled={!isValidSelector(inputText) ||
+          countSelectorMatches(iframe1Doc, inputText) < 2}
       >
         &lt;
       </button>
       <button
         class="selector-btn bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
         aria-label="Next selector"
-        onclick={() => {
-          /* Add your click handler logic here */
-        }}
+        onclick={handleNextMatch}
         type="button"
         tabindex="0"
+        disabled={!isValidSelector(inputText) ||
+          countSelectorMatches(iframe1Doc, inputText) < 2}
       >
         &gt;
       </button>
     </span>
+
+    <input
+      class="mb-2 p-2 border rounded"
+      style="flex:1 1 0; min-width: 0;"
+      type="text"
+      placeholder="Enter css selector"
+      bind:value={inputText}
+      class:bad-entry={!isValidSelector(inputText)}
+      bind:this={selectorInputs![index]}
+      onfocus={() => {
+        onFocus(index)
+        inputFocused = true
+      }}
+      onblur={() => {
+        inputFocused = false
+        onBlur()
+      }}
+      onkeydown={(e) => handleSelectorKeydown(e, index)}
+      aria-label="CSS selector input"
+      tabindex="0"
+    />
   </span>
-  <input
-    class="mb-2 p-2 border rounded"
-    style="flex:1 1 0; min-width: 0;"
-    type="text"
-    placeholder="Enter css selector"
-    bind:value={inputText}
-    class:bad-entry={!isValidSelector(inputText)}
-    bind:this={selectorInputs![index]}
-    onfocus={() => {
-      onFocus(index)
-      inputFocused = true
-    }}
-    onblur={() => {
-      inputFocused = false
-      onBlur()
-    }}
-    onkeydown={(e) => handleSelectorKeydown(e, index)}
-    aria-label="CSS selector input"
-    tabindex="0"
-  />
 
   {#if inputText.trim() !== ''}
     {#if isValidSelector(inputText)}
       {@const matches = countSelectorMatches(iframe1Doc, inputText)}
       {@const matchStr = matches === 1 ? 'match' : 'matches'}
-      <span class="whitespace-nowrap">{matches} {matchStr}</span>
+      <span class="whitespace-nowrap"
+        >#{currentMatchIndex}/{matches} {matchStr}</span
+      >
     {:else}
       <span
         class="text-red-600 whitespace-nowrap"
