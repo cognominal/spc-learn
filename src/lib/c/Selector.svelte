@@ -27,7 +27,7 @@
     onBlur: () => void
   } = $props()
 
-  //   validSel = isValidSelector(selectors[index])
+  //   validSel = isValidSelector(inputText)
   let isHovered = $state(false)
   let isInputFocused = $state(false)
   let inputText = $state('')
@@ -40,6 +40,7 @@
 
   $effect(() => {
     selectors[index] = inputText // Update the selector with the inputText
+
     // Keep selectorStates in sync with selectors length
     while (selectorStates.length < selectors.length)
       selectorStates.push({ visible: true })
@@ -69,92 +70,81 @@
   }
 </script>
 
-<span
-  class="selector-row flex items-center gap-2 group"
-  style:display={selectorStates[index]?.visible ? undefined : 'none'}
-  onmouseenter={() => (isHovered = true)}
-  onmouseleave={() => (isHovered = false)}
+<span>visibleButtons {visibleButtons}</span>
+<div
+  class="flex items-center gap-2"
   aria-label="CSS selector input row"
   role="group"
 >
-  <button
-    class="selector-btn transition-opacity duration-200 bg-transparent border border-red-300 rounded text-red-600 focus-visible:ring-2 focus-visible:ring-red-400 hover:bg-red-100 hover:border-red-500 hover:text-red-800 px-2 py-1 mr-4"
-    class:opacity-100={isInputFocused || isHovered}
-    class:pointer-events-auto={isInputFocused || isHovered}
-    class:opacity-0={!isInputFocused && !isHovered}
-    class:pointer-events-none={!isInputFocused && !isHovered}
-    class:ring-2={focusedIndex === index}
-    class:ring-red-400={focusedIndex === index}
-    aria-label="Delete selector"
-    onclick={() => {
-      if (selectors.length > 1) {
-        selectors.splice(index, 1)
-        selectorStates.splice(index, 1)
-        tick().then(() => {
-          const prevIndex = index > 0 ? index - 1 : 0
-          selectorInputs && selectorInputs[prevIndex]?.focus()
-        })
-      }
-    }}
-    type="button"
-    tabindex="0"
-  >
-    ×
-  </button>
   <span
-    class="ml-1 mr-2 align-middle transition-opacity duration-200 bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
-    class:opacity-100={isInputFocused || isHovered}
-    class:pointer-events-auto={isInputFocused || isHovered}
-    class:opacity-0={!isInputFocused && !isHovered}
-    class:pointer-events-none={!isInputFocused && !isHovered}
-    class:ring-2={focusedIndex === index}
-    class:ring-indigo-400={focusedIndex === index}
+    class="selector-row flex items-center gap-2 group"
+    class:opacity-100={visibleButtons}
+    class:pointer-events-auto={visibleButtons}
+    class:opacity-0={!visibleButtons}
+    class:pointer-events-none={!visibleButtons}
+    class:ring-2={isInputFocused}
+    class:ring-red-400={isInputFocused}
+    onmouseenter={() => (isHovered = true)}
+    onmouseleave={() => (isHovered = false)}
+    aria-label="CSS selector input row"
+    role="group"
   >
-    <input
-      type="checkbox"
-      aria-label="hide selected element on procesed document"
-      onchange={(e) =>
-        (selectorStates[index].visible = (
-          e.target as HTMLInputElement
-        ).checked)}
-    />
+    <button
+      class="selector-btn transition-opacity duration-200 bg-transparent border border-red-300 rounded text-red-600 focus-visible:ring-2 focus-visible:ring-red-400 hover:bg-red-100 hover:border-red-500 hover:text-red-800 px-2 py-1 mr-4"
+      aria-label="Delete selector"
+      onclick={() => {
+        if (selectors.length > 1) {
+          selectors.splice(index, 1)
+          selectorStates.splice(index, 1)
+          tick().then(() => {
+            const prevIndex = index > 0 ? index - 1 : 0
+            selectorInputs && selectorInputs[prevIndex]?.focus()
+          })
+        }
+      }}
+      type="button"
+      tabindex="0"
+    >
+      ×
+    </button>
+    <span
+      class="ml-1 mr-2 align-middle transition-opacity duration-200 bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
+    >
+      <input
+        type="checkbox"
+        aria-label="hide selected element on procesed document"
+        onchange={(e) =>
+          (selectorStates[index].visible = (
+            e.target as HTMLInputElement
+          ).checked)}
+      />
+    </span>
+    <button
+      class="selector-btn transition-opacity duration-200 bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
+      aria-label="Previous selector"
+      onclick={() => {
+        /* Add your click handler logic here */
+      }}
+      type="button"
+      tabindex="0"
+    >
+      &lt;
+    </button>
+    <button
+      class="selector-btn transition-opacity duration-200 bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
+      aria-label="Next selector"
+      onclick={() => {
+        /* Add your click handler logic here */
+      }}
+      type="button"
+      tabindex="0"
+    >
+      &gt;
+    </button>
   </span>
-  <button
-    class="selector-btn transition-opacity duration-200 bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
-    class:opacity-100={isInputFocused || isHovered}
-    class:pointer-events-auto={isInputFocused || isHovered}
-    class:opacity-0={!isInputFocused && !isHovered}
-    class:pointer-events-none={!isInputFocused && !isHovered}
-    class:ring-2={focusedIndex === index}
-    class:ring-indigo-400={focusedIndex === index}
-    aria-label="Previous selector"
-    onclick={() => {
-      /* Add your click handler logic here */
-    }}
-    type="button"
-    tabindex="0"
-  >
-    &lt;
-  </button>
-  <button
-    class="selector-btn transition-opacity duration-200 bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
-    class:opacity-100={isInputFocused || isHovered}
-    class:pointer-events-auto={isInputFocused || isHovered}
-    class:opacity-0={!isInputFocused && !isHovered}
-    class:pointer-events-none={!isInputFocused && !isHovered}
-    class:ring-2={focusedIndex === index}
-    class:ring-indigo-400={focusedIndex === index}
-    aria-label="Next selector"
-    onclick={() => {
-      /* Add your click handler logic here */
-    }}
-    type="button"
-    tabindex="0"
-  >
-    &gt;
-  </button>
   <input
-    class="mb-2 p-2 border rounded block"
+    class="mb-2 p-2 border rounded"
+    style="flex:1 1 0; min-width: 0;"
     type="text"
     placeholder="Enter css selector"
     bind:value={inputText}
@@ -173,9 +163,9 @@
     tabindex="0"
   />
 
-  {#if selectors[index].trim() !== ''}
-    {#if isValidSelector(selectors[index])}
-      {@const matches = countSelectorMatches(iframe1Doc, selectors[index])}
+  {#if inputText.trim() !== ''}
+    {#if isValidSelector(inputText)}
+      {@const matches = countSelectorMatches(iframe1Doc, inputText)}
       {@const matchStr = matches === 1 ? 'match' : 'matches'}
       <span class="whitespace-nowrap">{matches} {matchStr}</span>
     {:else}
@@ -186,4 +176,4 @@
       >
     {/if}
   {/if}
-</span>
+</div>
