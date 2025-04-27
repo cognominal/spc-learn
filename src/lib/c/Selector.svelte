@@ -5,7 +5,7 @@
     isValidSelector,
     countSelectorMatches,
   } from '$lib/utils'
-  import { onMount, tick } from 'svelte'
+  import { onDestroy, onMount, tick } from 'svelte'
 
   let {
     iframe1Doc = $bindable(),
@@ -27,7 +27,6 @@
     onBlur: () => void
   } = $props()
 
-  //   validSel = isValidSelector(inputText)
   let hovered = $state(false)
   let inputFocused = $state(false)
   let inputText = $state('')
@@ -41,15 +40,18 @@
   let selectorStates = $state<{ visible: boolean }[]>(
     selectors.map(() => ({ visible: true })),
   )
+  let highlightedElement: HTMLDivElement | null = null
 
   let currentMatchIndex = $state(0)
 
   let lastInputText = ''
+  let lastI = 0
   $effect(() => {
-    if (inputText === lastInputText) return
-    lastInputText = inputText
     console.log('scroll to match', `'${inputText}'`, currentMatchIndex)
-    if (!emptySelector) scrollToMatch(iframe1Doc, inputText, currentMatchIndex)
+    if (inputText === lastInputText && currentMatchIndex === lastI) return
+    lastInputText = inputText
+    lastI = currentMatchIndex // Update lastI to currentMatchIndex
+    scrollToMatch(iframe1Doc, inputText, currentMatchIndex)
   })
 
   function scrollToMatch(
@@ -73,19 +75,75 @@
   }
 
   function handlePrevMatch() {
-    if (!activeButtons) return
-    const matches = iframe1Doc?.querySelectorAll(inputText) ?? []
-    if (matches.length === 0) return
-    currentMatchIndex =
-      (currentMatchIndex - 1 + matches.length) % matches.length
+    handleMatch(-1)
+  }
+  function handleNextMatch() {
+    handleMatch(+1)
   }
 
-  function handleNextMatch() {
+  function handleMatch(i: number) {
     if (!activeButtons) return
     const matches = iframe1Doc?.querySelectorAll(inputText) ?? []
     if (matches.length === 0) return
-    currentMatchIndex = (currentMatchIndex + 1) % matches.length
+    // Always keep currentMatchIndex in [0, matches.length)
+    currentMatchIndex =
+      (((currentMatchIndex + i) % matches.length) + matches.length) %
+      matches.length
+    let elt = matches[currentMatchIndex]
+    unhighlightElement()
+    highlightElement(elt)
   }
+
+  function highlightElement(el: Element) {
+    // Find the iframe element in the parent document that contains el
+    let iframe: HTMLIFrameElement | null = null
+    try {
+      // Find the iframe by matching its contentDocument
+      for (const frame of Array.from(
+        window.parent.document.getElementsByTagName('iframe'),
+      )) {
+        if (frame.contentDocument === el.ownerDocument) {
+          iframe = frame
+          break
+        }
+      }
+    } catch (e) {
+      // Cross-origin, do nothing
+    }
+    if (!iframe) return
+
+    const elRect = (el as HTMLElement).getBoundingClientRect()
+    const iframeRect = iframe.getBoundingClientRect()
+
+    // Calculate the position of el relative to the main window
+    const left = iframeRect.left + elRect.left
+    const top = iframeRect.top + elRect.top
+
+    const overlay = document.createElement('div')
+    highlightedElement = overlay
+    overlay.style.position = 'fixed'
+    overlay.style.left = `${left}px`
+    overlay.style.top = `${top}px`
+    overlay.style.width = `${elRect.width}px`
+    overlay.style.height = `${elRect.height}px`
+    overlay.style.pointerEvents = 'none'
+    overlay.style.background = 'transparent'
+    overlay.style.border = '2px solid red'
+    overlay.style.zIndex = '9999'
+    document.body.appendChild(overlay)
+    return overlay
+  }
+
+  function unhighlightElement() {
+    if (highlightedElement) {
+      highlightedElement.remove()
+      highlightedElement = null
+    }
+  }
+
+  onDestroy(() => {
+    unhighlightElement()
+  })
 
   // Reset currentMatchIndex when selector changes
   $effect(() => {
