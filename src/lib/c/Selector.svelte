@@ -30,28 +30,31 @@
   let hovered = $state(false)
   let inputFocused = $state(false)
   let inputText = $state('')
-  let visibleButtons = $derived(
-    hovered || (inputFocused && isValidSelector(inputText)),
-  )
-  let emptySelector = $derived(inputText === '')
-  let activeButtons = $derived(visibleButtons && !emptySelector)
-  let inactiveButtons = $derived(visibleButtons && emptySelector)
+  let inputTextvalid = $derived(isValidSelector(inputText))
+  let emptyInputText = $derived(inputText === '')
+
+  let visibleButtons = $derived(hovered || (inputFocused && inputTextvalid))
+  let activeButtons = $derived(visibleButtons && !emptyInputText)
+  let inactiveButtons = $derived(visibleButtons && emptyInputText)
+  let currentMatchIndex = $state(0)
+  let matches = $state(0)
 
   let selectorStates = $state<{ visible: boolean }[]>(
     selectors.map(() => ({ visible: true })),
   )
   let highlightedElement: HTMLDivElement | null = null
 
-  let currentMatchIndex = $state(0)
-
   let lastInputText = ''
   let lastI = 0
   $effect(() => {
     console.log('scroll to match', `'${inputText}'`, currentMatchIndex)
     if (inputText === lastInputText && currentMatchIndex === lastI) return
+
     lastInputText = inputText
     lastI = currentMatchIndex // Update lastI to currentMatchIndex
     scrollToMatch(iframe1Doc, inputText, currentMatchIndex)
+    matches = countSelectorMatches(iframe1Doc, inputText)
+    highlightElement
   })
 
   function scrollToMatch(
@@ -59,7 +62,7 @@
     selector: string,
     matchIndex: number,
   ) {
-    if (!doc || !isValidSelector(selector)) return
+    if (!doc || !inputTextvalid) return
     const matches = Array.from(doc.querySelectorAll(selector))
     if (matches.length === 0) return
     const idx =
@@ -90,11 +93,11 @@
       (((currentMatchIndex + i) % matches.length) + matches.length) %
       matches.length
     let elt = matches[currentMatchIndex]
-    unhighlightElement()
     highlightElement(elt)
   }
 
   function highlightElement(el: Element) {
+    unhighlightElement()
     // Find the iframe element in the parent document that contains el
     let iframe: HTMLIFrameElement | null = null
     try {
@@ -113,25 +116,24 @@
     if (!iframe) return
 
     const elRect = (el as HTMLElement).getBoundingClientRect()
-    const iframeRect = iframe.getBoundingClientRect()
+    const doc = el.ownerDocument
 
     // Calculate the position of el relative to the main window
-    const left = iframeRect.left + elRect.left
-    const top = iframeRect.top + elRect.top
+    const left = elRect.left
+    const top = elRect.top
 
-    const overlay = document.createElement('div')
-    highlightedElement = overlay
-    overlay.style.position = 'fixed'
-    overlay.style.left = `${left}px`
-    overlay.style.top = `${top}px`
-    overlay.style.width = `${elRect.width}px`
-    overlay.style.height = `${elRect.height}px`
-    overlay.style.pointerEvents = 'none'
-    overlay.style.background = 'transparent'
-    overlay.style.border = '2px solid red'
-    overlay.style.zIndex = '9999'
-    document.body.appendChild(overlay)
-    return overlay
+    highlightedElement = doc.createElement('div')
+    highlightedElement.style.position = 'absolute'
+    highlightedElement.style.left = `${left}px`
+    highlightedElement.style.top = `${top}px`
+    highlightedElement.style.width = `${elRect.width}px`
+    highlightedElement.style.height = `${elRect.height}px`
+    highlightedElement.style.pointerEvents = 'none'
+    highlightedElement.style.background = 'transparent'
+    highlightedElement.style.border = '2px solid red'
+    highlightedElement.style.zIndex = '9999'
+    doc.body.appendChild(highlightedElement)
+    return highlightedElement
   }
 
   function unhighlightElement() {
@@ -225,12 +227,12 @@
           ).checked)}
       />
       <button
-        class="selector-btn bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
+        class="btn bg-transparent border border-gray-300 rounded text-inherit cursor-pointer focus-visible:ring-2 focus-visible:ring-indigo-400 hover:bg-indigo-100 hover:border-indigo-500 hover:text-indigo-800 px-2 py-1"
         aria-label="Previous selector"
         onclick={handlePrevMatch}
         type="button"
         tabindex="0"
-        disabled={!isValidSelector(inputText) ||
+        disabled={!inputTextvalid ||
           countSelectorMatches(iframe1Doc, inputText) < 2}
       >
         &lt;
@@ -241,7 +243,7 @@
         onclick={handleNextMatch}
         type="button"
         tabindex="0"
-        disabled={!isValidSelector(inputText) ||
+        disabled={!inputTextvalid ||
           countSelectorMatches(iframe1Doc, inputText) < 2}
       >
         &gt;
@@ -254,7 +256,7 @@
       type="text"
       placeholder="Enter css selector"
       bind:value={inputText}
-      class:bad-entry={!isValidSelector(inputText)}
+      class:bad-entry={!inputTextvalid}
       bind:this={selectorInputs![index]}
       onfocus={() => {
         onFocus(index)
@@ -271,7 +273,7 @@
   </span>
 
   {#if inputText.trim() !== ''}
-    {#if isValidSelector(inputText)}
+    {#if inputTextvalid}
       {@const matches = countSelectorMatches(iframe1Doc, inputText)}
       {@const matchStr = matches === 1 ? 'match' : 'matches'}
       <span class="whitespace-nowrap"
