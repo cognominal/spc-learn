@@ -56,14 +56,14 @@ in the edited frame.
   // Only fetch and update iframe content when the URL changes
   $effect(() => {
     if (url) {
-      console.log('set frame content:', url)
-      const updateIframes = async () => {
+      // console.log('set frame content:', url)
+      // Inline the async logic directly
+      ;(async () => {
         let content = await getPageHTML(url)
         iframe1.srcdoc = content
         iframe2.srcdoc = content
         iframe1Doc = iframe1.contentDocument
-      }
-      updateIframes()
+      })()
     }
   })
 
@@ -85,6 +85,29 @@ in the edited frame.
   }
   function handleBlur() {
     focusedIndex = null
+  }
+
+  // Helper: Wait for iframe1 to load and set iframe1Doc
+  function setupIframe1LoadListener() {
+    if (iframe1) {
+      iframe1.addEventListener('load', () => {
+        iframe1Doc = iframe1.contentDocument
+      })
+    }
+  }
+
+  onMount(() => {
+    setupIframe1LoadListener()
+  })
+
+  // Count matches for a selector in iframe1's document
+  function countSelectorMatches(selector: string): number {
+    if (!iframe1Doc) return 0
+    try {
+      return iframe1Doc.querySelectorAll(selector).length
+    } catch (e) {
+      return 0
+    }
   }
 </script>
 
@@ -122,7 +145,7 @@ in the edited frame.
     }}
     class="mb-2 px-4 py-2 border rounded bg-blue-500 text-white mx-auto block w-auto text-center"
   >
-    Add Selector
+    Add CSS Selector
   </button>
   <div class="flex-1 min-h-0">
     <iframe
