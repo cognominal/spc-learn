@@ -56,9 +56,9 @@ export function countSelectorMatches(doc: Document, selector: string): number {
 
   if (selector.trim() === "") return 0; // No selector
   console.log(`doc: ${doc} countSelectorMatches: ${selector}`);
+  console.log('doc content', doc.body.innerHTML.substring(0, 100))
   try {
     const matches = doc.querySelectorAll(selector).length;
-
     return matches;
   } catch {
     // If the selector is invalid, return 0

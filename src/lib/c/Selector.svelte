@@ -4,7 +4,9 @@
     getNonTailwindClasses,
     isValidSelector,
     countSelectorMatches,
-  } from '$lib/utils'
+    highlightElement,
+    unhighlightElement,
+  } from '$lib'
   import { onDestroy, onMount, tick } from 'svelte'
 
   let {
@@ -16,6 +18,7 @@
     focusedIndex,
     onFocus,
     onBlur,
+    highlightedElement = $bindable(),
   }: {
     iframe1Doc: Document | null
     iframe2Doc: Document | null
@@ -25,6 +28,7 @@
     focusedIndex: number | null
     onFocus: (i: number) => void
     onBlur: () => void
+    highlightedElement: HTMLElement | null
   } = $props()
 
   let hovered = $state(false)
@@ -42,19 +46,16 @@
   let selectorStates = $state<{ visible: boolean }[]>(
     selectors.map(() => ({ visible: true })),
   )
-  let highlightedElement: HTMLDivElement | null = null
 
   let lastInputText = ''
   let lastI = 0
   $effect(() => {
-    console.log('scroll to match', `'${inputText}'`, currentMatchIndex)
     if (inputText === lastInputText && currentMatchIndex === lastI) return
 
     lastInputText = inputText
     lastI = currentMatchIndex // Update lastI to currentMatchIndex
     scrollToMatch(iframe1Doc, inputText, currentMatchIndex)
-    matches = countSelectorMatches(iframe1Doc, inputText)
-    highlightElement
+    matches = countSelectorMatches(iframe1Doc!, inputText)
   })
 
   function scrollToMatch(
@@ -93,59 +94,11 @@
       (((currentMatchIndex + i) % matches.length) + matches.length) %
       matches.length
     let elt = matches[currentMatchIndex]
-    highlightElement(elt)
+    highlightedElement = highlightElement(
+      highlightedElement,
+      elt as HTMLElement,
+    ) //
   }
-
-  function highlightElement(el: Element) {
-    unhighlightElement()
-    // Find the iframe element in the parent document that contains el
-    let iframe: HTMLIFrameElement | null = null
-    try {
-      // Find the iframe by matching its contentDocument
-      for (const frame of Array.from(
-        window.parent.document.getElementsByTagName('iframe'),
-      )) {
-        if (frame.contentDocument === el.ownerDocument) {
-          iframe = frame
-          break
-        }
-      }
-    } catch (e) {
-      // Cross-origin, do nothing
-    }
-    if (!iframe) return
-
-    const elRect = (el as HTMLElement).getBoundingClientRect()
-    const doc = el.ownerDocument
-
-    // Calculate the position of el relative to the main window
-    const left = elRect.left
-    const top = elRect.top
-
-    highlightedElement = doc.createElement('div')
-    highlightedElement.style.position = 'absolute'
-    highlightedElement.style.left = `${left}px`
-    highlightedElement.style.top = `${top}px`
-    highlightedElement.style.width = `${elRect.width}px`
-    highlightedElement.style.height = `${elRect.height}px`
-    highlightedElement.style.pointerEvents = 'none'
-    highlightedElement.style.background = 'transparent'
-    highlightedElement.style.border = '2px solid red'
-    highlightedElement.style.zIndex = '9999'
-    doc.body.appendChild(highlightedElement)
-    return highlightedElement
-  }
-
-  function unhighlightElement() {
-    if (highlightedElement) {
-      highlightedElement.remove()
-      highlightedElement = null
-    }
-  }
-
-  onDestroy(() => {
-    unhighlightElement()
-  })
 
   // Reset currentMatchIndex when selector changes
   $effect(() => {
@@ -232,7 +185,7 @@
         type="button"
         tabindex="0"
         disabled={!inputTextvalid ||
-          countSelectorMatches(iframe1Doc, inputText) < 2}
+          countSelectorMatches(iframe1Doc!, inputText) < 2}
       >
         &lt;
       </button>
@@ -243,7 +196,7 @@
         type="button"
         tabindex="0"
         disabled={!inputTextvalid ||
-          countSelectorMatches(iframe1Doc, inputText) < 2}
+          countSelectorMatches(iframe1Doc!, inputText) < 2}
       >
         &gt;
       </button>
@@ -273,7 +226,7 @@
 
   {#if inputText.trim() !== ''}
     {#if inputTextvalid}
-      {@const matches = countSelectorMatches(iframe1Doc, inputText)}
+      {@const matches = countSelectorMatches(iframe1Doc!, inputText)}
       {@const matchStr = matches === 1 ? 'match' : 'matches'}
       <span class="whitespace-nowrap"
         >#{currentMatchIndex}/{matches} {matchStr}</span

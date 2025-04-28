@@ -22,13 +22,15 @@ in the edited frame.
 
   let title = $state('')
   let selectors: string[] = $state(['p'])
-  let selectorInputs: Array<HTMLInputElement | null> = $state([])
+  let selectorInputs: HTMLInputElement[] = $state([])
   let elt: HTMLElement | null = null
   let iframe1 = $state<HTMLIFrameElement | null>(null)
   let iframe2 = $state<HTMLIFrameElement | null>(null)
   let fetchError = $state<string | null>(null)
   let iframe1Doc = $state<Document | null>(null)
+  let iframe2Doc = $state<Document | null>(null)
   let focusedIndex: number | null = $state(null)
+  let highlightedElement: HTMLDivElement | null = $state(null)
 
   let { index, updateCookieJson } = $props()
 
@@ -60,9 +62,9 @@ in the edited frame.
       // Inline the async logic directly
       ;(async () => {
         let content = await getPageHTML(url)
-        iframe1.srcdoc = content
-        iframe2.srcdoc = content
-        iframe1Doc = iframe1.contentDocument
+        iframe1!.srcdoc = content
+        iframe2!.srcdoc = content
+        iframe1Doc = iframe1!.contentDocument
       })()
     }
   })
@@ -91,24 +93,31 @@ in the edited frame.
   function setupIframe1LoadListener() {
     if (iframe1) {
       iframe1.addEventListener('load', () => {
-        iframe1Doc = iframe1.contentDocument
+        iframe1Doc = iframe1!.contentDocument
       })
     }
   }
 
   onMount(() => {
     setupIframe1LoadListener()
-  })
 
-  // Count matches for a selector in iframe1's document
-  function countSelectorMatches(selector: string): number {
-    if (!iframe1Doc) return 0
-    try {
-      return iframe1Doc.querySelectorAll(selector).length
-    } catch (e) {
-      return 0
+    // Define the handler function
+    const handleIframeResize = (entries: ResizeObserverEntry[]) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect
+        console.log(`Iframe resized to: ${width}px x ${height}px`)
+        // Your custom logic here
+      }
     }
-  }
+
+    // Create a ResizeObserver instance
+    const resizeObserver = new ResizeObserver(handleIframeResize)
+
+    // Observe the iframe
+    if (iframe1) {
+      resizeObserver.observe(iframe1)
+    }
+  })
 </script>
 
 <!-- overflow would not work because overflow from layout takes over ? -->
@@ -130,9 +139,11 @@ in the edited frame.
     {#each selectors as selector, index}
       <Selector
         {iframe1Doc}
+        {iframe2Doc}
         {index}
         bind:selectors
         bind:selectorInputs
+        bind:highlightedElement
         {focusedIndex}
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -147,38 +158,31 @@ in the edited frame.
   >
     Add CSS Selector
   </button>
-  <div class="flex-1 min-h-0">
+  <div class="flex-1 overflow-auto">
     <iframe
       id="iframe1"
       bind:this={iframe1}
       title="title2"
-      width="100%"
-      height="100%"
-      frameborder="0"
+      frameborder="2"
       scrolling="auto"
-      class="w-full h-full rounded border"
-      style="display: block; min-height: 0; height: 100%; width: 100%; overflow: auto;"
+      class=" w-full rounded border min-h-[500px] overflow-auto"
     >
     </iframe>
-  </div>
-  <div class="flex-1 min-h-0">
     <iframe
       bind:this={iframe2}
       title="title"
-      width="100%"
-      height="100%"
-      frameborder="0"
+      frameborder="2"
       scrolling="auto"
-      class="w-full h-full rounded border"
+      class="w-full rounded border min-h-[500px] overflow-auto"
       src={urlString || undefined}
-      style="display: block; min-height: 0; height: 100%; width: 100%; overflow: auto;"
     >
     </iframe>
   </div>
 </div>
 
 <style>
-  bad-entry {
+  /* @svelte-ignore unused-css-selector */
+  .bad-entry {
     border: 2px solid #ef4444 !important;
     background-color: #fee2e2 !important;
   }
