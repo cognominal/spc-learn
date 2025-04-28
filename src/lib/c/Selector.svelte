@@ -31,7 +31,7 @@
   let inputFocused = $state(false)
   let inputText = $state('')
   let inputTextvalid = $derived(isValidSelector(inputText))
-  let emptyInputText = $derived(inputText === '')
+  let emptyInputText = $derived(inputText.trim() === '')
 
   let visibleButtons = $derived(hovered || (inputFocused && inputTextvalid))
   let activeButtons = $derived(visibleButtons && !emptyInputText)
@@ -157,22 +157,21 @@
     while (selectorStates.length > selectors.length) selectorStates.pop()
   })
 
-  async function handleSelectorKeydown(e: KeyboardEvent, i: number) {
+  async function handleSelectorKeydown(e: KeyboardEvent) {
     // console.log("keydown", e.key);
-    const trimmed = selectors[i].trim()
     switch (e.key) {
       case 'Enter':
-        if (trimmed !== '') {
+        if (!emptyInputText) {
           selectors.push('')
           await tick() // Wait for DOM update
           selectorInputs![selectors.length - 1]?.focus()
         }
         break
       case 'Backspace':
-        if (i !== 0 && trimmed === '' && selectors.length > 1) {
-          selectors.splice(i, 1)
+        if (index !== 0 && emptyInputText && selectors.length > 1) {
+          selectors.splice(index, 1)
           await tick() // Wait for DOM update
-          const prevIndex = i > 0 ? i - 1 : 0
+          const prevIndex = index > 0 ? index - 1 : 0
           selectorInputs![prevIndex]?.focus()
         }
         break
@@ -266,7 +265,7 @@
         inputFocused = false
         onBlur()
       }}
-      onkeydown={(e) => handleSelectorKeydown(e, index)}
+      onkeydown={(e) => handleSelectorKeydown(e)}
       aria-label="CSS selector input"
       tabindex="0"
     />
